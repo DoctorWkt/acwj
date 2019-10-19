@@ -22,7 +22,7 @@ Here are the steps I've taken so far:
  + [Part 10](10_For_Loops/Readme.md):     For Loops
  + [Part 11](11_Functions_pt1/Readme.md): Functions, part 1
  + [Part 12](12_Types_pt1/Readme.md):     Types, part 1
- + [Part 13](13_Functions_pt2/Readme.md): Functions, part 1
+ + [Part 13](13_Functions_pt2/Readme.md): Functions, part 2
  + [Part 14](14_ARM_Platform/Readme.md):  Generating ARM Assembly Code
 
 There isn't a schedule or timeline for the future parts, so
