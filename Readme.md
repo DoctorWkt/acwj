@@ -24,6 +24,7 @@ Here are the steps I've taken so far:
  + [Part 12](12_Types_pt1/Readme.md):     Types, part 1
  + [Part 13](13_Functions_pt2/Readme.md): Functions, part 2
  + [Part 14](14_ARM_Platform/Readme.md):  Generating ARM Assembly Code
+ + [Part 15](15_Pointers_pt1/Readme.md):  Pointers, part 1
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.

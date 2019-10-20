@@ -12,7 +12,7 @@ do if [ ! -f "out.$i" ]
    else
      echo -n $i
      ../comp1 $i
-     cc -o out out.s
+     cc -o out out.s ../lib/printint.c
      ./out > trial.$i
      cmp -s "out.$i" "trial.$i"
      if [ "$?" -eq "1" ]
