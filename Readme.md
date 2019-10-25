@@ -27,7 +27,7 @@ Here are the steps I've taken so far:
  + [Part 15](15_Pointers_pt1/Readme.md):  Pointers, part 1
  + [Part 16](16_Global_Vars/Readme.md):   Declaring Global Variables Properly
  + [Part 17](17_Scaling_Offsets/Readme.md): Better Type Checking and Pointer Offsets
- + [Part 18](Lvalues_Revisited/Readme.md): Lvalues and Rvalues Revisited
+ + [Part 18](18_Lvalues_Revisited/Readme.md): Lvalues and Rvalues Revisited
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
