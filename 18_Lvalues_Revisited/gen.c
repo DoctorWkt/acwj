@@ -27,7 +27,6 @@ static int genIF(struct ASTnode *n) {
 
   // Generate the condition code followed
   // by a jump to the false label.
-  // We cheat by sending the Lfalse label as a register.
   genAST(n->left, Lfalse, n->op);
   genfreeregs();
 
@@ -56,7 +55,6 @@ static int genIF(struct ASTnode *n) {
 }
 
 // Generate the code for a WHILE statement
-// and an optional ELSE clause
 static int genWHILE(struct ASTnode *n) {
   int Lstart, Lend;
 
@@ -68,7 +66,6 @@ static int genWHILE(struct ASTnode *n) {
 
   // Generate the condition code followed
   // by a jump to the end label.
-  // We cheat by sending the Lfalse label as a register.
   genAST(n->left, Lend, n->op);
   genfreeregs();
 
@@ -83,14 +80,14 @@ static int genWHILE(struct ASTnode *n) {
   return (NOREG);
 }
 
-// Given an AST, the register (if any) that holds
-// the previous rvalue, and the AST op of the parent,
-// generate assembly code recursively.
-// Return the register id with the tree's final value
+// Given an AST, an optional label, and the AST op
+// of the parent, generate assembly code recursively.
+// Return the register id with the tree's final value.
 int genAST(struct ASTnode *n, int label, int parentASTop) {
   int leftreg, rightreg;
 
-  // We now have specific AST node handling at the top
+  // We have some specific AST node handling at the top
+  // so that we don't evaluate the child sub-trees immediately
   switch (n->op) {
     case A_IF:
       return (genIF(n));
@@ -106,6 +103,7 @@ int genAST(struct ASTnode *n, int label, int parentASTop) {
       return (NOREG);
     case A_FUNCTION:
       // Generate the function's preamble before the code
+      // in the child sub-tree
       cgfuncpreamble(n->v.id);
       genAST(n->left, NOLABEL, n->op);
       cgfuncpostamble(n->v.id);
@@ -169,7 +167,7 @@ int genAST(struct ASTnode *n, int label, int parentASTop) {
     case A_ADDR:
       return (cgaddress(n->v.id));
     case A_DEREF:
-      // If we are an rvalue, dereference to get the value we point at
+      // If we are an rvalue, dereference to get the value we point at,
       // otherwise leave it for A_ASSIGN to store through the pointer
       if (n->rvalue)
         return (cgderef(leftreg, n->left->type));
