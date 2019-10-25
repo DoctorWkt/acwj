@@ -3,7 +3,7 @@
 As this is work in progress with no design document to guide me,
 occasionally I need to remove code that I've already written and
 rewrite it to make it more general, or to fix shortcomings. That's
-the case for the part of the journey.
+the case for this part of the journey.
 
 We added our initial support for pointers in part 15 so that we could
 write code line this:
@@ -166,13 +166,14 @@ static int OpPrec[] = {
 ## Changes to the Parser
 
 Now we have to remove the parsing of assignments as statements and
-make them into expressions. I also took the libery of removing
-the "print" statement from the language, as we now can call `printint()`.
+make them into expressions. I also took the liberty of removing
+the "print" statement from the language, as we can now call `printint()`.
 So, in `stmt.c`, I've removed both `print_statement()` and
 `assignment_statement()`. 
 
 > Yes, actually, I realised that I did remove the T_PRINT and 'print'
-  keywords from the language. 
+  keywords from the language. And now that our concept of lvalues and
+  rvalues are different, I also removed the A_LVIDENT AST node type.
 
 For now, the statement parser in `single_statement()` in `stmt.c`
 assumes that what's coming up next is an expression if it doesn't
@@ -465,7 +466,7 @@ int cgstorderef(int r1, int r2, int type) {
 }
 ```
 
-which is nearly exactly the opposite of `cgderef() which appear immediately
+which is nearly exactly the opposite of `cgderef()` which appear immediately
 before this new function.
 
 ## Conclusion and What's Next
