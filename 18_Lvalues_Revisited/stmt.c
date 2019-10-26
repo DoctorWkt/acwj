@@ -152,7 +152,7 @@ static struct ASTnode *return_statement(void) {
   // Ensure this is compatible with the function's type
   tree = modify_type(tree, Gsym[Functionid].type, 0);
   if (tree == NULL)
-    fatal("Incompatible type to print");
+    fatal("Incompatible type to return");
 
   // Add on the A_RETURN node
   tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
@@ -222,6 +222,7 @@ struct ASTnode *compound_statement(void) {
       else
 	left = mkastnode(A_GLUE, P_NONE, left, NULL, tree, 0);
     }
+
     // When we hit a right curly bracket,
     // skip past it and return the AST
     if (Token.token == T_RBRACE) {

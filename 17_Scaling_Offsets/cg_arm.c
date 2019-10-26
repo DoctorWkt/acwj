@@ -149,7 +149,15 @@ int cgloadglob(int id) {
 
   // Get the offset to the variable
   set_var_offset(id);
-  fprintf(Outfile, "\tldr\t%s, [r3]\n", reglist[r]);
+
+  switch (Gsym[id].type) {
+  case P_CHAR:
+    fprintf(Outfile, "\tldrb\t%s, [r3]\n", reglist[r]);
+    break;
+  default:
+    fprintf(Outfile, "\tldr\t%s, [r3]\n", reglist[r]);
+    break;
+  }
   return (r);
 }
 
@@ -211,6 +219,12 @@ int cgcall(int r, int id) {
   return (r);
 }
 
+// Shift a register left by a constant
+int cgshlconst(int r, int val) {
+  fprintf(Outfile, "\tlsl\t%s, %s, #%d\n", reglist[r], reglist[r], val);
+  return(r);
+}
+
 // Store a register's value into a variable
 int cgstorglob(int r, int id) {
 
@@ -218,15 +232,18 @@ int cgstorglob(int r, int id) {
   set_var_offset(id);
 
   switch (Gsym[id].type) {
-    case P_CHAR:
-      fprintf(Outfile, "\tstrb\t%s, [r3]\n", reglist[r]);
-      break;
-    case P_INT:
-    case P_LONG:
-      fprintf(Outfile, "\tstr\t%s, [r3]\n", reglist[r]);
-      break;
-    default:
-      fatald("Bad type in cgloadglob:", Gsym[id].type);
+  case P_CHAR:
+    fprintf(Outfile, "\tstrb\t%s, [r3]\n", reglist[r]);
+    break;
+  case P_INT:
+  case P_LONG:
+  case P_CHARPTR:
+  case P_INTPTR:
+  case P_LONGPTR:
+    fprintf(Outfile, "\tstr\t%s, [r3]\n", reglist[r]);
+    break;
+  default:
+    fatald("Bad type in cgstorglob:", Gsym[id].type);
   }
   return (r);
 }
@@ -250,7 +267,12 @@ void cgglobsym(int id) {
   // Get the size of the type
   typesize = cgprimsize(Gsym[id].type);
 
-  fprintf(Outfile, "\t.comm\t%s,%d,%d\n", Gsym[id].name, typesize, typesize);
+  fprintf(Outfile, "\t.data\n" "\t.globl\t%s\n", Gsym[id].name);
+  switch(typesize) {
+    case 1: fprintf(Outfile, "%s:\t.byte\t0\n", Gsym[id].name); break;
+    case 4: fprintf(Outfile, "%s:\t.long\t0\n", Gsym[id].name); break;
+    default: fatald("Unknown typesize in cgglobsym: ", typesize);
+  }
 }
 
 // List of comparison instructions,
@@ -317,4 +339,33 @@ int cgwiden(int r, int oldtype, int newtype) {
 void cgreturn(int reg, int id) {
   fprintf(Outfile, "\tmov\tr0, %s\n", reglist[reg]);
   cgjump(Gsym[id].endlabel);
+}
+
+// Generate code to load the address of a global
+// identifier into a variable. Return a new register
+int cgaddress(int id) {
+  // Get a new register
+  int r = alloc_register();
+
+  // Get the offset to the variable
+  set_var_offset(id);
+  fprintf(Outfile, "\tmov\t%s, r3\n", reglist[r]);
+  return (r);
+}
+
+// Dereference a pointer to get the value it
+// pointing at into the same register
+int cgderef(int r, int type) {
+  switch (type) {
+  case P_CHARPTR:
+    fprintf(Outfile, "\tldrb\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  case P_INTPTR:
+    fprintf(Outfile, "\tldr\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  case P_LONGPTR:
+    fprintf(Outfile, "\tldr\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  }
+  return (r);
 }

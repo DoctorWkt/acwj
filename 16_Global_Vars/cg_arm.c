@@ -149,7 +149,15 @@ int cgloadglob(int id) {
 
   // Get the offset to the variable
   set_var_offset(id);
-  fprintf(Outfile, "\tldr\t%s, [r3]\n", reglist[r]);
+
+  switch (Gsym[id].type) {
+  case P_CHAR:
+    fprintf(Outfile, "\tldrb\t%s, [r3]\n", reglist[r]);
+    break;
+  default:
+    fprintf(Outfile, "\tldr\t%s, [r3]\n", reglist[r]);
+    break;
+  }
   return (r);
 }
 
@@ -218,15 +226,18 @@ int cgstorglob(int r, int id) {
   set_var_offset(id);
 
   switch (Gsym[id].type) {
-    case P_CHAR:
-      fprintf(Outfile, "\tstrb\t%s, [r3]\n", reglist[r]);
-      break;
-    case P_INT:
-    case P_LONG:
-      fprintf(Outfile, "\tstr\t%s, [r3]\n", reglist[r]);
-      break;
-    default:
-      fatald("Bad type in cgloadglob:", Gsym[id].type);
+  case P_CHAR:
+    fprintf(Outfile, "\tstrb\t%s, [r3]\n", reglist[r]);
+    break;
+  case P_INT:
+  case P_LONG:
+  case P_CHARPTR:
+  case P_INTPTR:
+  case P_LONGPTR:
+    fprintf(Outfile, "\tstr\t%s, [r3]\n", reglist[r]);
+    break;
+  default:
+    fatald("Bad type in cgstorglob:", Gsym[id].type);
   }
   return (r);
 }
@@ -317,4 +328,33 @@ int cgwiden(int r, int oldtype, int newtype) {
 void cgreturn(int reg, int id) {
   fprintf(Outfile, "\tmov\tr0, %s\n", reglist[reg]);
   cgjump(Gsym[id].endlabel);
+}
+
+// Generate code to load the address of a global
+// identifier into a variable. Return a new register
+int cgaddress(int id) {
+  // Get a new register
+  int r = alloc_register();
+
+  // Get the offset to the variable
+  set_var_offset(id);
+  fprintf(Outfile, "\tmov\t%s, r3\n", reglist[r]);
+  return (r);
+}
+
+// Dereference a pointer to get the value it
+// pointing at into the same register
+int cgderef(int r, int type) {
+  switch (type) {
+  case P_CHARPTR:
+    fprintf(Outfile, "\tldrb\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  case P_INTPTR:
+    fprintf(Outfile, "\tldr\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  case P_LONGPTR:
+    fprintf(Outfile, "\tldr\t%s, [%s]\n", reglist[r], reglist[r]);
+    break;
+  }
+  return (r);
 }
