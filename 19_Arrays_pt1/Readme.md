@@ -21,7 +21,7 @@ sort of functionality I should try to implement:
 ```
 
 Arrays are *like* pointers in that we can dereference both a pointer
-and an aarray with the "[]" syntax to get access to a specific element.
+and an aarray with the "[ ]" syntax to get access to a specific element.
 We can use the array's name as a "pointer" and save the array's base
 into a pointer. We can get the address of an element in the array.
 But one thing we can't do is "overwrite" the base of an array
