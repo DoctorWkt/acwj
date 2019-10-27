@@ -1,0 +1,23 @@
+  int ary[5];
+  int *ptr;
+
+  ary[3]= 63;		    // Set ary[3] (lvalue) to 63
+  ptr   = ary;		    // Point ptr to base of ary
+  // ary= ptr;		    // error: assignment to expression with array type
+  ptr   = &ary[0];	    // Also point ptr to base of ary, ary[0] is lvalue
+  ptr[4]= 72;		    // Use ptr like an array, ptr[4] is an lvalue
+
+        .globl  z
+z:     .quad   1
+        .quad   2
+        .quad   3
+        .quad   4
+        .globl  zc
+zc:    .byte   1
+        .byte   2
+        .byte   3
+        .byte   4
+        .byte   0
+        .byte   0
+        .byte   0
+        .byte   0
