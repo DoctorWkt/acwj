@@ -29,6 +29,7 @@ Here are the steps I've taken so far:
  + [Part 17](17_Scaling_Offsets/Readme.md): Better Type Checking and Pointer Offsets
  + [Part 18](18_Lvalues_Revisited/Readme.md): Lvalues and Rvalues Revisited
  + [Part 19](19_Arrays_pt1/Readme.md):    Arrays, part 1
+ + [Part 20](20_Char_Str_Literals/Readme.md): Character and String Literals
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
