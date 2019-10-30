@@ -30,6 +30,7 @@ Here are the steps I've taken so far:
  + [Part 18](18_Lvalues_Revisited/Readme.md): Lvalues and Rvalues Revisited
  + [Part 19](19_Arrays_pt1/Readme.md):    Arrays, part 1
  + [Part 20](20_Char_Str_Literals/Readme.md): Character and String Literals
+ + [Part 21](21_More_Operators/Readme.md): More Operators
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
