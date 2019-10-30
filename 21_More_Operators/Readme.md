@@ -28,9 +28,9 @@ a few this time:
 
 | Scanned Input | Token |
 |:-------------:|-------|
-|   `||`        | T_LOGOR |
+|   `&#124;&#124;`        | T_LOGOR |
 |   `&&`        | T_LOGAND |
-|   `|`         | T_OR |
+|   `&#124;`         | T_OR |
 |   `^`         | T_XOR |
 |   `<<`        | T_LSHIFT |
 |   `>>`        | T_RSHIFT |
