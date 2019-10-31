@@ -89,7 +89,7 @@ several reasons:
    number of registers. We can spill a register onto the stack so
    that it is free to allocate.
  + We need to spill all our allocated register, and all registers with
-   parameters, onto the stack before a function call. This free them up
+   parameters, onto the stack before a function call. This frees them up
    so they can be used by the called function.
 
 On a function call return, we will need to unspill the registers to
@@ -138,17 +138,16 @@ no collision between the two ends in the middle. I like this idea, as we then
 have a single set of unique symbol slot numbers for every symbol, regardless
 of its scope.
 
-In terms of priortising local symbols over global symbols, we can
+In terms of prioritising local symbols over global symbols, we can
 search the local end of the symbol table first and, if we don't find a
-symbol, we can search through the global end. And, once we finish parsing
+symbol, we can then search through the global end. And, once we finish parsing
 a function, we can simply wipe the local end of the symbol table.
 
 ### Storage Classes
 
 C has the concept of
 [storage classes](https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers), and we'll have to implement at least some of these classes.
-
-SubC has a bunch of storage classes:
+SubC implements several of the storage classes:
 
 ```
 /* storage classes */
