@@ -31,6 +31,8 @@ Here are the steps I've taken so far:
  + [Part 19](19_Arrays_pt1/Readme.md):    Arrays, part 1
  + [Part 20](20_Char_Str_Literals/Readme.md): Character and String Literals
  + [Part 21](21_More_Operators/Readme.md): More Operators
+ + [Part 22](22_Design_Locals/Readme.md):  Design Ideas for Local Variables and Function Calls
+
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
