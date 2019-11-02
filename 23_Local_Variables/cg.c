@@ -23,8 +23,7 @@ void cgdataseg() {
 }
 
 // Position of next local variable relative to stack base pointer.
-// We store the offset as positive to make aligning the stack pointer
-// easier
+// We store the offset as positive to make aligning the stack pointer easier
 static int localOffset;
 static int stackOffset;
 
