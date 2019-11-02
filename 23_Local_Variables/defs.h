@@ -98,8 +98,8 @@ struct symtable {
   int type;			// Primitive type for the symbol
   int stype;			// Structural type for the symbol
   int class;			// Storage class for the symbol
-  int endlabel;			// For S_FUNCTIONs, the end label
+  int endlabel;			// For functions, the end label
   int size;			// Number of elements in the symbol
-  int posn;			// For locals, either the negative offset
-				// from stack base pointer, or register id
+  int posn;			// For locals,the negative offset
+				// from the stack base pointer
 };

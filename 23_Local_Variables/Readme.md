@@ -24,19 +24,17 @@ struct symtable {
   int type;                     // Primitive type for the symbol
   int stype;                    // Structural type for the symbol
   int class;                    // Storage class for the symbol
-  int endlabel;                 // For S_FUNCTIONs, the end label
+  int endlabel;                 // For functions, the end label
   int size;                     // Number of elements in the symbol
-  int posn;                     // For locals, either the negative offset
-                                // from stack base pointer, or register id
+  int posn;                     // For locals,the negative offset 
+                                // from the stack base pointer
 };
 ```
 
 with the `class` and `posn` fields added. As described in the last part,
-when the `posn` is negative, it implies an offset from the stack base pointer,
-i.e. the local variable is stored on the stack. When the `posn` is
-positive, the value holds a register number in our list of registers, i.e.
-the local variable is stored in a register for the lifetime of the function.
-In this part, I've only implemented the "variable on stack" part. Also 
+the `posn` is negative and holds an offset from the stack base pointer,
+i.e. the local variable is stored on the stack.
+In this part, I've only implemented local variables, not parameters. Also
 note that we now have symbols marked C_GLOBAL or C_LOCAL.
 
 The symbol table's name has also changed, along with the indexed into it
@@ -187,28 +185,41 @@ record this in the symbol table's `posn` field. Here is how we do it.
 In `cg.c` we have a new static variable and two functions to manipulate it:
 
 ```
-// Position of next local variable relative to stack base pointer
+// Position of next local variable relative to stack base pointer.
+// We store the offset as positive to make aligning the stack pointer easier
 static int localOffset;
+static int stackOffset;
 
 // Reset the position of new local variables when parsing a new function
 void cgresetlocals(void) {
   localOffset = 0;
 }
 
-// Get the position of the next local variable. If positive, it's in
-// a register. If negative, it's on the stack at the given offset.
-// Also use the isparam flag to allocate a parameter (not yet XXX).
+// Get the position of the next local variable.
+// Use the isparam flag to allocate a parameter (not yet XXX).
 int cggetlocaloffset(int type, int isparam) {
-  // For now just decrement the offset by a minimum of 4 bytes
+  // Decrement the offset by a minimum of 4 bytes
   // and allocate on the stack
-  localOffset -= (cgprimsize(type) > 4) ? cgprimsize(type) : 4;
-  return (localOffset);
+  localOffset += (cgprimsize(type) > 4) ? cgprimsize(type) : 4;
+  return (-localOffset);
 }
 ```
 
 For now, we allocate all local variables on the stack. They are aligned
 with a minimum of 4 bytes between each one. For 64-bit integers and pointers,
 that's 8-bytes for each variable, though.
+
+> I know, in the past, that multi-byte data items had to be properly aligned
+  in memory or the CPU would fault. It seems that, at least for x86-64,
+  there is [no need to align data items](https://lemire.me/blog/2012/05/31/data-alignment-for-speed-myth-or-reality/)
+
+> However, the stack pointer on the x86-64 *does* have to be properly aligned before
+  a function call. In "[Optimizing Subroutines in Assembly Language](https://www.agner.org/optimize/optimizing_assembly.pdf)" by Agner Fog, page 30, he
+  notes that "The stack pointer must be aligned by 16 before any CALL instruction,
+  so that the value of RSP is 8 modulo 16 at the entry of a function."
+
+> This means that, as part of the function preamble, we need to set `%rsp` to a
+  correctly aligned value.
 
 `cgresetlocals()` is called in `function_declaration()` once we have added
 the function's name to the symbol table but before we start parsing the
@@ -242,23 +253,28 @@ to modify the stack pointer in our function preamble and postamble:
 void cgfuncpreamble(int id) {
   char *name = Symtable[id].name;
   cgtextseg();
+
+  // Align the stack pointer to be a multiple of 16
+  // less than its previous value
+  stackOffset= (localOffset+15) & ~15;
+  
   fprintf(Outfile,
           "\t.globl\t%s\n"
           "\t.type\t%s, @function\n"
           "%s:\n" "\tpushq\t%%rbp\n"
           "\tmovq\t%%rsp, %%rbp\n"
-          "\taddq\t$%d,%%rsp\n", name, name, name, localOffset);
+          "\taddq\t$%d,%%rsp\n", name, name, name, -stackOffset);
 }
 
 // Print out a function postamble
 void cgfuncpostamble(int id) {
   cglabel(Symtable[id].endlabel);
-  fprintf(Outfile, "\taddq\t$%d,%%rsp\n", -localOffset);
+  fprintf(Outfile, "\taddq\t$%d,%%rsp\n", stackOffset);
   fputs("\tpopq %rbp\n" "\tret\n", Outfile);
 }
 ```
 
-Remember that `localOffset` is either zero or negative. So we add a negative
+Remember that `localOffset` is negative. So we add a negative
 value in the function preamble, and add a negative negative value in the
 function postamble.
 
@@ -296,7 +312,7 @@ c:      .long   0
 main:
         pushq   %rbp
         movq    %rsp, %rbp
-        addq    $-12,%rsp               # Lower stack pointer by 12
+        addq    $-16,%rsp               # Lower stack pointer by 16
         movq    $10, %r8
         movl    %r8d, -12(%rbp)         # z is at offset -12
         movq    $20, %r8
@@ -311,7 +327,7 @@ main:
         movl    %r8d, c(%rip)           # c has a global label
         jmp     L1
 L1:
-        addq    $12,%rsp                # Raise stack pointer by 12
+        addq    $16,%rsp                # Raise stack pointer by 16
         popq    %rbp
         ret
 ```

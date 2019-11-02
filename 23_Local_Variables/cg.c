@@ -22,23 +22,25 @@ void cgdataseg() {
   }
 }
 
-// Position of next local variable relative to stack base pointer
+// Position of next local variable relative to stack base pointer.
+// We store the offset as positive to make aligning the stack pointer
+// easier
 static int localOffset;
+static int stackOffset;
 
 // Reset the position of new local variables when parsing a new function
 void cgresetlocals(void) {
   localOffset = 0;
 }
 
-// Get the position of the next local variable. If positive, it's in
-// a register. If negative, it's on the stack at the given offset.
-// Also use the isparam flag to allocate a parameter (not yet XXX).
+// Get the position of the next local variable.
+// Use the isparam flag to allocate a parameter (not yet XXX).
 int cggetlocaloffset(int type, int isparam) {
   // For now just decrement the offset by a minimum of 4 bytes
   // and allocate on the stack
-  localOffset -= (cgprimsize(type) > 4) ? cgprimsize(type) : 4;
+  localOffset += (cgprimsize(type) > 4) ? cgprimsize(type) : 4;
 // printf("Returning offset %d for type %d\n", localOffset, type);
-  return (localOffset);
+  return (-localOffset);
 }
 
 // List of available registers and their names.
@@ -88,18 +90,24 @@ void cgpostamble() {
 void cgfuncpreamble(int id) {
   char *name = Symtable[id].name;
   cgtextseg();
+
+  // Align the stack pointer to be a multiple of 16
+  // less than its previous value
+  stackOffset= (localOffset+15) & ~15;
+  // printf("preamble local %d stack %d\n", localOffset, stackOffset);
+  
   fprintf(Outfile,
 	  "\t.globl\t%s\n"
 	  "\t.type\t%s, @function\n"
 	  "%s:\n" "\tpushq\t%%rbp\n"
 	  "\tmovq\t%%rsp, %%rbp\n"
-	  "\taddq\t$%d,%%rsp\n", name, name, name, localOffset);
+	  "\taddq\t$%d,%%rsp\n", name, name, name, -stackOffset);
 }
 
 // Print out a function postamble
 void cgfuncpostamble(int id) {
   cglabel(Symtable[id].endlabel);
-  fprintf(Outfile, "\taddq\t$%d,%%rsp\n", -localOffset);
+  fprintf(Outfile, "\taddq\t$%d,%%rsp\n", stackOffset);
   fputs("\tpopq	%rbp\n" "\tret\n", Outfile);
 }
 
