@@ -69,12 +69,29 @@ the function call mechanism on this architecture. I found this great
 article by Eli Bendersky on the
 [stack frame layout on x86-64](https://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64/).
 This is a document that you will definitely need to read before continuing
-on with this document!
+on with this document! As Eli's article is in the public domain, I'm reproducing
+his picture of the stack frame and the parameters in registers below for
+the function
 
-Essentially, on the x86-64 architecture, we will need to keep some local
-variables on the stack and some local variables in registers. At the same
-time, we want our compiler to be portable to different architectures. So,
-we will need to support a general function parameter framework for different
+```
+long myfunc(long a, long b, long c, long d,
+            long e, long f, long g, long h)
+{
+    long xx, yy, zz;
+    ...
+}
+```
+
+<center>
+![](Figs/x64_frame_nonleaf.png)
+</center>
+
+Essentially, on the x86-64 architecture, the values of some parameters will be
+passed in registers, and some parameter values will be pushed onto the stack.
+All our local variables will be on the stack but below the stack base pointer.
+
+At the same time, we want our compiler to be portable to different architectures.
+So, we will need to support a general function parameter framework for different
 architectures which use the only the stack, only registers or a combination
 of both.
 
@@ -182,14 +199,15 @@ arrays in our language, but we will need a list of primitive types for
 each function.
 
 So, my idea is this. We already have S_FUNCTION as the type for our
-existing symbol table elements. We can use the `size` field for an S_FUNCTION
-symbol to store the number of parameters that the function has.
+existing symbol table elements. We can have a "number of parameters" field
+in each symbol table entry to store the number of parameters that the function has.
 We can then immediately follow this symbol with the symbol table entries
 for each function parameter.
 
-When we get to parsing the body of the function, we can `memcpy()`
-the symbol table entries for the parameters up into the local end of the
-symbol table.
+When we are parsing the function's parameter list, we can add the parameters
+in the global symbol section to record the function's prototype. At the same time,
+we can also add the parameters as entries in the local symbol section, as they
+will be used as local variables by the function itself.
 
 When we need to determine if the list of arguments to a function call
 matches the function's prototype, we can find the function's global
@@ -197,54 +215,53 @@ symbol table entry and then compare the following entries in the symbol
 table to the argument list.
 
 Finally, when doing a search for a global symbol, we can easily skip past
-the parameter entries for a function by loading the function's `size`
-parameter and skip this many symbol table entries.
+the parameter entries for a function by loading the function's "number of parameters"
+field and skip this many symbol table entries.
+
+### Keeping Parameters in Registers: Not Possible
+
+I'm actually writing this section after trying to implement the above, so I've come
+back to revisit the design a bit. I thought that we would be able to keep the
+parameters passed as registers in their registers: this would make access to them
+faster and keep the stack frame smaller. But this isn't always possible for this
+reason. Consider this code:
+
+```
+void myfunction(int a) {        // a is a parameter in a register
+  int b;                        // b is a local variable on the stack
+
+  // Call a function to update a and b
+  b= function2(&a);
+}
+```
+
+If the `a` parameter is in a register, we won't be able to get its address
+with the `&` operator. Therefore, we'll have to copy it into memory somewhere.
+And, given that parameters are variables local to the function, we will need to
+copy it to the stack.
+
+For a while I had ideas of walking the AST looking for which parameters in the
+tree needed to have real addresses, but then I remembered that I'm following the
+KISS principle: keep it simple, stupid! So I will copy all parameters out of
+registers and onto the stack.
 
 ### Location of Local Variables
 
-How are we going to determine if a local variable is in a register or on
-the stack, in which register or at what negative offset from the frame
-base pointer? I'm going to try this. I'll add add a `posn` field into
-each symbol table entry. For a local variable, this will be negative to
-indicate the offset of the variable below the frame base pointer. Or, if
+How are we going to determine where a parameter or local variable is on the stack,
+once they have been copied or placed there? To do this, I will add a `posn` field into
+each local symbol table entry. This will indicate the offset of the variable below
+the frame base pointer.
 positive, it will indicate the register number that has been allocated to it.
-
-For x86-64, we can change the list of registers thus:
-
-```
-// List of available registers and their names.
-#define NUMREGS 4
-static int freereg[NUMREGS];
-static char *reglist[] = {
-   "%r10", "%r11", "%r12", "%r13",
-   "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"
- };
-```
-
-We will still only have four free registers to allocate, but we now
-have register index positions 0 to 9. We can store positions
-4 to 9 in the symbol table to identify which register holds
-each function parameter.
-
-### Spilling Registers
-
-For the function we are in, we know the number of parameters we have.
-We also know which registers we have allocated by looking at the
-`freereg[]` list. We can work out which in-use registers to spill on
-the stack before each function call, and how to unspill them afterwards.
-
-### Determining the Stack Offset for Locals
 
 Looking at the
 [BNF Grammar for C](https://www.lysator.liu.se/c/ANSI-C-grammar-y.html),
-the function declaration list (i.e. the list of funtcion parameters)
+the function declaration list (i.e. the list of function parameters)
 comes before the declaration list for the local variables, and this
 comes before the statement list.
 
-We can have a global flag which is raised when we begin the 
-function declaration list. We will need a `cg.c` function to select a position
-number for each new local variable declared. Some will be positive and
-in registers. Some will be negative and on the stack.
+This means that, as we parse the parameters and then the local variables, we can
+determine at what position they will be on the stack before we get to parse
+the statement list.
 
 ## Conclusion and What's Next
 
