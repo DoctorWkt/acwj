@@ -82,9 +82,7 @@ long myfunc(long a, long b, long c, long d,
 }
 ```
 
-<center>
 ![](Figs/x64_frame_nonleaf.png)
-</center>
 
 Essentially, on the x86-64 architecture, the values of some parameters will be
 passed in registers, and some parameter values will be pushed onto the stack.
