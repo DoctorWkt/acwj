@@ -424,7 +424,7 @@ cc -o out input27b.c out.s lib/printint.c
 ```
 
 And it works! I put an exclamation mark in because it still feels like
-magic sometimes when things work. Let's example the assembly code for
+magic sometimes when things work. Let's examine the assembly code for
 `param8()`:
 
 ```
