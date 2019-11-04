@@ -141,15 +141,13 @@ I'll use a PC running Lubuntu 18.04 as the Intel target, and a Raspberry
 Pi running Raspbian as the ARM target.
 
 On the Intel platform, we are going to need an existing C compiler.
-language parser. So, install these packages
-(I give the Ubuntu/Debian commands):
+So, install this package (I give the Ubuntu/Debian commands):
 
 ```
-  $ sudo apt-get install build-essential bc
+  $ sudo apt-get install build-essential
 ```
 
-To start with, I'll use the `bc` calculator to verify the results from
-the compiler. If there are any more tools required for a vanilla Linux
+If there are any more tools required for a vanilla Linux
 system, let me know.
 
 Finally, clone a copy of this Github repository.
