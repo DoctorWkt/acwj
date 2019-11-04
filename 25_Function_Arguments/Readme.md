@@ -16,9 +16,9 @@ Up to six "call by value" arguments to a function are passed in via the
 registers `%rdi` to `%r9`. For more than six arguments, the remaining arguments
 are pushed on the stack.
 
-Look closely at the argument values on the stack. Even though `g` is the
+Look closely at the argument values on the stack. Even though `h` is the
 last argument, it is pushed first on the stack (which grows downwards),
-and the `h` argument is pushed *after* the `g` argument.
+and the `g` argument is pushed *after* the `h` argument.
 
 One of the *Bad Things* about C is that there is no defined order of
 expression evaluation. As noted
@@ -53,17 +53,17 @@ For a function call `function(expr1, expr2, expr3, expr4)`, I've decided
 to build the tree like this:
 
 ```
-                A_FUNCCALL
-                 /
-               A_GLUE
+                 A_FUNCCALL
+                  /
+              A_GLUE
                /   \
-            A_GLUE  expr4
+           A_GLUE  expr4
             /   \
         A_GLUE  expr3
-        /    \
+         /   \
      A_GLUE  expr2
-          \
-         expr1
+     /    \
+   NULL  expr1
 ```
 
 Each expression is on the right, and previous expressions are on the left.
@@ -74,7 +74,7 @@ be pushed on the x86-64 stack before the latter.
 We already have a `funccall()` function to parse a simple function call
 with always one argument. I'll modify this to call an `expression_list()`
 function to parse the expression list and build the A_GLUE sub-tree. It
-will return a count of the number of expressions. This number can be stored
+will return a count of the number of expressions by storing this count
 in the top A_GLUE AST node. Then, in `funccall()`, we can check the type
 of all the expressions against the function's prototype which should be
 stored in the global symbol table.
@@ -89,7 +89,8 @@ borrow a quote that floats around on Twitter:
 
 > Weeks of programming can save you hours of planning.
 
-A bit of time spent on design always helps with the efficiency of coding.
+Conversely, a bit of time spent on design always helps with
+the efficiency of coding.
 Let's have a look at the changes. We'll start with the parsing.
 
 We now have to parse a comma-separated list of expressions, and build that
