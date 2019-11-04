@@ -32,7 +32,7 @@ enum {
 When the token is a `T_INTLIT` (i.e. an integer literal), the `intvalue`
 field will hold the value of the integer that we scanned in.
 
-## Function in `scan.c`
+## Functions in `scan.c`
 
 The `scan.c` file holds the functions of our lexical scanner. We are going
 to read in one character at a time from our input file. However, there will
@@ -170,7 +170,7 @@ missing `default` code from the `switch` statement:
     exit(1);
 ```
 
-Once we hit a decimal digit character, we call the helper function `scanint`
+Once we hit a decimal digit character, we call the helper function `scanint()`
 with this first character. It will return the scanned integer value. To
 do this, it has to read each character in turn, check that it's a
 legitimate digit, and build up the final number. Here is the code:
