@@ -245,8 +245,8 @@ static struct ASTnode *primary(void) {
 }
 ```
 
-I've moved the parsing of function calls and array references out to postfix,
-and this is where we parse the postfix `++` and `--` operators:
+I've moved the parsing of function calls and array references out to
+`postfix()`, and this is where we parse the postfix `++` and `--` operators:
 
 ```
 // Parse a postfix expression and return
@@ -549,7 +549,7 @@ You can browse them and confirm that the compiler can correctly compile
 them:
 
 ```
-make test
+$ make test
 ...
 input22.c: OK
 input23.c: OK
