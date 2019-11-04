@@ -66,7 +66,7 @@ This may require us to recursively call a function that has already been
 called.
 
 In our case, the first token in any expression will be a number and this
-is always followed by maths operator. After that there may only
+may be followed by maths operator. After that there may only
 be a single number, or there may be the start of a whole new expression.
 How can we parse this recursively?
 
@@ -114,6 +114,9 @@ to *recognise* the input, and warn of any syntax errors. Someone
 else is going to do the *semantic analysis* of the input, i.e. to
 understand and perform the meaning of this input.
 
+> Later on, you will see that this isn't actually true. It often makes
+  sense to intertwine the syntax analysis and semantic analysis.
+
 ## Abstract Syntax Trees
 
 To do the semantic analysis, we need code that either interprets
@@ -132,7 +135,7 @@ I highly recommend you read this short explanation of ASTs:
 It's well written and really help to explain the purpose and structure of ASTs.
 Don't worry, I'll be here when you get back.
 
-The structure of each node in the AST that we will build is descibed in
+The structure of each node in the AST that we will build is described in
 `defs.h`:
 
 ```
@@ -523,7 +526,7 @@ Unrecognised character a on line 1
 ## Conclusion and What's Next
 
 A parser recognises the grammar of the language and checks that the
-input to the compiler conforms to this grammar. If it doesn't the parser
+input to the compiler conforms to this grammar. If it doesn't, the parser
 should print out an error message. As our expression grammar is
 recursive, we have chosen to write a recursive descent parser to
 recognise our expressions.
