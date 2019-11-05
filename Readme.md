@@ -35,6 +35,7 @@ Here are the steps I've taken so far:
  + [Part 23](23_Local_Variables/Readme.md): Local Variables
  + [Part 24](24_Function_Params/Readme.md): Function Parameters
  + [Part 25](25_Function_Arguments/Readme.md): Function Calls and Arguments
+ + [Part 26](26_Prototypes/Readme.md):     Function Prototypes
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
