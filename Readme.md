@@ -36,6 +36,7 @@ Here are the steps I've taken so far:
  + [Part 24](24_Function_Params/Readme.md): Function Parameters
  + [Part 25](25_Function_Arguments/Readme.md): Function Calls and Arguments
  + [Part 26](26_Prototypes/Readme.md):     Function Prototypes
+ + [Part 27](27_Testing_Errors/Readme.md): Regression Testing and a Nice Surprise
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
