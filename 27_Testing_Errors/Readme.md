@@ -134,7 +134,7 @@ show the differences between the two files.
 
 This section gets executed when there is an error
 document, "err.$i". This time, we use the shell
-syntax `2>` to capture our compilers standard
+syntax `2>` to capture our compiler's standard
 error output to the file "trial.$i" and compare
 that against the correct error output. The logic
 after this is the same as before.
@@ -240,11 +240,12 @@ the function's prototype (in `expr.c`):
   // XXX Check type of each argument against the function's prototype
 ```
 
-I left this as I didn't want to add too much new code in one of our steps.
+I left this out as I didn't want to add too much new code in one of
+our steps.
 
 Now that we have prototypes, I've wanted to finally add support for
 `printf()` so that we can ditch our homegrown `printint()` and
-`printchar()` function. But we can't do this just yet, because
+`printchar()` functions. But we can't do this just yet, because
 `printf()` is a [variadic function](https://en.wikipedia.org/wiki/Variadic_function):
 it can accept a variable number of parameters. And, right now, our
 compiler only allows a function declaration with a fixed number of
@@ -276,7 +277,7 @@ returns.
 
 ## Conclusion and What's Next
 
-There is no new code in this step, but we are now testing the
+There is no new compiler code in this step, but we are now testing the
 error checking capability of the compiler, and we now have 54
 regression tests to help ensure we don't break the compiler when
 we add new functionality. And, fortuitously, we can now use
