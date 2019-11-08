@@ -15,8 +15,8 @@ are more steps to convert a source code file in a high-level language to
 an executable file:
 
  + Scan and parse the source code file to generate assembly output
- + Assemble the assembly output to an object file
- + Link one or more object files to produce the executable file
+ + Assemble the assembly output to an [object file](https://en.wikipedia.org/wiki/Object_file)
+ + [Link](https://en.wikipedia.org/wiki/Linker_(computing)) one or more object files to produce the executable file
 
 We've been doing the last two steps manually or with our Makefile, but I'm
 going to modify the compiler to call an external assembler and linker to
