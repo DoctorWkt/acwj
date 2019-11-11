@@ -39,6 +39,7 @@ Here are the steps I've taken so far:
  + [Part 27](27_Testing_Errors/Readme.md): Regression Testing and a Nice Surprise
  + [Part 28](28_Runtime_Flags/Readme.md):  Adding More Run-time Flags
  + [Part 29](29_Refactoring/Readme.md):    A Bit of Refactoring
+ + [Part 30](30_Design_Composites/Readme.md): Designing Structs, Unions and Enums
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
