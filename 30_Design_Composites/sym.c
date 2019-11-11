@@ -2,6 +2,9 @@
 #include "data.h"
 #include "decl.h"
 
+// Symbol table functions
+// Copyright (c) 2019 Warren Toomey, GPL3
+
 // Append a node to the singly-linked list pointed to by head or tail
 void appendsym(struct symtable **head, struct symtable **tail,
 	       struct symtable *node) {
@@ -18,9 +21,6 @@ void appendsym(struct symtable **head, struct symtable **tail,
     *head = *tail = node;
   node->next = NULL;
 }
-
-// Symbol table functions
-// Copyright (c) 2019 Warren Toomey, GPL3
 
 // Create a symbol node to be added to a symbol table list.
 // Set up the node's:
