@@ -40,6 +40,7 @@ Here are the steps I've taken so far:
  + [Part 28](28_Runtime_Flags/Readme.md):  Adding More Run-time Flags
  + [Part 29](29_Refactoring/Readme.md):    A Bit of Refactoring
  + [Part 30](30_Design_Composites/Readme.md): Designing Structs, Unions and Enums
+ + [Part 31](31_Struct_Declarations/Readme.md:) Implementing Structs, Part 1
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
