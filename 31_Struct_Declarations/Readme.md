@@ -385,7 +385,7 @@ stored at any alignment. But we enforce a 4-byte alignment on `int`s
 and `long`s.
 
 Let's break down the big offset expression. The first `alignment-1`
-turns `offset` 0 into 3, 1 into 4, 2 into 5 etc. Then, at the end`
+turns `offset` 0 into 3, 1 into 4, 2 into 5 etc. Then, at the end
 we AND this with the inverse of 3, i.e. ...111111100 to discard the
 last two bits and lower the value back down to the correct alignment.
 
