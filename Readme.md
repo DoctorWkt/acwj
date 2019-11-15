@@ -42,6 +42,7 @@ Here are the steps I've taken so far:
  + [Part 30](30_Design_Composites/Readme.md): Designing Structs, Unions and Enums
  + [Part 31](31_Struct_Declarations/Readme.md): Implementing Structs, Part 1
  + [Part 32](32_Struct_Access_pt1/Readme.md): Accessing Members in a Struct
+ + [Part 33](33_Unions/Readme.md):         Implementing Unions and Member Access
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
