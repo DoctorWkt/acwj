@@ -183,7 +183,7 @@ both `5 + var2.x` and `var2.x= 6`.
 
 ### Running Our Test Code
 
-The output of ``tests/input58.c` is, unsurprisingly:
+The output of `tests/input58.c` is, unsurprisingly:
 
 ```
 12
