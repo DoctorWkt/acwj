@@ -162,10 +162,5 @@ that pointer access into a union also works.
 
 ## Conclusion and What's Next
 
-This was another nice and easy part of our compiler writing journey. It is
-probably time to turn to something a bit more complicated.
-
-In the next part of our compiler writing journey, we will add the `break` and
-`continue` keywords to the language. I've done this with a previous compiler and
-it was a bit tricky, which is why I've held off doing it. But it's now time to
-make it happen.
+This was another nice and easy part of our compiler writing journey.
+In the next part of our compiler writing journey, we will add enums.
