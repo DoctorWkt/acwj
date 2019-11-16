@@ -43,6 +43,7 @@ Here are the steps I've taken so far:
  + [Part 31](31_Struct_Declarations/Readme.md): Implementing Structs, Part 1
  + [Part 32](32_Struct_Access_pt1/Readme.md): Accessing Members in a Struct
  + [Part 33](33_Unions/Readme.md):         Implementing Unions and Member Access
+ + [Part 34](34_Enums_and_Typedefs/Readme.md): Enums and Typedefs
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
