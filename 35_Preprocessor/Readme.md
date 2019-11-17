@@ -11,7 +11,7 @@ for our programs, and also put comments in them. I must admit, this feels good.
 ## The C Pre-Processor
 
 I don't want to write about the C pre-processor itself, even though is
-a very import part of any C environment. Instead, I'll point you at
+a very important part of any C environment. Instead, I'll point you at
 these two articles to read:
 
  + [C Preprocessor](https://en.wikipedia.org/wiki/C_preprocessor) at *Wikipedia*
@@ -90,7 +90,8 @@ static char *do_compile(char *filename) {
   ...
   // Generate the pre-processor command
   snprintf(cmd, TEXTLEN, "%s %s %s", CPPCMD, INCDIR, filename);
-    // Open up the pre-processor pipe
+
+  // Open up the pre-processor pipe
   if ((Infile = popen(cmd, "r")) == NULL) {
     fprintf(stderr, "Unable to open %s: %s\n", filename, strerror(errno));
     exit(1);
