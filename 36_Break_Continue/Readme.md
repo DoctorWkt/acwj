@@ -54,7 +54,7 @@ static int genIF(struct ASTnode *n) {
 
   // Generate the condition code followed
   // by a jump to the false label.
-  genAST(n->left, Lfalse, NOLABEL, NOLABEL, n->op);
+  genAST(n->left, Lfalse, n->op);
 ```
 
 The left-hand AST child is the one that evaluates the 'if' statement's
