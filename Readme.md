@@ -46,6 +46,7 @@ Here are the steps I've taken so far:
  + [Part 34](34_Enums_and_Typedefs/Readme.md): Enums and Typedefs
  + [Part 35](35_Preprocessor/Readme.md):  The C Pre-Processor
  + [Part 36](36_Break_Continue/Readme.md): `break` and `continue`
+ + [Part 37](37_Switch/Readme.md):        Switch Statements
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
