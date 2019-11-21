@@ -197,7 +197,7 @@ struct ASTnode *compound_statement(int inswitch) {
 
   while (1) {
     // Parse a single statement
-    tree = single_statement(inswitch);
+    tree = single_statement();
     ...
     // Leave if we've hit the end token
     if (Token.token == T_RBRACE) return(left);
@@ -211,60 +211,30 @@ called during the parsing of a 'switch' statement, so look for 'case', 'default'
 to end the compound statement. Otherwise, we are in a more typical '{' ... '}'
 situation.
 
-All fine and good, but why do we need to pass this `inswitch` flag to
-`single_statement()`? The answer is that we need to allow:
+Now, we also need to allow:
 
  + a single statement inside the body of an IF statement
  + a single statement inside the body of an WHILE statement
  + a single statement inside the body of a FOR statement
 
-All of these are, at present, calling `compound_statement(0)`, but this enforces
-the parsing of a closing '}', and we won't have one of these for a single statement.
+All of these are, at present, calling `compound_statement(0)`, but this
+enforces the parsing of a closing '}', and we won't have one of these for a single statement.
 
-The answer is to get the IF, WHILE and FOR parsing code to call `single_statement(0)`
-to parse one statement. But here is the clever bit:
-
-```
-// Parse a single statement and return its AST.
-// inswitch is passed to compound_statement so
-// we can determine on what tokens any compound
-// statement will end.
-static struct ASTnode *single_statement(int inswitch) {
-  int type, class = C_LOCAL;
-  struct symtable *ctype;
-  struct ASTnode *stmt;
-
-  switch (Token.token) {
-    case T_LBRACE:
-      // We have a '{', so this is a compound statement
-      lbrace();
-      stmt = compound_statement(0);
-      rbrace();
-      return(stmt);
-    case ...
-  }
-  ...
-}
-```
-
-`single_statement()` might only parse one statement, but *if* we see a '{' then
-we can rightfully assume that we have hit a compound statement. Now we need to
-call `compound_statement()`, and so we need to pass in the `inswitch` flag to it.
-As a pair, these two functions can be recursive.
-
-With the above change, in `stmt.c` I've also made these changes:
+The answer is to get the IF, WHILE and FOR parsing code to call
+`single_statement()` to parse one statement.
+Thus, I've also made these changes:
 
 ```
 static struct ASTnode *if_statement(void) {
   ...
   // Get the AST for the statement
-  trueAST = single_statement(0);
+  trueAST = single_statement();
   ...
   // If we have an 'else', skip it
   // and get the AST for the statement
   if (Token.token == T_ELSE) {
     scan(&Token);
-    falseAST = single_statement(0);
+    falseAST = single_statement();
   }
   ...
 }
@@ -274,7 +244,7 @@ static struct ASTnode *while_statement(void) {
     // Get the AST for the statement.
   // Update the loop depth in the process
   Looplevel++;
-  bodyAST = single_statement(0);
+  bodyAST = single_statement();
   Looplevel--;
   ...
 }
@@ -284,7 +254,7 @@ static struct ASTnode *for_statement(void) {
   // Get the statement which is the body
   // Update the loop depth in the process
   Looplevel++;
-  bodyAST = single_statement(0);
+  bodyAST = single_statement();
   Looplevel--;
   ...
 }
@@ -327,13 +297,13 @@ after the body of the IF statement:
 
 ```
   // Get the AST for the statement
-  trueAST = single_statement(0);
+  trueAST = single_statement();
 
   // If we have an 'else', skip it
   // and get the AST for the statement
   if (Token.token == T_ELSE) {
     scan(&Token);
-    falseAST = single_statement(0);
+    falseAST = single_statement();
   }
 ```
 

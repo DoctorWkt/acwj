@@ -6,7 +6,7 @@
 // Copyright (c) 2019 Warren Toomey, GPL3
 
 // Prototypes
-static struct ASTnode *single_statement(int inswitch);
+static struct ASTnode *single_statement(void);
 
 // compound_statement:          // empty, i.e. no statement
 //      |      statement
@@ -48,13 +48,13 @@ static struct ASTnode *if_statement(void) {
   rparen();
 
   // Get the AST for the statement
-  trueAST = single_statement(0);
+  trueAST = single_statement();
 
   // If we have an 'else', skip it
   // and get the AST for the statement
   if (Token.token == T_ELSE) {
     scan(&Token);
-    falseAST = single_statement(0);
+    falseAST = single_statement();
   }
   // Build and return the AST for this statement
   return (mkastnode(A_IF, P_NONE, condAST, trueAST, falseAST, NULL, 0));
@@ -83,7 +83,7 @@ static struct ASTnode *while_statement(void) {
   // Get the AST for the statement.
   // Update the loop depth in the process
   Looplevel++;
-  bodyAST = single_statement(0);
+  bodyAST = single_statement();
   Looplevel--;
 
   // Build and return the AST for this statement
@@ -123,7 +123,7 @@ static struct ASTnode *for_statement(void) {
   // Get the statement which is the body
   // Update the loop depth in the process
   Looplevel++;
-  bodyAST = single_statement(0);
+  bodyAST = single_statement();
   Looplevel--;
 
   // Glue the statement and the postop tree
@@ -276,10 +276,7 @@ static struct ASTnode *switch_statement(void) {
 }
 
 // Parse a single statement and return its AST.
-// inswitch is passed to compound_statement so
-// we can determine on what tokens any compound
-// statement will end.
-static struct ASTnode *single_statement(int inswitch) {
+static struct ASTnode *single_statement(void) {
   int type, class = C_LOCAL;
   struct symtable *ctype;
   struct ASTnode *stmt;
@@ -347,7 +344,7 @@ struct ASTnode *compound_statement(int inswitch) {
 
   while (1) {
     // Parse a single statement
-    tree = single_statement(inswitch);
+    tree = single_statement();
 
     // For each new tree, either save it in left
     // if left is empty, or glue the left and the
