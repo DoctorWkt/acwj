@@ -221,10 +221,24 @@ All of these are, at present, calling `compound_statement(0)`, but this
 enforces the parsing of a closing '}', and we won't have one of these for a single statement.
 
 The answer is to get the IF, WHILE and FOR parsing code to call
-`single_statement()` to parse one statement.
-Thus, I've also made these changes:
+`single_statement()` to parse one statement. And, get `single_statement()`
+to call `compound_statement()` if it see an opening curly bracket.
+
+Thus, I've also made these changes in `stmt.c`:
 
 ```
+// Parse a single statement and return its AST.
+static struct ASTnode *single_statement(void) {
+  ...
+  switch (Token.token) {
+    case T_LBRACE:
+      // We have a '{', so this is a compound statement
+      lbrace();
+      stmt = compound_statement(0);
+      rbrace();
+      return(stmt);
+}
+...
 static struct ASTnode *if_statement(void) {
   ...
   // Get the AST for the statement
