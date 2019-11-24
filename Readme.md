@@ -50,6 +50,7 @@ Here are the steps I've taken so far:
  + [Part 38](38_Dangling_Else/Readme.md): Dangling Else and More
  + [Part 39](39_Var_Initialisation_pt1/Readme.md): Variable Initialisation, part 1
  + [Part 40](40_Var_Initialisation_pt2/Readme.md): Global Variable Initialisation
+ + [Part 41](41_Local_Var_Init/Readme.md): Local Variable Initialisation
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
