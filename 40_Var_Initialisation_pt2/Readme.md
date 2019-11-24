@@ -299,7 +299,7 @@ We can finally get to array initialisation. I want to allow three forms:
 
 ```
 int a[10];                                      // Ten zeroed elements
-char b[]= { 'q', 'w', 'e', 'r', 't', 'y' };     // Five elements
+char b[]= { 'q', 'w', 'e', 'r', 't', 'y' };     // Six elements
 char c[10]= { 'q', 'w', 'e', 'r', 't', 'y' };   // Ten elements, zero padded
 ```
 
