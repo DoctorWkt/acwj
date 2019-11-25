@@ -566,7 +566,7 @@ static struct symtable *composite_declaration(int type) {
 // Parse an enum declaration
 static void enum_declaration(void) {
   struct symtable *etype = NULL;
-  char *name;
+  char *name= NULL;
   int intval = 0;
 
   // Skip the enum keyword.

@@ -39,7 +39,10 @@ struct symtable *newsym(char *name, int type, struct symtable *ctype,
     fatal("Unable to malloc a symbol table node in newsym");
 
   // Fill in the values
-  node->name = strdup(name);
+  if (name == NULL)
+    node->name = NULL;
+  else
+    node->name = strdup(name);
   node->type = type;
   node->ctype = ctype;
   node->stype = stype;

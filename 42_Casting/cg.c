@@ -59,7 +59,8 @@ int cgalign(int type, int offset, int direction) {
     case P_LONG:
       break;
     default:
-      fatald("Bad type in calc_aligned_offset:", type);
+      if (!ptrtype(type))
+        fatald("Bad type in cg_align:", type);
   }
 
   // Here we have an int or a long. Align it on a 4-byte offset
