@@ -53,6 +53,7 @@ Here are the steps I've taken so far:
  + [Part 41](41_Local_Var_Init/Readme.md): Local Variable Initialisation
  + [Part 42](42_Casting/Readme.md):       Type Casting and NULL
  + [Part 43](43_More_Operators/Readme.md): Bugfixes and More Operators
+ + [Part 44](44_Fold_Optimisation/Readme.md): Constant Folding
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
