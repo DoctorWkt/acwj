@@ -1,0 +1,1 @@
+enum fred var3;

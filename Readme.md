@@ -52,6 +52,7 @@ Here are the steps I've taken so far:
  + [Part 40](40_Var_Initialisation_pt2/Readme.md): Global Variable Initialisation
  + [Part 41](41_Local_Var_Init/Readme.md): Local Variable Initialisation
  + [Part 42](42_Casting/Readme.md):       Type Casting and NULL
+ + [Part 43](43_More_Operators/Readme.md): Bugfixes and More Operators
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
