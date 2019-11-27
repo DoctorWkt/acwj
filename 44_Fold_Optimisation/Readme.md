@@ -150,6 +150,8 @@ static struct ASTnode *fold1(struct ASTnode *n) {
   // Return the new leaf node.
   val = n->left->a_intvalue;
   switch (n->op) {
+    case A_WIDEN:
+      break;
     case A_INVERT:
       val = ~val;
       break;
@@ -164,6 +166,26 @@ static struct ASTnode *fold1(struct ASTnode *n) {
   return (mkastleaf(A_INTLIT, n->type, NULL, val));
 }
 ```
+
+There is one small wrinkle with implementing `fold1()` in our compiler,
+and that is we have AST nodes to widen values from one type to another.
+For example, in this expression `x= 3000 + 1;`, the '1' is parsed as
+a `char` literal. It needs to be widened to be of type `int` so that it
+can be added to the '3000'. The compiler without optimisation generates this
+AST tree:
+
+```
+       A_ADD
+      /     \
+  A_INTLIT A_WIDEN
+    3000      \
+           A_INTLIT
+               1
+```
+
+What we do here is treat the A_WIDEN as a unary AST operation and copy the
+literal value from the child and return a leaf node with the widened type
+and with the literal value.
 
 ## Recursively Folding a Whole AST Tree
 
@@ -245,25 +267,25 @@ through its paces.
 ```
 #include <stdio.h>
 int main() {
-  int x= 2 + 3 + 4 * 5 + 6;
+  int x= 2000 + 3 + 4 * 5 + 6;
   printf("%d\n", x);
   return(0);
 }
 ```
 
-The compiler should replace the initialisation with `x=31;`. Let's do
+The compiler should replace the initialisation with `x=2029;`. Let's do
 a `cwj -T -S tests/input111.c` and see:
 
 ```
 $ ./cwj -T -S z.c
-    A_INTLIT 31
+    A_INTLIT 2029
   A_WIDEN
   A_IDENT x
 A_ASSIGN
 ...
 $ ./cwj -o tests/input111 tests/input111.c
 $ ./tests/input111
-31
+2029
 ```
 
 It seems to work, and the compiler still passes all 110 previous tests, so

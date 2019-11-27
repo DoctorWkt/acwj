@@ -53,6 +53,8 @@ static struct ASTnode *fold1(struct ASTnode *n) {
   // Return the new leaf node.
   val = n->left->a_intvalue;
   switch (n->op) {
+    case A_WIDEN:
+      break;
     case A_INVERT:
       val = ~val;
       break;
