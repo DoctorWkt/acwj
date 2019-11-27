@@ -54,6 +54,7 @@ Here are the steps I've taken so far:
  + [Part 42](42_Casting/Readme.md):       Type Casting and NULL
  + [Part 43](43_More_Operators/Readme.md): Bugfixes and More Operators
  + [Part 44](44_Fold_Optimisation/Readme.md): Constant Folding
+ + [Part 45](45_Globals_Again/Readme.md): Global Variable Declarations, revisited
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
