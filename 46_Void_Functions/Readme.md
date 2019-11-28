@@ -55,10 +55,10 @@ int fred(void);
 int jane(void *ptr, int x, int y);
 ```
 
-If we scan and parse the next token after 'void' and see it is the '*',
+If we scan and parse the next token after 'void' and see it is the asterisk,
 then we have lost the 'void' token. When we then call `declaration_list()`,
-the first token it will see is '*' and it will get upset. Thus, we need
-the ability to peek beyond the current token while keeping the current
+the first token it will see is the asterisk and it will get upset. Thus,
+we need the ability to peek beyond the current token while keeping the current
 token intact.
 
 ## New Scanner Code
