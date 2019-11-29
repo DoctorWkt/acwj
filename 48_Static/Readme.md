@@ -143,13 +143,13 @@ void freestaticsyms(void) {
       // so do the same to Globhead
       if (prev != NULL) prev->next= g->next;
       else Globhead->next= g->next;
-    }
 
-    // If g is the tail, point Globtail at the previous node
-    // (if there is one), or Globhead
-    if (g == Globtail) {
-      if (prev != NULL) Globtail= prev;
-      else Globtail= Globhead;
+      // If g is the tail, point Globtail at the previous node
+      // (if there is one), or Globhead
+      if (g == Globtail) {
+        if (prev != NULL) Globtail= prev;
+        else Globtail= Globhead;
+      }
     }
   }
 
