@@ -57,6 +57,7 @@ Here are the steps I've taken so far:
  + [Part 45](45_Globals_Again/Readme.md): Global Variable Declarations, revisited
  + [Part 46](46_Void_Functions/Readme.md): Void Function Parameters and Scanning Changes
  + [Part 47](47_Sizeof/Readme.md):        A Subset of `sizeof`
+ + [Part 48](48_Static/Readme.md):        A Subset of `static`
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
