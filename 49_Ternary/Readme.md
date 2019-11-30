@@ -312,7 +312,7 @@ The effect is to do `y+2` for `y` values 0 to 3, `y+9` for `y` values
 Like a few of the steps so far, I was apprehensive to tackle the ternary
 operator because I thought it would be very difficult. I did have problems
 putting it into the IF generating code, so I stepped back a bit. Actually,
-I went out to see a movie with my wife and this gave me a change to mull
+I went out to see a movie with my wife and this gave me a chance to mull
 things over. I realised that I had to free all but one registers, and I
 should write a separate function. After that, writing the code was
 straight forward. It's always good to step away from the keyboard now and
