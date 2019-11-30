@@ -60,6 +60,7 @@ Here are the steps I've taken so far:
  + [Part 48](48_Static/Readme.md):        A Subset of `static`
  + [Part 49](49_Ternary/Readme.md):       The Ternary Operator
  + [Part 50](50_Mop_up_pt1/Readme.md):    Mopping Up, part 1
+ + [Part 51](51_Arrays_pt2/Readme.md):    Arrays, part 2
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.

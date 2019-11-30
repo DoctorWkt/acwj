@@ -1,0 +1,20 @@
+ 0 infant composite
+ 1 infant composite
+ 2 infant prime
+ 3 infant prime
+ 4 infant composite
+ 5 infant prime
+ 6 infant composite
+ 7 infant prime
+ 8 infant composite
+ 9 infant composite
+10 infant composite
+11 infant prime
+12 infant composite
+13 teen   prime
+14 teen   composite
+15 teen   composite
+16 teen   composite
+17 teen   prime
+18 teen   composite
+19 teen   prime
