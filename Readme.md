@@ -63,6 +63,7 @@ Here are the steps I've taken so far:
  + [Part 51](51_Arrays_pt2/Readme.md):    Arrays, part 2
  + [Part 52](52_Pointers_pt2/Readme.md):  Pointers, part 2
  + [Part 53](53_Mop_up_pt2/Readme.md):    Mopping Up, part 2
+ + [Part 54](54_Reg_Spills/Readme.md):    Spilling Registers
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
