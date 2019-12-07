@@ -46,7 +46,7 @@ static int genIF(struct ASTnode *n, int looptoplabel, int loopendlabel) {
   // false compound statement and the
   // end label
   if (n->right) {
-    genAST(n->right, NOLABEL, NOLABEL, NOLABEL, n->op);
+    genAST(n->right, NOLABEL, NOLABEL, loopendlabel, n->op);
     genfreeregs(NOREG);
     cglabel(Lend);
   }

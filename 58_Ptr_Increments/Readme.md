@@ -344,6 +344,63 @@ int main() {
 }
 ```
 
+## Why Doesn't It Link
+
+We are now at the point where our compiler can parse each and every of its
+own source code files. But when I try to link them, I get a warning about
+missing `L0` labels.
+
+After a bit of investigation, it turns out that I wasn't properly
+propagating the end label for loops and switches in `genIF()` in `gen.c`.
+The fix is on line 49:
+
+```
+// Generate the code for an IF statement
+// and an optional ELSE clause.
+static int genIF(struct ASTnode *n, int looptoplabel, int loopendlabel) {
+  ...
+  // Optional ELSE clause: generate the
+  // false compound statement and the
+  // end label
+  if (n->right) {
+    genAST(n->right, NOLABEL, NOLABEL, loopendlabel, n->op);
+    genfreeregs(NOREG);
+    cglabel(Lend);
+  }
+  ...
+}
+```
+
+Now that `loopendlabel` is being propagated, I can do this (in a shell
+script I call `memake`):
+
+```
+#!/bin/sh
+make install
+
+rm *.s *.o
+
+for i in cg.c decl.c expr.c gen.c main.c misc.c \
+        opt.c scan.c stmt.c sym.c tree.c types.c
+do echo "./cwj -c $i"; ./cwj -c $i ; ./cwj -S $i
+done
+
+cc -o cwj0 cg.o decl.o expr.o gen.o main.o misc.o \
+        opt.o scan.o stmt.o sym.o tree.o types.o
+```
+
+We end up with a binary, `cwj0`, which is the result of the compiler
+compiling itself.
+
+$ size cwj0
+   text    data     bss     dec     hex filename
+ 106540    3008      48  109596   1ac1c cwj0
+
+$ file cwj0
+cwj0: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically
+      linked, interpreter /lib64/l, for GNU/Linux 3.2.0, not stripped
+```
+
 ## Conclusion and What's Next
 
 For the pointer increment problem, I definitely had to scratch my head quite
@@ -355,14 +412,20 @@ The modulo operators were simple to add (in theory), but annoyingly
 difficult to get everything synchronised (in practice). There is probably
 some scope to refactor here to make the synchronisation much easier.
 
+Then, while trying to link all the object files that our compiler had
+made from its own source code, I found that we were not propagating
+loop/switch end labels properly.
+
 We've now reached the point where our compiler can parse every one of
-its source code files, and generates assembly code for it. This is now
-the **WDIL** point: why doesn't it link?
+its source code files, generate assembly code for it, and we can link
+them.
+We have reached the final stage of our journey, one that is probably
+going to be the most painful, the **WDIW** stage: why doesn't it work?
 
-Right now, there are bugs in the output because there are several jumps to
-label `L0`, and there should not be any `L0`! This is preventing all of the
-assembly output files from being turned in object code and being linked. 
-Now the amount of work to uncover the bugs is going to increase.
+Here, we don't have a debugger, we are going to have to look at lots
+of assembly output. We'll have to single-step assembly and look at
+register values.
 
-In the next part of our compiler writing journey, I will start the
-**WDIL** jouney.
+In the next part of our compiler writing journey, I will start on the
+**WDIW** stage. We are going to need some strategies to make our work
+effective.
