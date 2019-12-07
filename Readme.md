@@ -67,6 +67,7 @@ Here are the steps I've taken so far:
  + [Part 55](55_Lazy_Evaluation/Readme.md): Lazy Evaluation
  + [Part 56](56_Local_Arrays/Readme.md):  Local Arrays
  + [Part 57](57_Mop_up_pt3/Readme.md):    Mopping Up, part 3
+ + [Part 58](58_Ptr_Increments/Readme.md): Fixing Pointer Increments/Decrements
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
