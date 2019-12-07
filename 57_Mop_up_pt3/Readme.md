@@ -1,7 +1,7 @@
 # Part 57: Mopping Up, part 3
 
 In this part of our compiler writing journey, I fix up a few more small
-issues with the compiler
+issues with the compiler.
 
 ## No -D Flag
 
