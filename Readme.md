@@ -66,6 +66,7 @@ Here are the steps I've taken so far:
  + [Part 54](54_Reg_Spills/Readme.md):    Spilling Registers
  + [Part 55](55_Lazy_Evaluation/Readme.md): Lazy Evaluation
  + [Part 56](56_Local_Arrays/Readme.md):  Local Arrays
+ + [Part 57](57_Mop_up_pt3/Readme.md):    Mopping Up, part 3
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
