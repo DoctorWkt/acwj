@@ -392,6 +392,7 @@ cc -o cwj0 cg.o decl.o expr.o gen.o main.o misc.o \
 We end up with a binary, `cwj0`, which is the result of the compiler
 compiling itself.
 
+```
 $ size cwj0
    text    data     bss     dec     hex filename
  106540    3008      48  109596   1ac1c cwj0
