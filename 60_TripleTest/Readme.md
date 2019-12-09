@@ -235,7 +235,7 @@ int cgcompare_and_jump(int ASTop, int r1, int r2, int label, int type) {
 Looking at the code, we can definitely free `r1` and `r2`, so let's
 try that instead of freeing all the registers.
 
-Yes, that helps, and all our regression tests pass.
+Yes, that helps, and all our regression tests still pass.
 However, another function is also freeing all the registers.
 It's time to use `gdb` and follow the execution.
 
@@ -323,7 +323,7 @@ static int gen_ternary(struct ASTnode *n) {
 
 With this change, the compiler now passes several tests:
 
-  + the triple test: `$make triple`
+  + the triple test: `$ make triple`
   + a quadruple test where we do one more compiler compilation:
 
 ```
@@ -339,8 +339,8 @@ size cwj[012]
  109636    3028      48  112712   1b848 cwj2
 ```
 
-  + the regression tests with the Gnu C compiled compiler: `make test`
-  + the regression tests with our compiler compiled with itself: `make test0`
+  + the regression tests with the Gnu C compiled compiler: `$ make test`
+  + the regression tests with our compiler compiled with itself: `$ make test0`
   
 That feels very satisfying.
 
