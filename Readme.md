@@ -69,6 +69,7 @@ Here are the steps I've taken so far:
  + [Part 57](57_Mop_up_pt3/Readme.md):    Mopping Up, part 3
  + [Part 58](58_Ptr_Increments/Readme.md): Fixing Pointer Increments/Decrements
  + [Part 59](59_WDIW_pt1/Readme.md):      Why Doesn't It Work, part 1
+ + [Part 60](60_TripleTest/Readme.md):    Passing the Triple Test
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
