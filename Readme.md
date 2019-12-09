@@ -1,7 +1,8 @@
 # A Compiler Writing Journey
 
 In this Github repository, I'm documenting my journey to write a
-self-compiling compiler. I'm also writing out the details so that,
+self-compiling compiler for a subset of the C language.
+I'm also writing out the details so that,
 if you want to follow along, there will be an explanation of what
 I did, why, and with some references back to the theory of compilers.
 
