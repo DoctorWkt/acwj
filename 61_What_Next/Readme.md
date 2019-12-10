@@ -59,6 +59,12 @@ So, we need to add in the `...` token, somehow mark
 a function has having either "exactly N" or "N or more"
 parameters, and then write the code to use this information.
 
+## Add `short`s
+
+It shouldn't be too hard to add a 16-bit signed `short` type. But Nils
+mentions, in his SubC book, that adding `unsigned` integer to a C
+compiler is tricky.
+
 ## Rewrite the Register Allocation and Spilling
 
 Right now, the mechanism for register allocation and
