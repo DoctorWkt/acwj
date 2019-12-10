@@ -211,7 +211,7 @@ that's 8-bytes for each variable, though.
 
 > I know, in the past, that multi-byte data items had to be properly aligned
   in memory or the CPU would fault. It seems that, at least for x86-64,
-  there is [no need to align data items](https://lemire.me/blog/2012/05/31/data-alignment-for-speed-myth-or-reality/)
+  there is [no need to align data items](https://lemire.me/blog/2012/05/31/data-alignment-for-speed-myth-or-reality/).
 
 > However, the stack pointer on the x86-64 *does* have to be properly aligned before
   a function call. In "[Optimizing Subroutines in Assembly Language](https://www.agner.org/optimize/optimizing_assembly.pdf)" by Agner Fog, page 30, he

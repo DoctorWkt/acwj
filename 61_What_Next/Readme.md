@@ -47,6 +47,18 @@ write snippets of BNF grammar thoughout the journey,
 but near the end I stopped doing it. It would be 
 good to write out the full, final, BNF grammar.
 
+## Support Variadic Functions
+
+The compiler still doesn't check that the number of
+arguments to a function matches the number of
+function parameters. We need this because the compiler
+also doesn't support variadic functions like `printf()`
+and friends.
+
+So, we need to add in the `...` token, somehow mark
+a function has having either "exactly N" or "N or more"
+parameters, and then write the code to use this information.
+
 ## Rewrite the Register Allocation and Spilling
 
 Right now, the mechanism for register allocation and

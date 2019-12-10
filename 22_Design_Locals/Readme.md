@@ -249,7 +249,6 @@ How are we going to determine where a parameter or local variable is on the stac
 once they have been copied or placed there? To do this, I will add a `posn` field into
 each local symbol table entry. This will indicate the offset of the variable below
 the frame base pointer.
-positive, it will indicate the register number that has been allocated to it.
 
 Looking at the
 [BNF Grammar for C](https://www.lysator.liu.se/c/ANSI-C-grammar-y.html),

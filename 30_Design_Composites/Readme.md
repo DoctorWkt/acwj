@@ -283,7 +283,7 @@ z.c:2:25: note: previous definition of ‘dennis’ was here
 
 After modifying and compiling the above program a few times, the answers are:
 
- + We can't reclare `enum fred`. This seems to be the only place where
+ + We can't redeclare `enum fred`. This seems to be the only place where
    we need to remember the name of an enum list.
  + We can reuse the enum list identifer `fred` as a variable name.
  + We can't reuse the enum value identifer `mary` in another enum list,
@@ -301,7 +301,7 @@ OK, so I think we're at the point where we can start listing what we want:
    each struct and the type details for each member. Also, we will need
    the memory offset for the member from the "base" of the struct.
  + ditto for named and unnamed structs, although the offset will always be zero.
- + a list enumerated list names and the actual enumeration names and their associated
+ + a list of enumerated list names and the actual enumeration names and their associated
    values.
  + in the symbol table, we need the existing `type` information for non-composite
    types, but we'll also need a pointer to the relevant composite type, if a
