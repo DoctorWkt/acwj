@@ -28,7 +28,7 @@ struct symtable {
 };                              // union or enum
 ```
 
-We also two new lists for symbols in `data.h`:
+We also have two new lists for symbols in `data.h`:
 
 ```
 // Symbol table lists
@@ -46,7 +46,7 @@ the `int type` argument to determine the type of something. This isn't
 enough now that we have composite types: the P_STRUCT integer value
 tells us that something is a struct, not which one.
 
-So many functions now receive an `int type` argument and also a
+Therefore, many functions now receive an `int type` argument and also a
 `struct symtable *ctype` argument. When `type` is P_STRUCT, `ctype`
 points at the node which defines this particular struct type.
 
@@ -69,7 +69,7 @@ There are a bunch of places where we need to parse the `struct` keyword:
   + the definition of a named struct
   + the definition of an unnamed struct followed by a variable of this type
   + the definition of a struct within another struct or union
-  + the definition of a variablt of a previously defined struct type
+  + the definition of a variable of a previously defined struct type
 
 At first, I wasn't sure where to fit in the parsing of structs. Should I
 assume that we are parsing a new struct definition, but bail out when I
