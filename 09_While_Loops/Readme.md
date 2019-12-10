@@ -13,7 +13,7 @@ So, this:
   }
 ```
 
-will should get translated to:
+should get translated to:
 
 ```
 Lstart: evaluate condition

@@ -1,7 +1,7 @@
 # Part 5: Statements
 
 It's time to add some "proper" statements to the grammar of our language.
-I want to be able to write lines of code line this:
+I want to be able to write lines of code like this:
 
 ```
    print 2 + 3 * 5;

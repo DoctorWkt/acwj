@@ -155,5 +155,5 @@ Finally, clone a copy of this Github repository.
 ## The Next Step
 
 In the next part of our compiler writing journey, we will start with
-the code to scan our input file and find the `tokens` that are the
+the code to scan our input file and find the *tokens* that are the
 lexical elements of our language.

@@ -66,7 +66,7 @@ struct ASTnode *function_declaration(void) {
 ```
 
 This is going to do the syntax checking and AST building, but there is
-little to no semantic error checking here. What is a function gets
+little to no semantic error checking here. What if a function gets
 redeclared? Well, we won't notice that yet.
 
 ## Modifications to `main()`
@@ -201,4 +201,5 @@ but at present we can't run the code for the second function.
 We've made a good start at adding functions to our language. For now,
 it's a pretty simplistic function declaration only.
 
-In the next part of our compiler writing journey, we will XXX
+In the next part of our compiler writing journey, we will begin
+the process to add types to our compiler.

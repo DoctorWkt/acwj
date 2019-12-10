@@ -35,7 +35,7 @@ For now, the BNF syntax that I'm using for a function call is:
 ```
 
 The function has a name followed by a pair of parentheses. Inside the
-parenthese we must have exactly one argument. I want this to be used
+parentheses we must have exactly one argument. I want this to be used
 as both an expression and also as a standalone statement.
 
 So we'll start with the function call parser,
@@ -94,7 +94,7 @@ We need to look ahead one token to see if there is a '('. If there is,
 we have a function call. But by doing so, we lose the existing token.
 To solve this problem, I've modified the scanner so that we can put
 back an unwanted token: this will be returned when we get the next token
-instead of a brand-new token. The noew code in `scan.c` is:
+instead of a brand-new token. The new code in `scan.c` is:
 
 ```
 // A pointer to a rejected token
@@ -226,7 +226,7 @@ struct ASTnode *function_declaration(void) {
 
 With `Functionid` set up each time we enter a function declaration, we
 can get back to parsing and checking the semantics of a return statement.
-The new code is `return_statement() in `stmt.c`:
+The new code is `return_statement()` in `stmt.c`:
 
 ```
 // Parse a return statement and return its AST

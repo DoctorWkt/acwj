@@ -86,6 +86,7 @@ each variable? We need to modify the `symtable` structure. I've also added
 the details of the "structural type" of the symbol which I'll use in the
 future (in `defs.h`):
 
+```
 // Structural types
 enum {
   S_VARIABLE, S_FUNCTION
@@ -97,6 +98,7 @@ struct symtable {
   int type;                     // Primitive type for the symbol
   int stype;                    // Structural type for the symbol
 };
+```
 
 There's new code in `newglob()` in `sym.c` to initialise these new
 fields:
@@ -529,7 +531,7 @@ L3:
 ```
 
 Still not the most elegant assembly code, but it does work. Also,
-`$make test` confirms that all the previous code examples still work.
+`$ make test` confirms that all the previous code examples still work.
 
 ## Conclusion and What's Next
 
