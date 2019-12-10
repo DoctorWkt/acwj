@@ -36,8 +36,8 @@ algorithm:
 
   1. Try to fold and replace the left child, i.e. recursively.
   1. Try to fold and replace the right child, i.e. recursively.
-  1. If a binary operation with two literals child leaves, fold that.
-  1. If a unary operation with one literals child leaf, fold that.
+  1. If it's a binary operation with two literals child leaves, fold that.
+  1. If it's a unary operation with one literal child leaf, fold that.
 
 The fact that we replace the sub-trees means we recursively optimise the
 edges of the tree first, then work back up the tree to the root of the

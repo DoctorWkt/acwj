@@ -4,7 +4,7 @@ In the last part of our compiler writing journey, I realised that I
 had implemented arrays not exactly right. In this part of our compiler
 writing journey, I'll try to rectify things.
 
-To start with, I stepped back and thought a bit about arrays and pointer.
+To start with, I stepped back and thought a bit about arrays and pointers.
 I realised that an array is similar to a pointer except:
 
   1. You can't use the unadorned array identifier as an rvalue.

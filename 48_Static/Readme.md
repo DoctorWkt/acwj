@@ -158,7 +158,7 @@ void freestaticsyms(void) {
 }
 ```
 
-The overall effect is to treat static declarations as global declaration,
+The overall effect is to treat static declarations as global declarations,
 but to remove them from the symbol table at the end of processing an
 input file.
 

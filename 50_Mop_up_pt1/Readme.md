@@ -5,7 +5,7 @@ of our compiler writing journey I don't introduce any major feature.
 Instead, I fix a couple of problems and add a couple of minor
 functions.
 
-## Consecuitve Cases
+## Consecutive Cases
 
 At present, the compiler can't parse
 

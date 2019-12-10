@@ -234,7 +234,7 @@ another struct/union.
 
 So the code is different in that we don't build the leaf AST node for the
 original identifier anymore. We still build AST nodes to add on the offset
-from the base and derefence the pointer to the member.
+from the base and dereference the pointer to the member.
 
 One other difference is this code:
 

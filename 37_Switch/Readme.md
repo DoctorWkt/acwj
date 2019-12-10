@@ -1,4 +1,4 @@
-# Part 27: Switch Statements
+# Part 37: Switch Statements
 
 In this part of our compiler writing journey, we are going to implement
 the 'switch' statement. This is really tricky for several reasons which
@@ -71,7 +71,7 @@ Otherwise, we let the code branch fall through into the next code branch.
 All of the above is fine and good, except that we have to parse a 'switch'
 statement from top to bottom. This means that we won't know how big the
 jump table should be until after we have parsed all of the cases. This
-also means that, unless perform some clever tricks, we will have generated
+also means that, unless we perform some clever tricks, we will have generated
 the assembly code for all the cases *before* we can generate the jump table.
 
 As you know, I'm writing this compiler following the "KISS principle": keep

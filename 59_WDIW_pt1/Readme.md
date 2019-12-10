@@ -17,7 +17,7 @@ the first character at `argv[i]`.
 
 I first thought this was a parsing error, but no. It turned out that
 we were not setting `argv[i]` as an rvalue before we dereferenced it.
-I worked thus out by dumping the AST trees with both `cwj` and `cwj0` and
+I worked this out by dumping the AST trees with both `cwj` and `cwj0` and
 observing the differences between them. What we need to do is mark the expression *after*
 the `*` token as an rvalue. This is now done in `prefix()` in `expr.c`:
 
@@ -217,9 +217,9 @@ compiling itself consistently.
 
 ## Conclusion and What's Next
 
-I didn't think I'd get to the point where I can build `cwj`, `cwj0` and `cwj1` in a
-single step of this journey. I expected we would have a whole pile of bugs
-to fix before we get to this point.
+I didn't think I'd get to the point where I can build `cwj`, `cwj0` and
+`cwj1` in a single step of this journey. I expected we would have a whole
+pile of bugs to fix before we got to this point.
 
 The next problem is to work out why the stage 2 and stage 3 compilers are
 different sizes. Looking at the `size` output, the data and bss sections

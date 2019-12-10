@@ -141,7 +141,7 @@ and produces the following correct output: `Hello world 17 20`.
 
 ## Conclusion and What's Next
 
-It's nice to have a simple part on this journey now and then,. I'm now starting to
+It's nice to have a simple part on this journey now and then. I'm now starting to
 take wagers with myself as to:
 
  + how many parts to the journey, in total, there will be, and

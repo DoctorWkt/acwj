@@ -122,7 +122,7 @@ We modify the code in `param_declaration_list()` as follows:
 ```
 
 Assume that we have scanned in the 'void'. We now `scan(&Peektoken);` to
-see what's up next without altering the current `Token`. If that' a
+see what's up next without altering the current `Token`. If that's a
 right parenthesis, we can leave with `paramcnt` set to zero after skipping
 the 'void' token.
 

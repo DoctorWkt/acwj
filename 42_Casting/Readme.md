@@ -382,5 +382,5 @@ reckon with was the issues surrounding `void *`. I feel that I've
 covered most bases here but not all of them, so expect to see
 some `void *` edge cases that I haven't spotted yet.
 
-In the next part of our compiler writing journey, I don't really
-know what I'll do yet.
+In the next part of our compiler writing journey, we'll add some missing
+operators.

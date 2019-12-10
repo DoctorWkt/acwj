@@ -418,8 +418,7 @@ made from its own source code, I found that we were not propagating
 loop/switch end labels properly.
 
 We've now reached the point where our compiler can parse every one of
-its source code files, generate assembly code for it, and we can link
-them.
+its source code files, generate assembly code for them, and we can link them.
 We have reached the final stage of our journey, one that is probably
 going to be the most painful, the **WDIW** stage: why doesn't it work?
 

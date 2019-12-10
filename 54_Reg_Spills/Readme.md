@@ -89,7 +89,7 @@ registers in the reverse order in which we spilled them on the stack.
 Is this something that we can guarantee? In other words, will we ever need
 to reload a register out of order? If so, the stack isn't going to be
 the mechanism that we need. Alternatively, can we write our compiler
-to ensure that the reload in reverse spill order?
+to ensure that the registers reload in reverse spill order?
 
 ## Some Optimisations
 
