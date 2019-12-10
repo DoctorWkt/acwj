@@ -303,6 +303,5 @@ with the character and string literal delimiters and the escaping of
 characters inside them. But there was some work done on the code
 generator, too.
 
-
-In the next part of our compiler writing journey,
-I don't know what I'm doing next. Stay tuned!
+In the next part of our compiler writing journey, we'll add some
+more binary operators to the language that the compiler recognises.

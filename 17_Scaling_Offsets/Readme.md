@@ -48,7 +48,7 @@ The existing `type_compatible()`:
  + returned A_WIDEN on the left or right if either side needed to
    be widened,
  + didn't actually add the A_WIDEN node to the tree,
- + returned false if the types were notcompatible, and
+ + returned false if the types were not compatible, and
  + didn't handle pointer types
 
 Now let's look at the use cases for type comparisons:

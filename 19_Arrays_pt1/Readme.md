@@ -47,7 +47,7 @@ in expressions yet, so now it's time to add them.
 On the web there is a page with the
 [BNF Grammar for C](https://www.lysator.liu.se/c/ANSI-C-grammar-y.html)
 written by Jeff Lee in 1985. I like to reference it to give me ideas
-and to comfirm if I'm not making too many mistakes.
+and to confirm that I'm not making too many mistakes.
 
 One thing to note is that, instead of implemnting the priority of
 the binary expression operators in C, the grammar uses recursive

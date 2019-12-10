@@ -6,7 +6,7 @@ global variable declarations out of function declarations. Actually,
 I've also left the parsing of variable declarations inside functions, because
 later on we will change them to be local variable declarations.
 
-I also wanted to extend our grammar so that we can declare multiple
+I also want to extend our grammar so that we can declare multiple
 variables with the same type at the same time, e.g.
 
 ```
@@ -164,7 +164,7 @@ void var_declaration(int type) {
 it requires the type and first identifier to be pre-scanned.
 
 Thus, I've left the call to `var_declaration()` in `single_statement()`
-in `stmt.c`. Later on, we will modify this to declarare local variables.
+in `stmt.c`. Later on, we will modify this to declare local variables.
 But for now, all of the variables in this example program are globals:
 
 ```

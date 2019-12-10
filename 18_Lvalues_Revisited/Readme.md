@@ -171,7 +171,7 @@ the "print" statement from the language, as we can now call `printint()`.
 So, in `stmt.c`, I've removed both `print_statement()` and
 `assignment_statement()`. 
 
-> Yes, actually, I realised that I did remove the T_PRINT and 'print'
+> I also removed the T_PRINT and 'print'
   keywords from the language. And now that our concept of lvalues and
   rvalues are different, I also removed the A_LVIDENT AST node type.
 
@@ -215,7 +215,7 @@ There are two things we have to worry about:
    the statement parser, and we'll have to do this in the expression
    parser.
 2. Assignment expressions are *right associative*: the operator binds
-   mode tightly to the expression on the right than to the left.
+   more tightly to the expression on the right than to the left.
 
 We haven't touched right associativity before. Let's look at an example.
 Consider the expression `2 + 3 + 4`. We can happily parse this from
@@ -330,7 +330,7 @@ Notice also the code to explicitly mark the right-hand side of the
 assignment expression as an rvalue. And, for non assignments, both
 sides of the expression get marked as rvalues.
 
-Scattered through `binexpr()` are a few mode lines of code to
+Scattered through `binexpr()` are a few more lines of code to
 explicitly set a tree to be an rvalue. These get performed when
 we hit a leaf node. For example the `a` identifier in `b= a;` needs
 to be marked as an rvalue, but we will never enter the body of the
@@ -358,7 +358,7 @@ now has a `-T` command line argument which sets an internal flag,
 
 ```
 
-The tree dumper code print out each node in the order tree traversal
+The tree dumper code prints out each node in the order tree traversal
 order, so the output isn't tree shaped. However, the indentation of
 each node indicates its depth in the tree.
 
@@ -466,7 +466,7 @@ int cgstorderef(int r1, int r2, int type) {
 }
 ```
 
-which is nearly exactly the opposite of `cgderef()` which appear immediately
+which is nearly exactly the opposite of `cgderef()` which appears immediately
 before this new function.
 
 ## Conclusion and What's Next

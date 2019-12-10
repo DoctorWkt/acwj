@@ -8,8 +8,8 @@ are still missing. These include:
 + unary `-`, `~`, and `!`
 + binary `^`, `&`, `|`, `<<` and `>>`
 
-I also implemented the "not operator" which treats an expression rvalue as
-a boolean value for selection and loop statements, e.g.
+I also implemented the implicit "not zero operator" which treats an
+expression rvalue as a boolean value for selection and loop statements, e.g.
 
 ```
   for (str= "Hello"; *str; str++) ...
@@ -208,7 +208,7 @@ or more new AST nodes to the tree:
 
 ## Parsing the Postfix Operators
 
-If you look at the BNF grammar I hyperlinked above, to parse a postfix
+If you look at the BNF grammar I hyperlinked to above, to parse a postfix
 expression we need to refer to the parsing of a primary expression. To
 implement this, we need to get the tokens of the primary expression first
 and then then determine if there are any trailing postfix tokens.
@@ -216,6 +216,8 @@ and then then determine if there are any trailing postfix tokens.
 Even though the grammar shows "postfix" calling "primary", I've
 implemented it by scanning the tokens in `primary()` and then deciding to call
 `postfix()` to parse the postfix tokens.
+
+> This turned out to be a mistake -- Warren, writing from the future.
 
 The BNF grammar above seems to allow expressions like `x++ ++` because it has:
 
@@ -295,7 +297,7 @@ static struct ASTnode *postfix(void) {
 ```
 
 Another design decision. For `++`, we could have made an A_IDENT AST
-node with an A_POSTINC parent, but given that we have the idenfier's name
+node with an A_POSTINC parent, but given that we have the identifier's name
 in `Text`, we can build a single AST node that contains both the node type
 and the reference to the identifier's slot number in the symbol table.
 

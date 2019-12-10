@@ -316,10 +316,6 @@ The `leaq` instruction loads the address of the named identifier.
 In the section function, the `(%r8)` syntax loads the value that
 register `%r8` points to.
 
-## ARM Implementation
-
-XXX To write
-
 ## Testing the New Functinality
 
 Here's our new test file, `tests/input15.c` and the result when we
@@ -356,13 +352,13 @@ cc -o out out.s lib/printint.c
 I decided to change our test files to end with the `.c`
 suffix, now that they are actually C programs. I also
 changed the `tests/mktests` script to generate the
-`correct` results by using a "real" compiler to
+*correct* results by using a "real" compiler to
 compile our test files.
 
 ## Conclusion and What's Next
 
 Well, we have the start of pointers implemented. They
-are not completly correct yet. For example, if I write
+are not completely correct yet. For example, if I write
 this code:
 
 ```
