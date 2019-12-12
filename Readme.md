@@ -72,6 +72,7 @@ Here are the steps I've taken so far:
  + [Part 59](59_WDIW_pt1/Readme.md):      Why Doesn't It Work, part 1
  + [Part 60](60_TripleTest/Readme.md):    Passing the Triple Test
  + [Part 61](61_What_Next/Readme.md):     What's Next?
+ + [Part 62](62_Cleanup/Readme.md):       Code Cleanup
 
 There isn't a schedule or timeline for the future parts, so
 just keep checking back here to see if I've written any more.
