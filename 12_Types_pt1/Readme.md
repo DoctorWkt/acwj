@@ -301,7 +301,7 @@ Now, where else do we need to widen expression values?
 ## Using `type_compatible()` to Print Expressions
 
 When we use the `print` keyword, we need to have an `int` expression
-for it to print. So we need to change `print_statement() in `stmt.c`:
+for it to print. So we need to change `print_statement()` in `stmt.c`:
 
 ```
 static struct ASTnode *print_statement(void) {

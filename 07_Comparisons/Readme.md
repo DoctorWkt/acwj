@@ -1,7 +1,7 @@
 # Part 7: Comparison Operators
 
 I was going to add IF statements next, but then I realised that I'd
-better add some comparison operators next. This turned out to be quite
+better add some comparison operators first. This turned out to be quite
 easy, because they are binary operators like the existing ones.
 
 So let's quickly see what the changes are to add the six comparison

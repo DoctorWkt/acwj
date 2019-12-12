@@ -43,7 +43,7 @@ The BNF grammar for the WHILE loop is:
 ```
 
 and we need a function in `stmt.c` to parse this. Here it is; note the
-simplicity of this compared the parsing IF statements:
+simplicity of this compared to the parsing of IF statements:
 
 ```
 // Parse a WHILE statement
@@ -215,7 +215,7 @@ as they share a lot of similarities.
 
 I think we also now have a
 [Turing-complete](https://en.wikipedia.org/wiki/Turing_completeness)
-langauge:
+language:
 
   + an infinite amount of storage, i.e. an infinite number of variables
   + the ability to make decisions based on stored values, i.e. IF statements

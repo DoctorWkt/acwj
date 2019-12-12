@@ -13,7 +13,7 @@ We want to be able to:
  + Use variables to get stored values
  + Assign to variables
 
-Here is `input02` which will be out test program:
+Here is `input02` which will be our test program:
 
 ```
 int fred;
@@ -512,4 +512,4 @@ errors (variable use without a declaration).
 
 In the next part of our compiler writing journey, we will
 add the six comparison operators to our language. That will
-allow us to start on the control structres in the part after that.
+allow us to start on the control structures in the part after that.

@@ -107,7 +107,7 @@ But there's another wrinkle. Take the existing parsing of assignment
 statements in `assignment_statement()`. The parser must find a semicolon
 at the end of the statement.
 
-That's good for compound statement but it won't work for FOR loops.
+That's good for compound statements but it won't work for FOR loops.
 I would have to write something like:
 
 ```
@@ -116,7 +116,7 @@ I would have to write something like:
 
 because each assignment statement *must* end with a semicolon.
 
-What we need is for the single statement parsers *not* to scan in the
+What we need is for the single statement parser *not* to scan in the
 semicolon, but to leave that up to the compound statement parser.
 And we scan in semicolons for some statements (e.g. between assignment
 statements) and not for other statements (e.g. not between successive
