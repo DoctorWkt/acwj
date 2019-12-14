@@ -87,7 +87,8 @@ int cgalign(int type, int offset, int direction) {
 }
 ```
 
-Everything but P_CHAR gets aligned on a 4-byte, including structs and unions.
+Everything but P_CHAR gets aligned on a 4-byte alignment,
+including structs and unions.
 
 ## What's Next
 
