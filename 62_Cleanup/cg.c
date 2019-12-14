@@ -56,19 +56,13 @@ int cgalign(int type, int offset, int direction) {
   // on a 4-byte alignment
   switch (type) {
   case P_CHAR:
-    return (offset);
-  case P_INT:
-  case P_LONG:
     break;
   default:
-    if (!ptrtype(type))
-      fatald("Bad type in cg_align:", type);
+    // Align whatever we have now on a 4-byte alignment.
+    // I put the generic code here so it can be reused elsewhere.
+    alignment = 4;
+    offset = (offset + direction * (alignment - 1)) & ~(alignment - 1);
   }
-
-  // Here we have an int or a long. Align it on a 4-byte offset.
-  // I put the generic code here so it can be reused elsewhere.
-  alignment = 4;
-  offset = (offset + direction * (alignment - 1)) & ~(alignment - 1);
   return (offset);
 }
 
