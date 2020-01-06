@@ -334,7 +334,7 @@ unaligned offset, we need to know which is the next aligned position
 to place a value of the given type.
 
 I also was worried that we might need to do this on the stack, which
-grows downwards now upwards. So there is a third argument to the function:
+grows downwards not upwards. So there is a third argument to the function:
 the *direction* in which we need to find the next aligned position.
 
 Also, the knowledge of alignment is hardware specific, so:
