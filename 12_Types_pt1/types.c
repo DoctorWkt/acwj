@@ -13,14 +13,15 @@
 // If onlyright is true, only widen left to right.
 int type_compatible(int *left, int *right, int onlyright) {
 
+  // Voids not compatible with anything
+  if ((*left == P_VOID) || (*right == P_VOID))
+    return (0);
+
   // Same types, they are compatible
   if (*left == *right) {
     *left = *right = 0;
     return (1);
   }
-  // Voids not compatible with anything
-  if ((*left == P_VOID) || (*right == P_VOID))
-    return (0);
 
   // Widen P_CHARs to P_INTs as required
   if ((*left == P_CHAR) && (*right == P_INT)) {
