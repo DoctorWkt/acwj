@@ -1,6 +1,6 @@
 # Part 15: Pointers, part 1
 
-In this part of out compiler writing journey, I want
+In this part of our compiler writing journey, I want
 to begin the work to add pointers to our language.
 In particular, I want to add this:
 
