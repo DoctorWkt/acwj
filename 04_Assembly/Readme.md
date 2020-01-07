@@ -219,7 +219,7 @@ int cgsub(int r1, int r2) {
 }
 ```
 
-### Dividing Two Resisters
+### Dividing Two Registers
 
 Division is also not commutative, so the previous notes apply. On
 the x86-64, it's even more complicated. We need to load `%rax`
