@@ -107,7 +107,7 @@ I'll be looking at.
 
 ### Learning Resources
 
-If you want to start with some readings, papers and tools on compilers,
+If you want to start with some books, papers and tools on compilers,
 I'd highly recommend this list:
 
   + [Curated list of awesome resources on Compilers, Interpreters and Runtimes](https://github.com/aalhour/awesome-compilers) by Ahmad Alhour
