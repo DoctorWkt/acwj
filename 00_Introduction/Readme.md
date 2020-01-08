@@ -68,7 +68,7 @@ conform to the *grammar* of the language. For example, your language
 might have this decision-making
 structure:
 
-```
+```c
       if (x < 23) {
         print("x is smaller than 23\n");
       }
@@ -76,7 +76,7 @@ structure:
 
 > but in another language you might write:
 
-```
+```c
       if (x < 23):
         print("x is smaller than 23\n")
 ```
