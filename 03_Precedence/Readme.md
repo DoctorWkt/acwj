@@ -221,9 +221,7 @@ back to `additive_expr()` to deal with the low precedence operator.
 ## Drawbacks of the Above
 
 The above way of constructing a recursive descent parser with
-explicit operator precedence is known as the
-[precedence climbing method](https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method).
-As is noted in the Wikipedia article, this can be inefficient because of
+explicit operator precedence can be inefficient because of
 all the function calls needed to reach the right level of precedence.
 There also has to be functions to deal with each level of operator
 precedence, so we end up with lots of lines of code.
