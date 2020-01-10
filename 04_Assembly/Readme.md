@@ -9,7 +9,7 @@ in our program with code that generates x86-64 assembly code.
 Before we do, it will be worthwhile to revisit the interpreter code
 in `interp.c`:
 
-```
+```c
 int interpretAST(struct ASTnode *n) {
   int leftval, rightval;
 
@@ -51,7 +51,7 @@ generation functions.
 
 Here is the generic assembly code generator in `gen.c`:
 
-```
+```c
 // Given an AST, generate
 // assembly code recursively
 static int genAST(struct ASTnode *n) {
@@ -90,7 +90,7 @@ returns the identity of the register with the loaded value.
 value of the tree at this point. That's why the code at the top is
 getting register identities:
 
-```
+```c
   if (n->left) leftreg = genAST(n->left);
   if (n->right) rightreg = genAST(n->right);
 ```
@@ -103,7 +103,7 @@ to wrap the assembly code we generate with some leading code (the
 *preamble*) and some trailing code (the *postamble*). This is done with
 the other function in `gen.c`:
 
-```
+```c
 void generatecode(struct ASTnode *n) {
   int reg;
 
@@ -143,7 +143,7 @@ run out of free registers.
 The code works on generic registers: r0, r1, r2 and r3. There is a table
 of strings with the actual register names:
 
-```
+```c
 static char *reglist[4]= { "%r8", "%r9", "%r10", "%r11" };
 ```
 
@@ -154,7 +154,7 @@ This makes these functions fairly independent of the CPU architecture.
 This is done in `cgload()`: a register is allocated, then a `movq`
 instruction loads a literal value into the allocated register.
 
-```
+```c
 // Load an integer literal value into a register.
 // Return the number of the register
 int cgload(int value) {
@@ -174,7 +174,7 @@ int cgload(int value) {
 them together. The result is saved in one of the two registers,
 and the other one is then freed for future use:
 
-```
+```c
 // Add two registers together and return
 // the number of the register with the result
 int cgadd(int r1, int r2) {
@@ -193,7 +193,7 @@ value is returned.
 This is very similar to addition, and again the operation is
 *commutative*, so any register can be returned:
 
-```
+```c
 // Multiply two registers together and return
 // the number of the register with the result
 int cgmul(int r1, int r2) {
@@ -209,7 +209,7 @@ Subtraction is *not* commutative: we have to get the order correct.
 The second register is subtracted from the first, so we return the
 first and free the second:
 
-```
+```c
 // Subtract the second register from the first and
 // return the number of the register with the result
 int cgsub(int r1, int r2) {
@@ -228,7 +228,7 @@ bytes with `cqo`. Then, `idivq` will divide `%rax` with the divisor
 in `r2`, leaving the *quotient* in `%rax`, so we need to copy it
 out to either `r1` or `r2`. Then we can free the other register.
 
-```
+```c
 // Divide the first register by the second and
 // return the number of the register with the result
 int cgdiv(int r1, int r2) {
@@ -255,7 +255,7 @@ here, simply calls `exit(0)` to end the program.
 
 Here, however, is `cgprintint()`:
 
-```
+```c
 void cgprintint(int r) {
   fprintf(Outfile, "\tmovq\t%s, %%rdi\n", reglist[r]);
   fprintf(Outfile, "\tcall\tprintint\n");
@@ -275,7 +275,7 @@ the same answer for the input expression as the interpreter.
 
 Let's make the compiler and run it on `input01`:
 
-```
+```make
 $ make
 cc -o comp1 -g cg.c expr.c gen.c interp.c main.c scan.c tree.c
 
