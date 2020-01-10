@@ -3,7 +3,7 @@
 In this part of our compiler writing journey, I've implemented type casting.
 I thought this would allow me to do:
 
-```
+```c
 #define NULL (void *)0
 ```
 
@@ -17,7 +17,7 @@ be something else. Common reasons are to narrow an integer value down
 to a smaller range type, or to assign a pointer from one type into
 a pointer storage of another type, e.g.
 
-```
+```c
   int   x= 65535;
   char  y= (char)x;     // y is now 255, the lower 8 bits
   int  *a= &x;
@@ -36,7 +36,7 @@ parser to allow a cast to come before the literal value.
 
 I've added this new function in `decl.c`:
 
-```
+```c
 // Parse a type which appears inside a cast
 int parse_cast(void) {
   int type, class;
@@ -65,7 +65,7 @@ in global variable assignments. I didn't want any
 We already parse parentheses in our expression code, so we will need to
 modify this. In `primary()` in `expr.c`, we now do this:
 
-```
+```c
 static struct ASTnode *primary(void) {
   int type=0;
   ...
@@ -132,7 +132,7 @@ following expression as the child.
 Well, we are lucky because the expression's value will be stored in a register.
 So if we do:
 
-```
+```c
   int   x= 65535;
   char  y= (char)x;     // y is now 255, the lower 8 bits
 ```
@@ -150,7 +150,7 @@ the correct code to save the right size:
 
 So, in `genAST()` in `gen.c`, we have this code to deal with casting:
 
-```
+```c
   ...
   leftreg = genAST(n->left, NOLABEL, NOLABEL, NOLABEL, n->op);
   ...
@@ -172,7 +172,7 @@ and apply it to a literal value that follows it.
 So, for example, in `scalar_declaration` in `decl.c` we need
 this code:
 
-```
+```c
     // Globals must be assigned a literal value
     if (class == C_GLOBAL) {
       // If there is a cast
@@ -208,13 +208,13 @@ in the range 0 ... 255 etc.
 
 Now that we have a cast, we should be able to accept:
 
-```
+```c
   char a= (char)65536;
 ```
 
 So the code in `parse_literal()` in `decl.c` now does this:
 
-```
+```c
 int parse_literal(int type) {
 
   // We have a string literal. Store in memory and return the label
@@ -248,14 +248,14 @@ pointer type. So we have to implement this.
 
 We already did this for global variable assignments above:
 
-```
+```c
    if (casttype == type || (casttype== pointer_to(P_VOID) && ptrtype(type)))
 ```
 
 i.e. if the types are equal, or if a `void *` pointer is being assigned
 to a pointer. This allows the following global assignment:
 
-```
+```c
   char *str= (void *)0;
 ```
 
@@ -265,7 +265,7 @@ Now we need to deal with `void *` (and other pointer/pointer operations)
 in expressions. To do this, I had to change `modify_type()` in `types.c`.
 As a refresher, here is what this function does:
 
-```
+```c
 // Given an AST tree and a type which we want it to become,
 // possibly modify the tree by widening or scaling so that
 // it is compatible with this type. Return the original tree
@@ -278,7 +278,7 @@ struct ASTnode *modify_type(struct ASTnode *tree, int rtype, int op);
 This is the code that widens values, e.g. `int x= 'Q';` to make `x` into
 a 32-bit value. We also use it for scaling: when we do:
 
-```
+```c
   int x[4];
   int y= x[2];
 ```
@@ -288,7 +288,7 @@ the base of the `x[]` array.
 
 So, inside a function, when we write:
 
-```
+```c
   char *str= (void *)0;
 ```
 
@@ -308,7 +308,7 @@ the type of the left-hand `tree` will be `void *` and the `rtype` will be
 
 I've changed `modify_type()` to do this for pointers:
 
-```
+```c
   // For pointers
   if (ptrtype(ltype) && ptrtype(rtype)) {
     // We can compare them
@@ -332,7 +332,7 @@ pointer to any pointer.
 Now that we can deal with `void *` pointers, we can add NULL to our include files.
 I've added this to both `stdio.h` and `stddef.h`:
 
-```
+```c
 #ifndef NULL
 # define NULL (void *)0
 #endif
@@ -340,7 +340,7 @@ I've added this to both `stdio.h` and `stddef.h`:
 
 But there was one final wrinkle. When I tried this global declaration:
 
-```
+```c
 #include <stdio.h>
 char *str= NULL;
 ```
@@ -357,7 +357,7 @@ treated as a label number. So the "0" in the NULL was being turned
 into an "L0" label. We need to fix this. Now, in `cgglobsym()`
 in `cg.c`:
 
-```
+```c
       case 8:
         // Generate the pointer to a string literal. Treat a zero value
         // as actually zero, not the label L0

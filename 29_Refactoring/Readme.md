@@ -42,7 +42,7 @@ Anyway, this change is for the future.
 Another thing that I borrowed from SubC is the enumeration of types
 (in `defs.h`):
 
-```
+```c
 // Primitive types
 enum {
   P_NONE, P_VOID, P_CHAR, P_INT, P_LONG,
@@ -56,7 +56,7 @@ value? So I've changed our code so that the bottom four bits in a `type`
 integer is the level of indirection, and the higher bits encode the
 actual type:
 
-```
+```c
 // Primitive types. The bottom 4 bits is an integer
 // value that represents the level of indirection,
 // e.g. 0= no pointer, 1= pointer, 2= pointer pointer etc.
@@ -71,7 +71,7 @@ references in the old code. Let's see what changes there have been.
 Firstly, we have to deal with scalar and pointer types in `types.c`. The code
 now is actually smaller than before:
 
-```
+```c
 // Return true if a type is an int type
 // of any size, false otherwise
 int inttype(int type) {
@@ -105,7 +105,7 @@ And `modify_type()` hasn't changed whatsoever.
 In `expr.c`, when dealing with literal strings, I was using `P_CHARPTR`
 but now I can write:
 
-```
+```c
    n = mkastleaf(A_STRLIT, pointer_to(P_CHAR), id);
 ```
 
@@ -113,7 +113,7 @@ One other substantial area where the `P_XXXPTR` values were used is the code
 in the hardware-dependent code in `cg.c`. We start by rewriting `cgprimsize()`
 to use `ptrtype()`:
 
-```
+```c
 // Given a P_XXX type value, return the
 // size of a primitive type in bytes.
 int cgprimsize(int type) {
@@ -133,7 +133,7 @@ now call `cgprimsize()`, `ptrtype()`,
 `inttype()`, `pointer_to()` and `value_at()` as required, instead of
 referring to specific types. Here's an example from `cg.c`:
 
-```
+```c
 // Dereference a pointer to get the value it
 // pointing at into the same register
 int cgderef(int r, int type) {
@@ -169,7 +169,7 @@ Have a quick read through `cg.c` and look for the calls to `cgprimsize()`.
 Now that we have up to sixteen levels of indirection, I wrote a test program
 to confirm that they work, `tests/input55.c`:
 
-```
+```c
 int printf(char *fmt);
 
 int main(int argc, char **argv) {
@@ -194,7 +194,7 @@ While I didn't refactor the symbol table into lists, I did tweak the
 symbol table structure itself, now that I realised that I can use
 unions and not have to give the union a variable name:
 
-```
+```c
 // Symbol table structure
 struct symtable {
   char *name;                   // Name of a symbol
@@ -224,7 +224,7 @@ parameters to `addglob()`, but not much else.
 Similarly, I've modified the AST node structure so that the union doesn't
 have a variable name:
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
@@ -244,7 +244,7 @@ struct ASTnode {
 and this means that I can, e.g., write the second line instead of the first
 one:
 
-```
+```c
     return (cgloadglob(n->left->v.id, n->op));    // Old code
     return (cgloadglob(n->left->id,   n->op));    // New code
 ```

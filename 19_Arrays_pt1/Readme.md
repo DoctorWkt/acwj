@@ -9,7 +9,7 @@ So, we begin the work to add arrays to the compiler in this part of
 the journey. I sat down and wrote a small C program to see what
 sort of functionality I should try to implement:
 
-```
+```c
   int ary[5];               // Array of five int elements
   int *ptr;                 // Pointer to an int
 
@@ -86,7 +86,7 @@ there is no work to be done in the lexical scanner.
 
 Instead, we simply modify `primary()` to do the extra parsing:
 
-```
+```c
 static struct ASTnode *primary(void) {
   struct ASTnode *n;
   ...
@@ -123,7 +123,7 @@ to match the opening '(' token.
 
 The `test/input19.c` test checks that parentheses are working:
 
-```
+```c
   a= 2; b= 4; c= 3; d= 2;
   e= (a+b) * (c+d);
   printint(e);
@@ -138,7 +138,7 @@ symbol table. It's time to add arrays. Later on, we'll want to
 get the number of elements in each array with the `sizeof()` operator.
 Here are the changes in `defs.h`:
 
-```
+```c
 // Structural types
 enum {
   S_VARIABLE, S_FUNCTION, S_ARRAY
@@ -159,7 +159,7 @@ array is "pointer to" something, e.g. "pointer to int" if the elements
 in the array are `int`s. We also need to add one more argument to
 `addglob()` in `sym.c`:
 
-```
+```c
 int addglob(char *name, int type, int stype, int endlabel, int size) {
   ...
 }
@@ -179,7 +179,7 @@ The BNF grammar for variable declarations is now:
 So we need to see what token is next in `var_declaration()` in `decl.c`
 and process either a scalar variable declaration or an array declaration:
 
-```
+```c
 // Parse the declaration of a scalar variable or an array
 // with a given size.
 // The identifier has been scanned & we have the type
@@ -220,7 +220,7 @@ initialisation lists to the declaration of arrays.
 Now that we know the size of the array, we can modify `cgglobsym()` to
 allocate this space in the assembler:
 
-```
+```c
 void cgglobsym(int id) {
   int typesize;
   // Get the size of the type
@@ -244,7 +244,7 @@ void cgglobsym(int id) {
 
 With this in place, we can now declare arrays such as:
 
-```
+```c
   char a[10];
   int  b[25];
   long c[100];
@@ -256,7 +256,7 @@ In this part I don't want to get too adventurous. I only want to
 get basic array indexes as rvalues and lvalues to work. The
 `test/input20.c` program has the functionality that I want to achieve:
 
-```
+```c
 int a;
 int b[25];
 
@@ -288,7 +288,7 @@ The code to do the semantic analysis ended up being big enough to warrant
 a new function:
 
 
-```
+```c
 static struct ASTnode *primary(void) {
   struct ASTnode *n;
   int id;
@@ -309,7 +309,7 @@ static struct ASTnode *primary(void) {
 
 And here is the `array_access()` function:
 
-```
+```c
 // Parse the index into an array and
 // return an AST tree for it
 static struct ASTnode *array_access(void) {
@@ -353,7 +353,7 @@ scale the index (6) by the size of `int`s (4), and add this to the
 address of the array base. Then this element has to be dereferenced.
 We leave it marked as an lvalue, because we could be trying to do:
 
-```
+```c
   x[6] = 100;
 ```
 
@@ -365,7 +365,7 @@ flag in the A_DEREF AST node.
 Going back to our test program `tests/input20.c`, the code that will
 produce AST trees with array indexes are:
 
-```
+```c
   b[3]= 12; a= b[3];
 ```
 
@@ -396,7 +396,7 @@ There are a couple of minor changes to the parser in `expr.c` which took
 me a while to debug. I needed to be more stringent with the input to
 the operator precedence lookup function:
 
-```
+```c
 // Check that we have a binary operator and
 // return its precedence.
 static int op_precedence(int tokentype) {
@@ -415,7 +415,7 @@ The other change is that, now that we can use expressions as array
 indexes (e.g. `x[ a+2 ]`), we have to expect the ']' token can end
 an expression. So, at the end of `binexpr()`:
 
-```
+```c
     // Update the details of the current token.
     // If we hit a semicolon, ')' or ']', return just the left node
     tokentype = Token.token;
@@ -433,7 +433,7 @@ There are none. We had all the necessary components in our compiler
 already: scaling integer values, obtaining the address of a variable etc.
 For our test code:
 
-```
+```c
   b[3]= 12; a= b[3];
 ```
 

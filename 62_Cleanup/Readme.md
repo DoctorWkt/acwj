@@ -9,7 +9,7 @@ code cleanup, rename some functions and variables etc.
 For the changes to the compiler that I'm planning, I need to be able
 to put structs into structs. Therefore, I should be able to do:
 
-```
+```c
    printf("%d\n", thing.member1.age_in_years);
 ```
 
@@ -27,7 +27,7 @@ Fortunately, this was quite easy to do. We don't have to change the
 parser code, but let's look at what is  already there. In `member_access()`
 in `expr.c`:
 
-```
+```c
   // Check that the left AST tree is a struct or union.
   // If so, change it from an A_IDENT to an A_ADDR so that
   // we get the base address, not the value at this address.
@@ -45,7 +45,7 @@ we either have a variable whose address we need (e.g. `thing` in
 (e.g. the offset of `member1` in `member1.age_in_years). So in `genAST()`
 in `gen.c`, we do:
 
-```
+```c
   case A_ADDR:
     // If we have a symbol, get its address. Otherwise,
     // the left register already has the address because
@@ -61,7 +61,7 @@ alignment of types doesn't deal with structs inside structs, only
 scalar types inside structs. So, I've modified `cgalign()` in `cg.c`
 as follows:
 
-```
+```c
 // Given a scalar type, an existing memory offset
 // (which hasn't been allocated to anything yet)
 // and a direction (1 is up, -1 is down), calculate

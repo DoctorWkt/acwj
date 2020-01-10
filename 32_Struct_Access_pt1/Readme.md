@@ -7,7 +7,7 @@ access to global struct variables.
 I'll give our test program, `tests/input58.c`, here so that you can see the
 language features that I've implemented:
 
-```
+```c
 int printf(char *fmt);
 
 struct fred {                   // Struct declaration, done last time
@@ -46,7 +46,7 @@ in the input. As always, I won't give the code in `scan.c` to identify these.
 This turned out to be very similar to our existing array element accessing code.
 Let's look at the similarities and the differences. With this code:
 
-```
+```c
   int x[5];
   int y;
   ...
@@ -60,7 +60,7 @@ get the value at that array position.
 
 Accessing a struct member is similar:
 
-```
+```c
   struct fred { int x; char y; long z; };
   struct fred var2;
   char y;
@@ -79,7 +79,7 @@ T_DOT and T_ARROW are postfix operators, like the '[' of an array reference, as 
 come after an identifier's name. So it makes sense to add their parsing in the
 existing `postfix()` function in `expr.c`:
 
-```
+```c
 static struct ASTnode *postfix(void) {
   ...
     // Access into a struct or union
@@ -95,7 +95,7 @@ The argument to the new `member_access()` function in `expr.c` indicates if we
 are accessing a member through a pointer or directly. Now let's look at the new
 `member_access()` in stages.
 
-```
+```c
 // Parse the member reference of a struct (or union, soon)
 // and return an AST tree for it. If withpointer is true,
 // the access is through a pointer to the member.
@@ -118,7 +118,7 @@ static struct ASTnode *member_access(int withpointer) {
 First, some error checking. I know I will have to add checking for unions here, so
 I'm not going to refactor the code just yet.
 
-```
+```c
   // If a pointer to a struct, get the pointer's value.
   // Otherwise, make a leaf node that points at the base
   // Either way, it's an rvalue
@@ -136,7 +136,7 @@ with an A_ADDR AST node.
 
 This node can't be an lvalue, i.e. we can't say `var2. = 5`. It has to be an rvalue.
 
-```
+```c
   // Get the details of the composite type
   typeptr = compvar->ctype;
 
@@ -149,7 +149,7 @@ We get a pointer to the composite type so that we can walk the list of members i
 type, and we get the member's name after the '.' or '->'
 (and confirm that it is an identifier).
 
-```
+```c
   // Find the matching member's name in the type
   // Die if we can't find it
   for (m = typeptr->member; m != NULL; m = m->next)
@@ -162,7 +162,7 @@ type, and we get the member's name after the '.' or '->'
 
 We walk the member's list to find the matching member's name.
 
-```
+```c
   // Build an A_INTLIT node with the offset
   right = mkastleaf(A_INTLIT, P_INT, NULL, m->posn);
 
@@ -220,7 +220,7 @@ Well, this was a nice pleasant surprise to get structs to work this easily!
 I'm sure the future parts of our journey will make up for it. I also know that
 our compiler as it stands still is pretty limited. For example, it can't do this:
 
-```
+```c
 struct foo {
   int x;
   struct foo *next;

@@ -18,7 +18,7 @@ of the whole expression.
 
 One subtlety here is that, for example, in:
 
-```
+```c
    x= y != 5 : y++ ? ++y;
 ```
 
@@ -27,7 +27,7 @@ incremented once.
 
 We can rewrite the above code as an IF statement:
 
-```
+```c
 if (y != 5)
   x= y++;
 else
@@ -36,7 +36,7 @@ else
 
 However, the ternary operator is an expression, so we can also do:
 
-```
+```c
   x= 23 * (y != 5 : y++ ? ++y) - 18;
 ```
 
@@ -58,7 +58,7 @@ in precedence order and the AST operators must correspond to the tokens.
 
 Thus, in `defs.h`, we now have:
 
-```
+```c
 // Token types
 enum {
   T_EOF,
@@ -76,7 +76,7 @@ enum {
 
 And in `expr.c`, we now have:
 
-```
+```c
 static int OpPrec[] = {
   0, 10, 10,                    // T_EOF, T_ASSIGN, T_ASPLUS,
   10, 10, 10,                   // T_ASMINUS, T_ASSTAR, T_ASSLASH,
@@ -93,7 +93,7 @@ Even though the ternary operator isn't a binary operator, because it
 has precedence, we need to implement it in `binexpr()` with the binary
 operators. Here's the code:
 
-```
+```c
 struct ASTnode *binexpr(int ptp) {
   struct ASTnode *left, *right;
   struct ASTnode *ltemp, ...
@@ -137,7 +137,7 @@ and the ternary operator, but it was easier just to write another function.
 
 There is one wrinkle to the generation of the assembly code. Consider:
 
-```
+```c
    x= (y > 4) ? 2 * y - 18 : y * z - 3 * a;
 ```
 
@@ -170,7 +170,7 @@ which takes no arguments. Our registers are numbered zero upwards. I've
 modified this function to take, as an argument, the register we want to
 *keep*. And, in order to free *all* registers, we pass it NOREG which is defined to be the number `-1`:
 
-```
+```c
 // Set all registers as available.
 // But if reg is positive, don't free that one.
 void freeall_registers(int keepreg) {
@@ -189,7 +189,7 @@ replace what used to be `freeall_registers()`.
 We now have a function in `gen.c` to deal with the ternary operator.
 It gets called from the top of `genAST()`:
 
-```
+```c
   // We have some specific AST node handling at the top
   // so that we don't evaluate the child sub-trees immediately
   switch (n->op) {
@@ -200,7 +200,7 @@ It gets called from the top of `genAST()`:
 
 Let's have a look at the function in stages.
 
-```
+```c
 // Generate code for a ternary expression
 static int gen_ternary(struct ASTnode *n) {
   int Lfalse, Lend;
@@ -222,7 +222,7 @@ This is pretty much exactly the same as the IF generating code. We pass the logi
 false label and the A_TERNARY operator into `genAST()`. When `genAST()` sees
 this, it knows to generate a jump if false to this label.
 
-```
+```c
   // Get a register to hold the result of the two expressions
   reg = alloc_register();
 
@@ -244,7 +244,7 @@ With this done, we can free all registers except the known register. If
 we did the true expression, we now jump to the end of the ternary
 assembly code.
 
-```
+```c
   // Generate the false expression and the end label.
   // Move the expression result into the known register.
   expreg = genAST(n->right, NOLABEL, NOLABEL, NOLABEL, n->op);
@@ -272,7 +272,7 @@ ternary operator as right associative.
 
 `tests/input121.c` is an example of a nested ternary operator:
 
-```
+```c
 #include <stdio.h>
 
 int x;

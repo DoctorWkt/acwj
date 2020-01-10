@@ -256,7 +256,7 @@ the number of arguments in a function call, we can pass *any* number
 of arguments to `printf()` as long as we have given it an existing
 prototype. So, at present, this code (`tests/input53.c`) works:
 
-```
+```c
 int printf(char *fmt);
 
 int main()

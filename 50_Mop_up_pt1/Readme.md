@@ -9,7 +9,7 @@ functions.
 
 At present, the compiler can't parse
 
-```
+```c
   switch(x) {
     case 1:
     case 2: printf("Hello\n");
@@ -19,7 +19,7 @@ At present, the compiler can't parse
 because the parser expects a compound statement after the ':' token.
 In `switch_statement()` in `stmt.c`:
 
-```
+```c
         // Scan the ':' and get the compound expression
         match(T_COLON, ":");
         left= compound_statement(1); casecount++;
@@ -34,7 +34,7 @@ compound statement.
 
 The change in `switch_statement()` is:
 
-```
+```c
         // Scan the ':' and increment the casecount
         match(T_COLON, ":");
         casecount++;
@@ -51,7 +51,7 @@ This is, however, only half the story. Now in the code generation section,
 we have to catch the NULL compound statement and do something about it.
 In `genSWITCH()` in `gen.c`:
 
-```
+```c
   // Walk the right-child linked list to
   // generate the code for each case
   for (i = 0, c = n->right; c != NULL; i++, c = c->right) {
@@ -135,7 +135,7 @@ The answer is that `postfix()` in `expr.c`, after finding an identifier,
 consults the following token. If it is a '[', then the identifier must
 be an array. If there is no '[', then the identifier must be a variable:
 
-```
+```c
   // A variable. Check that the variable exists.
   if ((varptr = findsymbol(Text)) == NULL || varptr->stype != S_VARIABLE)
     fatals("Unknown variable", Text);
@@ -144,7 +144,7 @@ be an array. If there is no '[', then the identifier must be a variable:
 This is preventing the passing of an array reference as an argument to a
 function. The "offending" line that prompts the error message is in `decl.c`:
 
-```
+```c
       type = type_of_typedef(Text, ctype);
 ```
 
@@ -175,7 +175,7 @@ A_LOGOR and A_LOGAND AST nodes. So we need to fix up the code generator.
 
 In `genAST()` in `gen.c`, we now have:
 
-```
+```c
   case A_LOGOR:
     return (cglogor(leftreg, rightreg));
   case A_LOGAND:
@@ -186,7 +186,7 @@ with two corresponding functions in `cg.c`. Before we look at the `cg.c`
 functions, let's just see an example C expression and the assembly code
 that will be produced.
 
-```
+```c
 int x, y, z;
   ...
   z= x || y;
@@ -216,7 +216,7 @@ and the `movq $0` and `movq $1` are swapped around.
 
 So, without further comment, are the new `cg.c` functions:
 
-```
+```c
 // Logically OR two registers and return a
 // register with the result, 1 or 0
 int cglogor(int r1, int r2) {
@@ -245,7 +245,7 @@ int cglogor(int r1, int r2) {
 }
 ```
 
-```
+```c
 // Logically AND two registers and return a
 // register with the result, 1 or 0
 int cglogand(int r1, int r2) {

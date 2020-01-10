@@ -56,7 +56,7 @@ support in our compiler.
 
 ### Global Declarations
 
-```
+```c
   int   x= 5;
   int   a, b= 7, c, d= 6;
   char *e, f;                           // e is a pointer, f isn't!
@@ -77,7 +77,7 @@ as shown in the examples above.
 
 The above examples also apply, but we should also be able to do these local declarations:
 
-```
+```c
   int u= x + 3;
   char *v= k[0];
   char *w= k[b-6];
@@ -138,7 +138,7 @@ call `declaration_list()` to parse what should be a variable.
 *base type* of a list, but each thing in the list can modify this type.
 As an example:
 
-```
+```c
   int a, *b, c[40], *d[100];
 ```
 
@@ -163,7 +163,7 @@ enums and typedefs are also parsed.
 Parsing a typedef in `typedef_declaration()` should be easy because there
 is an existing type which we are aliasing. However, we can also write this:
 
-```
+```c
 typedef char * charptr;
 ```
 
@@ -189,7 +189,7 @@ Although this part of the journey is mostly a redesign to get ready for
 variable initialisation, we now support lists in global and local variable
 declarations. Therefore, I have new tests:
 
-```
+```c
 // tests/input84.c, locals
 int main() {
   int x, y;

@@ -9,7 +9,7 @@ where one operand is a pointer and the other is an integer type, we need
 to scale the integer value by the size of the type that the pointer
 points at. In `modify_type()` in `types.c`:
 
-```
+```c
   // We can scale only on add and subtract operations
   if (op == A_ADD || op == A_SUBTRACT ||
       op == A_ASPLUS || op == A_ASMINUS) {
@@ -36,7 +36,7 @@ Up to now, this got resolved when we call either `cgloadglob()` or
 `cgloadlocal()` in `cg.c` to load the value of a global or local variable.
 For example:
 
-```
+```c
 int cgloadglob(struct symtable *sym, int op) {
   ...
   if (cgprimsize(sym->type) == 8) {
@@ -71,7 +71,7 @@ Halfway through, I realised that I could merge `cgloadglob()` and
 `cgloadlocal()` into a single function. Let's look at the solution
 in stages.
 
-```
+```c
 // Load a value from a variable into a register.
 // Return the number of the register. If the
 // operation is pre- or post-increment/decrement,
@@ -93,7 +93,7 @@ We start by assuming that we will be doing +1 as an increment. However,
 once we realise that we could be incrementing a pointer, we change
 this to the the size of the type that it points to.
 
-```
+```c
   // Negate the offset for decrements
   if (op==A_PREDEC || op==A_POSTDEC)
     offset= -offset;
@@ -101,7 +101,7 @@ this to the the size of the type that it points to.
 
 Now the `offset` is negative if we are going to do a decrement.
 
-```
+```c
   // If we have a pre-operation
   if (op==A_PREINC || op==A_PREDEC) {
     // Load the symbol's address
@@ -115,7 +115,7 @@ This is where our algorithm differs from the old code. The old code used
 the `incq` instruction, but that limits the variable change to exactly one.
 Now that we have the variable's address in our register...
 
-```
+```c
     // and change the value at that address
     switch (sym->size) {
       case 1: fprintf(Outfile, "\taddb\t$%d,(%s)\n", offset, reglist[r]); break;
@@ -132,7 +132,7 @@ of the variable.
 We've done any pre-increment or pre-decrement operation. Now we can load
 the variable's value into a register:
 
-```
+```c
   // Now load the output register with the value
   if (sym->class == C_LOCAL || sym->class == C_PARAM) {
     switch (sym->size) {
@@ -158,7 +158,7 @@ The value is safely in register `r`. But now we need to do any post-increment
 or post-decrement. We can re-use the pre-op code, but we'll need a new
 register:
 
-```
+```c
   // If we have a post-operation, get a new register
   if (op==A_POSTINC || op==A_POSTDEC) {
     postreg = alloc_register();
@@ -178,7 +178,7 @@ So the code for `cgloadvar()` is about as complex as the old code, but
 it now deals with pointer increments. The `tests/input145.c` test program
 verifies that this new code works:
 
-```
+```c
 int list[]= {3, 5, 7, 9, 11, 13, 15};
 int *lptr;
 
@@ -208,7 +208,7 @@ Adding new operators to the compiler now is tricky because we have to
 synchronise changes in several places. Let's see where. In `defs.h`
 we need to add the tokens:
 
-```
+```c
 // Token types
 enum {
   T_EOF,
@@ -228,7 +228,7 @@ enum {
 
 with T_ASMOD and T_MOD the new tokens. Now we need to create AST ops to match:
 
-```
+```c
  // AST node types. The first few line up
 // with the related tokens
 enum {
@@ -245,7 +245,7 @@ Now we need to add the scanner changes to scan these tokens. I won't show
 the code, but I will show the change to the table of token strings in
 `scan.c`:
 
-```
+```c
 // List of token strings, for debugging purposes
 char *Tstring[] = {
   "EOF", "=", "+=", "-=", "*=", "/=", "%=",
@@ -261,7 +261,7 @@ char *Tstring[] = {
 Now we need to set the operators' precedence in `expr.c`. T_SLASH used to
 be the highest operator but it's been replaced with T_MOD:
 
-```
+```c
 // Convert a binary operator token into a binary AST operation.
 // We rely on a 1:1 mapping from token to AST operation
 static int binastop(int tokentype) {
@@ -312,7 +312,7 @@ So we can modify `cgdiv()` to take the AST operation being performed,
 and it can do both division and remainder (modulo). The new function
 in `cg.c` is:
 
-```
+```c
 // Divide or modulo the first register by the second and
 // return the number of the register with the result
 int cgdivmod(int r1, int r2, int op) {
@@ -330,7 +330,7 @@ int cgdivmod(int r1, int r2, int op) {
 
 The `tests/input147.c` confirms that the above changes work:
 
-```
+```c
 #include <stdio.h>
 
 int a;
@@ -354,7 +354,7 @@ After a bit of investigation, it turns out that I wasn't properly
 propagating the end label for loops and switches in `genIF()` in `gen.c`.
 The fix is on line 49:
 
-```
+```c
 // Generate the code for an IF statement
 // and an optional ELSE clause.
 static int genIF(struct ASTnode *n, int looptoplabel, int loopendlabel) {

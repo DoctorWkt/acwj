@@ -23,7 +23,7 @@ all the members share the same memory locations.
 
 An example of a struct type is:
 
-```
+```c
 struct foo {
   int  a;
   int  b;
@@ -36,7 +36,7 @@ struct foo fred;
 The variable `fred` is of type `struct foo`, and it has three members `a`, `b` and
 `c`. We can now do these three assignments to `fred`:
 
-```
+```c
   fred.a= 4;
   fred.b= 7;
   fred.c= 'x';
@@ -46,7 +46,7 @@ and all three values are stored in the respective members in `fred`.
 
 On the other hand, here is an example of a union type:
 
-```
+```c
 union bar {
   int  a;
   int  b;
@@ -58,7 +58,7 @@ union bar jane;
 
 If we perform these statements:
 
-```
+```c
   jane.a= 5;
   printf("%d\n", jane.b);
 ```
@@ -76,7 +76,7 @@ named integer values.
 
 As an example, we can define these new identifiers:
 
-```
+```c
 enum { apple=1, banana, carrot, pear=10, peach, mango, papaya };
 ```
 
@@ -103,7 +103,7 @@ type another name. It's often used to make naming structs and unions easier.
 
 Using a previous example, we can write:
 
-```
+```c
 typedef struct foo Husk;
 Husk kim;
 ```
@@ -140,7 +140,7 @@ With the old array-based symbol table, we had to skip over the function paramete
 when we were searching for global variables and functions. So, let's also have a
 list in a separate direction for the parameters of a function:
 
-```
+```c
 struct symtable {
   char *name;                   // Name of a symbol
   int stype;                    // Structural type for the symbol
@@ -153,7 +153,7 @@ struct symtable {
 Let's have a look, graphically, how this will
 look for the following code fragment:
 
-```
+```c
   int a;
   char b;
   void func1(int x, int y);
@@ -193,7 +193,7 @@ We'll start with unions. Firstly, we can put a union into a struct.
 Secondly, the union doesn't need a name. Thirdly, a variable does not
 need to be declared in the struct to hold the union. As an example:
 
-```
+```c
 #include <stdio.h>
 struct fred {
   int x;
@@ -224,7 +224,7 @@ by having the struct's member name also set to NULL, i.e.
 I've used enums before but I haven't really thought about implementing them
 that much. So I wrote the following C program to see if I could "break" enums:
 
-```
+```c
 #include <stdio.h>
 
 enum fred { bill, mary, dennis };
@@ -259,7 +259,7 @@ The questions are:
 
 And here is what `gcc` produces as errors and warnings:
 
-```
+```c
 z.c:4:5: error: ‘mary’ redeclared as different kind of symbol
  int mary;
      ^~~~
@@ -418,7 +418,7 @@ variables.
 
 I want to store all the symbols and implicit values below:
 
-```
+```c
   enum fred { chocolate, spinach, glue };
   enum amy  { garbage, dennis, flute, couch };
 ```
@@ -433,7 +433,7 @@ enumeration names and their values.
 Therefore I propose a couple of "dummy" type values: P_ENUMLIST and P_ENUMVAL.
 We then build just a single-dimensional list like this:
 
-```
+```c
      fred  -> chocolate-> spinach ->   glue  ->    amy  -> garbage -> dennis -> ...
   P_ENUMLIST  P_ENUMVAL  P_ENUMVAL  P_ENUMVAL  P_ENUMLIST  P_ENUMVAL  P_ENUMVAL
 ```
@@ -448,7 +448,7 @@ Up at the top of this document, I mentioned that I've already
 rewritten the symbol table from being a single array to being
 several singly-linked lists, with these new fields in the `struct symtable` node:
 
-```
+```c
   struct symtable *next;        // Next symbol in one list
   struct symtable *member;      // First parameter of a function
 ```
@@ -460,7 +460,7 @@ changes whatsoever.
 
 We now have three symbol table lists in `data.h`:
 
-```
+```c
 // Symbol table lists
 struct symtable *Globhead, *Globtail;   // Global variables and functions
 struct symtable *Loclhead, *Locltail;   // Local variables
@@ -470,7 +470,7 @@ struct symtable *Parmhead, *Parmtail;   // Local parameters
 and all of the functions in `sym.c` have been rewritten to use them. I have written
 a generic function to append to a list:
 
-```
+```c
 // Append a node to the singly-linked list pointed to by head or tail
 void appendsym(struct symtable **head, struct symtable **tail,
                struct symtable *node) {
@@ -494,7 +494,7 @@ won't give the code here.
 For each list, there is a function to build and append a node to the list. One
 example is:
 
-```
+```c
 // Add a symbol to the global symbol list
 struct symtable *addglob(char *name, int type, int stype, int class, int size) {
   struct symtable *sym = newsym(name, type, stype, class, size, 0);
@@ -506,7 +506,7 @@ struct symtable *addglob(char *name, int type, int stype, int class, int size) {
 There is a generic function to find a symbol in a list, where the `list` pointer
 is the head of the list:
 
-```
+```c
 // Search for a symbol in a specific list.
 // Return a pointer to the found node or NULL if not found.
 static struct symtable *findsyminlist(char *s, struct symtable *list) {
@@ -545,7 +545,7 @@ Back in `function_declaration()` which is parsing the whole function (its name,
 parameter list *and* any function body), the parameter list is copied into the
 function's symbol table node:
 
-```
+```c
     newfuncsym->nelems = paramcnt;
     newfuncsym->member = Parmhead;
 
@@ -559,7 +559,7 @@ This would mean that all these are no longer available to search for via the glo
 The solution is to set a global variable, `Functionid`, to the function's
 symbol table entry:
 
-```
+```c
   Functionid = newfuncsym;
 ```
 

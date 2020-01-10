@@ -59,7 +59,7 @@ The middle clause is a single expression that must provide a true or false resul
 The first and last clauses can be expression lists. This allows a FOR loop like
 the one now in `tests/input80.c`:
 
-```
+```c
     for (x=0, y=1; x < 6; x++, y=y+2)
 ```
 
@@ -74,7 +74,7 @@ end an expression list. Therefore, I've modified `expression_list()`
 in `expr.c` to get the end token as an argument. And in `for_statement()`
 in `stmt.c`, we now have this code:
 
-```
+```c
 // Parse a FOR statement and return its AST
 static struct ASTnode *for_statement(void) {
   ...
@@ -94,7 +94,7 @@ static struct ASTnode *for_statement(void) {
 
 And the code in `expression_list()` now looks like this:
 
-```
+```c
 struct ASTnode *expression_list(int endtoken) {
   ...
   // Loop until the end token
@@ -133,7 +133,7 @@ Up to now, I've forced the programmer using our compiler to always put code in
 For the first four statements in this list, we don't need curly brackets when
 there is only a single statement, e.g.
 
-```
+```c
   if (x>5)
     x= x - 16;
   else
@@ -143,7 +143,7 @@ there is only a single statement, e.g.
 But when there are multiple statements in the body, we *do* need a compound statement
 which is a set of single statements surrounded by curly brackets, e.g.
 
-```
+```c
   if (x>5)
     { x= x - 16; printf("not again!\n"); }
   else
@@ -154,7 +154,7 @@ But, for some unknown reason, the code after a 'case' or 'default' clause in a
 'switch' statement can be a set of single statements and we don't need curly brackets!!
 Who was the crazy person who thought that was OK? An example:
 
-```
+```c
   switch (x) {
     case 1: printf("statement 1\n");
             printf("statement 2\n");
@@ -165,7 +165,7 @@ Who was the crazy person who thought that was OK? An example:
 
 Even worse, this is also legal:
 
-```
+```c
   switch (x) {
     case 1: {
       printf("statement 1\n");
@@ -185,7 +185,7 @@ Therefore, we need to be able to parse:
 
 To this end, I've modified the `compound_statement()` in `stmt.c` to take an argument:
 
-```
+```c
 // Parse a compound statement
 // and return its AST. If inswitch is true,
 // we look for a '}', 'case' or 'default' token
@@ -226,7 +226,7 @@ to call `compound_statement()` if it see an opening curly bracket.
 
 Thus, I've also made these changes in `stmt.c`:
 
-```
+```c
 // Parse a single statement and return its AST.
 static struct ASTnode *single_statement(void) {
   ...
@@ -276,7 +276,7 @@ static struct ASTnode *for_statement(void) {
 
 This now means the compiler will accept code which looks like this:
 
-```
+```c
   if (x>5)
     x= x - 16;
   else
@@ -291,7 +291,7 @@ solved due to the way that we already parse our input.
 
 Consider this program:
 
-```
+```c
   // Dangling else test.
   // We should not print anything for x<= 5
   for (x=0; x < 12; x++)
@@ -309,7 +309,7 @@ The 'else' code should *not* be invoked due to the opposite of `x > 5`.
 Luckily, in our `if_statement()` parser, we greedily scan for any 'else' token
 after the body of the IF statement:
 
-```
+```c
   // Get the AST for the statement
   trueAST = single_statement();
 
@@ -338,7 +338,7 @@ the token numeric value in our error messages, e.g.
 For the programmer who receives these error messages, they are essentially unusable.
 In `scan.c`, I've added this list of token strings:
 
-```
+```c
 // List of token strings, for debugging purposes
 char *Tstring[] = {
   "EOF", "=", "||", "&&", "|", "^", "&",
@@ -357,7 +357,7 @@ char *Tstring[] = {
 
 In `defs.h`, I've added another field to the Token structure:
 
-```
+```c
 // Token structure
 struct token {
   int token;                    // Token type, from the enum list above
@@ -369,7 +369,7 @@ struct token {
 In `scan()` in `scan.c`, just before we return a token, we set up its
 string equivalent:
 
-```
+```c
   t->tokstr = Tstring[t->token];
 ```
 

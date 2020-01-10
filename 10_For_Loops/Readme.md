@@ -8,7 +8,7 @@ to explain before I get to the discussion on how it got solved.
 
 I assume that you are familiar with the syntax of FOR loops. One example is
 
-```
+```c
   for (i=0; i < MAX; i++)
     printf("%d\n", i);
 ```
@@ -110,7 +110,7 @@ at the end of the statement.
 That's good for compound statements but it won't work for FOR loops.
 I would have to write something like:
 
-```
+```c
   for (i=1; ; i < 10 ; i= i + 1; )
 ```
 
@@ -125,7 +125,7 @@ IF statements).
 With all of that explained, let's now look at the new single and compound
 statement parsing code:
 
-```
+```c
 // Parse a single statement
 // and return its AST
 static struct ASTnode *single_statement(void) {
@@ -194,7 +194,7 @@ Given the BNF syntax for FOR loops above, this is straightforward. And
 given the shape of the AST tree we want, the code to build this tree is
 also straightforward. Here's the code:
 
-```
+```c
 // Parse a FOR statement
 // and return its AST
 static struct ASTnode *for_statement(void) {
@@ -247,7 +247,7 @@ to the generation side of the compiler.
 
 The `tests/input07` file has this program in it:
 
-```
+```c
 {
   int i;
   for (i= 1; i <= 10; i= i + 1) {

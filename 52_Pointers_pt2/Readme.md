@@ -12,7 +12,7 @@ We'll start with the problem that caused all of this. When running the
 compiler's source code through itself, I realised that I couldn't parse
 a chain of pointers, e.g. something like the expression:
 
-```
+```c
   ptr->next->next->next
 ```
 
@@ -25,7 +25,7 @@ There is no loop to follow a chain of `->` operators.
 Even worse, `primary()` looks for a single identifier. This means that
 it won't parse the following, either:
 
-```
+```c
   ptrarray[4]->next     OR
   unionvar.member->next
 ```
@@ -78,7 +78,7 @@ AST tree for the identifier plus any postfix operations.
 At the same time, the AST node structure in `defs.h` only knows about the
 primitive type:
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   int op;           // "Operation" to be performed on this tree
@@ -114,7 +114,7 @@ I'm not going to bore you with all the details, but we can start with
 the change to the AST node structure in `defs.h`, and the main function
 in `tree.c` that builds an AST node:
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
@@ -164,7 +164,7 @@ much of what we've done, there are a few wrinkles along the way to iron out.
 
 `postfix()` actually looks much cleaner now:
 
-```
+```c
 // Parse a postfix expression and return
 // an AST node representing it. The
 // identifier is already in Text.
@@ -238,7 +238,7 @@ from the base and dereference the pointer to the member.
 
 One other difference is this code:
 
-```
+```c
   // Check that the left AST tree is a struct or union.
   // If so, change it from an A_IDENT to an A_ADDR so that
   // we get the base address, not the value at this address.
@@ -269,7 +269,7 @@ to get through all the tests again.
 `tests/input128.c` now checks that we can follow a chain of pointers, which
 was the whole point of this exercise:
 
-```
+```c
 struct foo {
   int val;
   struct foo *next;
@@ -303,7 +303,7 @@ that we had hit a C pre-processor line and it parsed this line. Unfortunately,
 I hadn't tied the scanner down to looking in the first column of each line.
 So, when our compiler hit this source code line:
 
-```
+```c
   while (c == '#') {
 ```
 

@@ -42,7 +42,7 @@ add.
 The new function syntax is so simple that we can write a nice, small function
 to parse it (in `decl.c`):
 
-```
+```c
 // Parse the declaration of a simplistic function
 struct ASTnode *function_declaration(void) {
   struct ASTnode *tree;
@@ -74,7 +74,7 @@ redeclared? Well, we won't notice that yet.
 With the above function, we can now rewrite some of the code in `main()`
 to parse multiple functions one after the other:
 
-```
+```c
   scan(&Token);                 // Get the first token from the input
   genpreamble();                // Output the preamble
   while (1) {                   // Parse a function and
@@ -96,7 +96,7 @@ Now that we have an A_FUNCTION AST node, we had better add some code
 in the generic code generator, `gen.c` to deal with it. Looking above,
 this is a *unary* AST node with a single child:
 
-```
+```c
   // Return an A_FUNCTION node which has the function's nameslot
   // and the compound statement sub-tree
   return(mkuastunary(A_FUNCTION, tree, nameslot));
@@ -107,7 +107,7 @@ is the body of the function. We need to generate the start of the
 function *before* we generate the code for the compound statement.
 So here's the code in `genAST()` to do this:
 
-```
+```c
     case A_FUNCTION:
       // Generate the function's preamble before the code
       cgfuncpreamble(Gsym[n->v.id].name);
@@ -127,7 +127,7 @@ We already have this code in `cgpreamble()` and `cgpostamble()`, but
 Therefore, it's a matter of separating out these snippets of assembly
 code into new functions in `cg.c`:
 
-```
+```c
 // Print out the assembly preamble
 void cgpreamble() {
   freeall_registers();
@@ -155,7 +155,7 @@ void cgfuncpostamble() {
 We have a new test program, `tests/input08` which is starting to look
 like a C program (apart from the `print` statement):
 
-```
+```c
 void main()
 {
   int i;

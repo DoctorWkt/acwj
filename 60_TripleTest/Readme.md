@@ -42,7 +42,7 @@ $ ./cwj0 -o z tests/input002.c ; ./z
 So, `cwj0` is producing incorrect assembly output. Let's start 
 with the test source code:
 
-```
+```c
 void main()
 {
   int fred;
@@ -77,7 +77,7 @@ is calculating the offset as `-8` below the frame pointer.
 These offsets are being calculated by the function
 `newlocaloffset()` in `cg.c`:
 
-```
+```c
 // Create the position of a new local variable.
 static int localOffset;
 static int newlocaloffset(int size) {
@@ -101,7 +101,7 @@ Let's abstract  `newlocaloffset()` into a separate source
 file, `z.c` (my "go to" temporary file name) and compile it.
 The source file is:
 
-```
+```c
 static int localOffset=0;
 static int newlocaloffset(int size) {
   localOffset += (size > 4) ? size : 4;
@@ -161,7 +161,7 @@ it should be adding two different registers.
 We can pass the triple test by rewriting the source code
 to `newlocaloffset()`:
 
-```
+```c
 static int newlocaloffset(int size) {
   if (size > 4)
     localOffset= localOffset + size;
@@ -207,7 +207,7 @@ all the registers are freed, even though `%r10` holds the cached
 copy of `localOffset`. Which function is generating these lines
 and freeing the registers? The answer is:
 
-```
+```c
 // Compare two registers and jump if false.
 int cgcompare_and_jump(int ASTop, int r1, int r2, int label, int type) {
   int size = cgprimsize(type);
@@ -250,7 +250,7 @@ deals with ternary operators is freeing registers, even though
 this may only be part of a bigger expression with registers already
 allocated (in `gen.c`):
 
-```
+```c
 static int gen_ternary(struct ASTnode *n) {
   ...
   // Generate the condition code
@@ -288,7 +288,7 @@ false expression's value.
 To make this happen, I've made a previously-static function in `cg.c`
 global and renamed it:
 
-```
+```c
 // Return a register to the list of available registers.
 // Check to see if it's not already there.
 void cgfreereg(int reg) { ... }
@@ -296,7 +296,7 @@ void cgfreereg(int reg) { ... }
 
 We can now rewrite the ternary handling code in `gen.c`:
 
-```
+```c
 static int gen_ternary(struct ASTnode *n) {
   ...
     // Generate the condition code followed

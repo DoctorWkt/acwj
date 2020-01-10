@@ -11,7 +11,7 @@ We start with the changes to the symbol table as these
 are central to having two variable scopes: global and local.
 The structure of the symbol table entries is now (in `defs.h`):
 
-```
+```c
 // Storage classes
 enum {
         C_GLOBAL = 1,           // Globally visible symbol
@@ -40,7 +40,7 @@ note that we now have symbols marked C_GLOBAL or C_LOCAL.
 The symbol table's name has also changed, along with the indexed into it
 (in `data.h`):
 
-```
+```c
 extern_ struct symtable Symtable[NSYMBOLS];     // Global symbol table
 extern_ int Globs;                              // Position of next free global symbol slot
 extern_ int Locls;                              // Position of next free local symbol slot
@@ -61,7 +61,7 @@ In `sym.c` as well as the existing `findglob()` and `newglob()` functions
 to find or allocate a global symbol, we now have `findlocl()` and `newlocl()`.
 They have code to detect a collision between `Globs` and `Locls`:
 
-```
+```c
 // Get the position of a new global symbol slot, or die
 // if we've run out of positions.
 static int newglob(void) {
@@ -93,7 +93,7 @@ and call `updatesym()` to set the values for this symbol. Finally, there is
 a new function, `findsymbol()`, that searches for a symbol in both local
 and global sections of the symbol table:
 
-```
+```c
 // Determine if the symbol s is in the symbol table.
 // Return its slot position or -1 if not found.
 int findsymbol(char *s) {
@@ -115,7 +115,7 @@ We need to be able to parse both global and local variable declarations.
 The code to parse them is (for now) the same, so I added a flag to the
 function:
 
-```
+```c
 void var_declaration(int type, int islocal) {
     ...
       // Add this as a known array
@@ -139,7 +139,7 @@ There are two calls to `var_declaration()` in our compiler at present.
 This one in `global_declarations()` in `decl.c` parses global variable
 declarations:
 
-```
+```c
 void global_declarations(void) {
       ...
       // Parse the global variable declaration
@@ -151,7 +151,7 @@ void global_declarations(void) {
 This one in `single_statement()` in `stmt.c` parses local variable
 declarations:
 
-```
+```c
 static struct ASTnode *single_statement(void) {
   int type;
 
@@ -184,7 +184,7 @@ For each local variable, we need to allocate a position for it and
 record this in the symbol table's `posn` field. Here is how we do it.
 In `cg.c` we have a new static variable and two functions to manipulate it:
 
-```
+```c
 // Position of next local variable relative to stack base pointer.
 // We store the offset as positive to make aligning the stack pointer easier
 static int localOffset;
@@ -248,7 +248,7 @@ Now that we are using locations on the stack, we had better move the stack
 pointer down below the area which holds our local variables. Thus, we need
 to modify the stack pointer in our function preamble and postamble:
 
-```
+```c
 // Print out a function preamble
 void cgfuncpreamble(int id) {
   char *name = Symtable[id].name;
@@ -284,7 +284,7 @@ I think that is the bulk of the changes to add local variables to our
 compiler. The test program `tests/input25.c` demonstrates the storage of
 local variables on the stack:
 
-```
+```c
 int a; int b; int c;
 
 int main()

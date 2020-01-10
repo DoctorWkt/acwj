@@ -2,7 +2,7 @@
 
 Two parts ago, I was trying to compile this line:
 
-```
+```c
 enum { TEXTLEN = 512 };         // Length of identifiers in input
 extern char Text[TEXTLEN + 1];
 ```
@@ -33,7 +33,7 @@ values.
 
 The function header in `decl.c` is now:
 
-```
+```c
 // Given a type, parse an expression of literals and ensure
 // that the type of this expression matches the given type.
 // Parse any type cast that precedes the expression.
@@ -46,7 +46,7 @@ So, it's a drop-in replacement for the old `parse_literal()` except
 that any cast parsing code we had before can be discarded. Let's now
 look at the new code in `parse_literal()`.
 
-```
+```c
 int parse_literal(int type) {
   struct ASTnode *tree;
 
@@ -60,7 +60,7 @@ in the input file, and then `optimise()` to fold all the literal expressions.
 Now, for this to be a tree we can use, the root node should be either
 an A_INTLIT, an A_STRLIT or a A_CAST (if there was a preceding cast).
 
-```
+```c
   // If there's a cast, get the child and
   // mark it as having the type from the cast
   if (tree->op == A_CAST) {
@@ -73,7 +73,7 @@ It was a cast, so we get rid of the A_CAST node but keep the type
 that the child was cast to.
 
 
-```
+```c
   // The tree must now have an integer or string literal
   if (tree->op != A_INTLIT && tree->op != A_STRLIT)
     fatal("Cannot initialise globals with a general expression");
@@ -81,7 +81,7 @@ that the child was cast to.
 
 Oops, they gave us something we cannot use, so tell them and stop.
 
-```
+```c
   // If the type is char * and
   if (type == pointer_to(P_CHAR)) {
     // We have a string literal, return the label number
@@ -95,7 +95,7 @@ Oops, they gave us something we cannot use, so tell them and stop.
 
 We need to be able to accept both of these as input:
 
-```
+```c
               char *c= "Hello";
               char *c= (char *)0;
 ```
@@ -103,7 +103,7 @@ We need to be able to accept both of these as input:
 and the two inner IF statements above match the two input lines shown.
 If not a string literal, ...
 
-```
+```c
   // We only get here with an integer literal. The input type
   // is an integer type and is wide enough to hold the literal value
   if (inttype(type) && typesize(type, NULL) >= typesize(tree->type, NULL))
@@ -116,7 +116,7 @@ If not a string literal, ...
 
 This took me a while to figure out. We have to parse these:
 
-```
+```c
   long  x= 3;    // allow this, where 3 is type char
   char  y= 4000; // prevent this, where 4000 is too wide
   char *z= 4000; // prevent this, as z is not integer type
@@ -131,7 +131,7 @@ Now that we have a function that can parse a literal expression
 possibly preceded by a cast, we can use it. This is where we toss
 out our old cast parsing code and replace it. The changes are:
 
-```
+```c
 // Parse a scalar declaration
 static struct symtable *scalar_declaration(...) {
     ...
@@ -180,13 +180,13 @@ new `parse_literal()`. In our general function to parse expressions,
 `binexpr()`, we now must inform it that an expression can be ended
 by a '}' token, such as appears here:
 
-```
+```c
   int fred[]= { 1, 2, 6 };
 ```
 
 The small change to `binexpr()` is:
 
-```
+```c
     // If we hit a terminating token, return just the left node
     tokentype = Token.token;
     if (tokentype == T_SEMI || tokentype == T_RPAREN ||
@@ -204,7 +204,7 @@ value to initialise a global variable. This code in `tests/input112.c`
 tests both a literal expression to initialise a scalar variable, and
 a literal expression as the size of an array:
 
-```
+```c
 #include <stdio.h>
 char* y = NULL;
 int x= 10 + 6;

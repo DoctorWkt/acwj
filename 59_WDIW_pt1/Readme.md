@@ -21,7 +21,7 @@ I worked this out by dumping the AST trees with both `cwj` and `cwj0` and
 observing the differences between them. What we need to do is mark the expression *after*
 the `*` token as an rvalue. This is now done in `prefix()` in `expr.c`:
 
-```
+```c
 static struct ASTnode *prefix(int ptp) {
   struct ASTnode *tree;
   switch (Token.token) {
@@ -41,7 +41,7 @@ This one is going to keep biting me, I'm sure. I found another place where
 I wasn't treating an extern symbol as a global symbol. This was in `genAST()`
 in `gen.c` where we generate assignment assembly code. The fix is:
 
-```
+```c
       // Now into the assignment code
       // Are we assigning to an identifier or through a pointer?
       switch (n->right->op) {
@@ -77,7 +77,7 @@ Right now, `cwj1` can't be created as there is no assembly output!
 The question is, where is the compiler getting to? To find out, I
 added a `printf()` to the bottom of `scan()`:
 
-```
+```c
   // We found a token
   t->tokstr = Tstring[t->token];
   printf("Scanned %d\n", t->token);
@@ -97,7 +97,7 @@ Ah, I spotted a memory access to `0(%rbp)`. This should never
 happen as all locals are at negative locations relative to the frame pointer.
 In `cgaddress()` in `cg.c`, we have another missed external test. We now have:
 
-```
+```c
 int cgaddress(struct symtable *sym) {
   int r = alloc_register();
 
@@ -125,7 +125,7 @@ invalid digit in integer literal:e on line 1 of tests/input001.c
 
 This turned out to be caused by this loop in `scanint()` in `scan.c()`:
 
-```
+```c
 static int scanint(int c) {
   int k;
   ...
@@ -158,7 +158,7 @@ What we should do is use a different `cmp` instruction
 based on the size of the operands in the comparison.
 I've made this change to `cgcompare_and_set()` in `cg.c`:
 
-```
+```c
 int cgcompare_and_set(int ASTop, int r1, int r2, int type) {
   int size = cgprimsize(type);
   ...

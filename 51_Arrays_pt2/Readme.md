@@ -16,7 +16,7 @@ I realised that an array is similar to a pointer except:
 
 As an example of the first point above, consider:
 
-```
+```c
 int ary[5];
 int *ptr;
 
@@ -47,7 +47,7 @@ but it's time to go back and fix it properly. We need to allow
 unadorned array identifiers but mark them as an rvalues. Here are the
 changes:
 
-```
+```c
 static struct ASTnode *postfix(void) {
   ...
   int rvalue=0;
@@ -90,7 +90,7 @@ scalar variable.
 Now we need to modify `array_access()` in `expr.c` to allow pointers
 to be used with '[' ']' indexing. Here are the changes:
 
-```
+```c
 static struct ASTnode *array_access(void) {
   struct ASTnode *left, *right;
   struct symtable *aryptr;

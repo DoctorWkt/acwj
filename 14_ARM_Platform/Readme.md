@@ -80,7 +80,7 @@ Stores to variables are similar:
 
 There is now this code in `cgpostamble()` to generate the table of .words:
 
-```
+```c
   // Print out the global variables
   fprintf(Outfile, ".L2:\n");
   for (int i = 0; i < Globs; i++) {
@@ -94,7 +94,7 @@ global variable. Following the KISS principle, I manually calculate the
 offset each time I want to load `r3` with the address of a variable.
 Yes, I should calculate each offset once and store it somewhere; later!
 
-```
+```c
 // Determine the offset of a variable from the .L2
 // label. Yes, this is inefficient code.
 static void set_var_offset(int id) {
@@ -122,7 +122,7 @@ values. In the postamble, I output them following the `.L3` label. And, like
 variables, I walk this list to determine the offset of any literal from
 the `.L3` label:
 
-```
+```c
 // We have to store large integer literal values in memory.
 // Keep a list of them which will be output in the postamble
 #define MAXINTS 1024
