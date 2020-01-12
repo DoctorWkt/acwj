@@ -64,7 +64,7 @@ struct ASTnode *funccall(void) {
   // Build the function call AST node. Store the
   // function's return type as this node's type.
   // Also record the function's symbol-id
-  tree = mkuastunary(A_FUNCCALL, Gsym[id].type, tree, id);
+  tree = mkastunary(A_FUNCCALL, Gsym[id].type, tree, id);
 
   // Get the ')'
   rparen();
@@ -253,10 +253,10 @@ static struct ASTnode *return_statement(void) {
 
   // Widen the left if required.
   if (returntype)
-    tree = mkuastunary(returntype, functype, tree, 0);
+    tree = mkastunary(returntype, functype, tree, 0);
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, 0);
 
   // Get the ')'
   rparen();

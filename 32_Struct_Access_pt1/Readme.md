@@ -169,7 +169,7 @@ We walk the member's list to find the matching member's name.
   // Add the member's offset to the base of the struct and
   // dereference it. Still an lvalue at this point
   left = mkastnode(A_ADD, pointer_to(m->type), left, NULL, right, NULL, 0);
-  left = mkuastunary(A_DEREF, m->type, left, NULL, 0);
+  left = mkastunary(A_DEREF, m->type, left, NULL, 0);
   return (left);
 }
 

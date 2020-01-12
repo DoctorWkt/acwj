@@ -276,7 +276,7 @@ when the scale was 1. The code in `modify_type()` in `types.c` is now:
     if (inttype(ltype) && ptrtype(rtype)) {
       rsize = genprimsize(value_at(rtype));
       if (rsize > 1)
-        return (mkuastunary(A_SCALE, rtype, tree, rsize));
+        return (mkastunary(A_SCALE, rtype, tree, rsize));
       else
         return (tree);          // Size 1, no need to scale
     }

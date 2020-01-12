@@ -106,7 +106,7 @@ static struct ASTnode *primary(void) {
       rparen();
     else
       // Otherwise, make a unary AST node for the cast
-      n= mkuastunary(A_CAST, type, n, NULL, 0);
+      n= mkastunary(A_CAST, type, n, NULL, 0);
     return (n);
   }
 }

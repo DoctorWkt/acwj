@@ -43,10 +43,10 @@ static struct ASTnode *print_statement(void) {
 
   // Widen the tree if required. 
   if (righttype)
-    tree = mkuastunary(righttype, P_INT, tree, 0);
+    tree = mkastunary(righttype, P_INT, tree, 0);
 
   // Make an print AST tree
-  tree = mkuastunary(A_PRINT, P_NONE, tree, 0);
+  tree = mkastunary(A_PRINT, P_NONE, tree, 0);
 
   // Return the AST
   return (tree);
@@ -90,7 +90,7 @@ static struct ASTnode *assignment_statement(void) {
 
   // Widen the left if required.
   if (lefttype)
-    left = mkuastunary(lefttype, right->type, left, 0);
+    left = mkastunary(lefttype, right->type, left, 0);
 
   // Make an assignment AST tree
   tree = mkastnode(A_ASSIGN, P_INT, left, NULL, right, 0);
@@ -234,10 +234,10 @@ static struct ASTnode *return_statement(void) {
 
   // Widen the left if required.
   if (returntype)
-    tree = mkuastunary(returntype, functype, tree, 0);
+    tree = mkastunary(returntype, functype, tree, 0);
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, 0);
 
   // Get the ')'
   rparen();

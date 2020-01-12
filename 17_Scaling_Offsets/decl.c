@@ -96,7 +96,7 @@ struct ASTnode *function_declaration(int type) {
   }
   // Return an A_FUNCTION node which has the function's nameslot
   // and the compound statement sub-tree
-  return (mkuastunary(A_FUNCTION, type, tree, nameslot));
+  return (mkastunary(A_FUNCTION, type, tree, nameslot));
 }
 
 

@@ -40,7 +40,7 @@ static struct ASTnode *print_statement(void) {
     fatal("Incompatible type to print");
 
   // Make an print AST tree
-  tree = mkuastunary(A_PRINT, P_NONE, tree, 0);
+  tree = mkastunary(A_PRINT, P_NONE, tree, 0);
 
   // Return the AST
   return (tree);
@@ -219,7 +219,7 @@ static struct ASTnode *return_statement(void) {
     fatal("Incompatible type to print");
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, 0);
 
   // Get the ')'
   rparen();

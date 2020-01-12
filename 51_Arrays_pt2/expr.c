@@ -65,7 +65,7 @@ static struct ASTnode *funccall(void) {
   // Build the function call AST node. Store the
   // function's return type as this node's type.
   // Also record the function's symbol-id
-  tree = mkuastunary(A_FUNCCALL, funcptr->type, tree, funcptr, 0);
+  tree = mkastunary(A_FUNCCALL, funcptr->type, tree, funcptr, 0);
 
   // Get the ')'
   rparen();
@@ -113,7 +113,7 @@ static struct ASTnode *array_access(void) {
   // added to it, and dereference the element. Still an lvalue
   // at this point.
   left = mkastnode(A_ADD, aryptr->type, left, NULL, right, NULL, 0);
-  left = mkuastunary(A_DEREF, value_at(left->type), left, NULL, 0);
+  left = mkastunary(A_DEREF, value_at(left->type), left, NULL, 0);
   return (left);
 }
 
@@ -167,7 +167,7 @@ static struct ASTnode *member_access(int withpointer) {
   // Add the member's offset to the base of the struct/union
   // and dereference it. Still an lvalue at this point
   left = mkastnode(A_ADD, pointer_to(m->type), left, NULL, right, NULL, 0);
-  left = mkuastunary(A_DEREF, m->type, left, NULL, 0);
+  left = mkastunary(A_DEREF, m->type, left, NULL, 0);
   return (left);
 }
 
@@ -324,7 +324,7 @@ static struct ASTnode *primary(void) {
       rparen();
     else
       // Otherwise, make a unary AST node for the cast
-      n = mkuastunary(A_CAST, type, n, NULL, 0);
+      n = mkastunary(A_CAST, type, n, NULL, 0);
     return (n);
 
   default:
@@ -424,7 +424,7 @@ struct ASTnode *prefix(void) {
       fatal("* operator must be followed by an identifier or *");
 
     // Prepend an A_DEREF operation to the tree
-    tree = mkuastunary(A_DEREF, value_at(tree->type), tree, NULL, 0);
+    tree = mkastunary(A_DEREF, value_at(tree->type), tree, NULL, 0);
     break;
   case T_MINUS:
     // Get the next token and parse it
@@ -437,7 +437,7 @@ struct ASTnode *prefix(void) {
     // also widen this to int so that it's signed
     tree->rvalue = 1;
     tree = modify_type(tree, P_INT, 0);
-    tree = mkuastunary(A_NEGATE, tree->type, tree, NULL, 0);
+    tree = mkastunary(A_NEGATE, tree->type, tree, NULL, 0);
     break;
   case T_INVERT:
     // Get the next token and parse it
@@ -448,7 +448,7 @@ struct ASTnode *prefix(void) {
     // Prepend a A_INVERT operation to the tree and
     // make the child an rvalue.
     tree->rvalue = 1;
-    tree = mkuastunary(A_INVERT, tree->type, tree, NULL, 0);
+    tree = mkastunary(A_INVERT, tree->type, tree, NULL, 0);
     break;
   case T_LOGNOT:
     // Get the next token and parse it
@@ -459,7 +459,7 @@ struct ASTnode *prefix(void) {
     // Prepend a A_LOGNOT operation to the tree and
     // make the child an rvalue.
     tree->rvalue = 1;
-    tree = mkuastunary(A_LOGNOT, tree->type, tree, NULL, 0);
+    tree = mkastunary(A_LOGNOT, tree->type, tree, NULL, 0);
     break;
   case T_INC:
     // Get the next token and parse it
@@ -472,7 +472,7 @@ struct ASTnode *prefix(void) {
       fatal("++ operator must be followed by an identifier");
 
     // Prepend an A_PREINC operation to the tree
-    tree = mkuastunary(A_PREINC, tree->type, tree, NULL, 0);
+    tree = mkastunary(A_PREINC, tree->type, tree, NULL, 0);
     break;
   case T_DEC:
     // Get the next token and parse it
@@ -485,7 +485,7 @@ struct ASTnode *prefix(void) {
       fatal("-- operator must be followed by an identifier");
 
     // Prepend an A_PREDEC operation to the tree
-    tree = mkuastunary(A_PREDEC, tree->type, tree, NULL, 0);
+    tree = mkastunary(A_PREDEC, tree->type, tree, NULL, 0);
     break;
   default:
     tree = primary();

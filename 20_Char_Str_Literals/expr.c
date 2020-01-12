@@ -25,7 +25,7 @@ static struct ASTnode *funccall(void) {
   // Build the function call AST node. Store the
   // function's return type as this node's type.
   // Also record the function's symbol-id
-  tree = mkuastunary(A_FUNCCALL, Gsym[id].type, tree, id);
+  tree = mkastunary(A_FUNCCALL, Gsym[id].type, tree, id);
 
   // Get the ')'
   rparen();
@@ -65,7 +65,7 @@ static struct ASTnode *array_access(void) {
   // added to it, and dereference the element. Still an lvalue
   // at this point.
   left = mkastnode(A_ADD, Gsym[id].type, left, NULL, right, 0);
-  left = mkuastunary(A_DEREF, value_at(left->type), left, 0);
+  left = mkastunary(A_DEREF, value_at(left->type), left, 0);
   return (left);
 }
 
@@ -213,7 +213,7 @@ struct ASTnode *prefix(void) {
       fatal("* operator must be followed by an identifier or *");
 
     // Prepend an A_DEREF operation to the tree
-    tree = mkuastunary(A_DEREF, value_at(tree->type), tree, 0);
+    tree = mkastunary(A_DEREF, value_at(tree->type), tree, 0);
     break;
   default:
     tree = primary();

@@ -249,7 +249,7 @@ struct ASTnode *function_declaration(int type) {
   }
   // Return an A_FUNCTION node which has the function's symbol pointer
   // and the compound statement sub-tree
-  return (mkuastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel));
+  return (mkastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel));
 }
 
 // Parse struct declarations. Either find an existing

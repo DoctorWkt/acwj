@@ -61,7 +61,7 @@ struct ASTnode *function_declaration(void) {
 
   // Return an A_FUNCTION node which has the function's nameslot
   // and the compound statement sub-tree
-  return(mkuastunary(A_FUNCTION, tree, nameslot));
+  return(mkastunary(A_FUNCTION, tree, nameslot));
 }
 ```
 
@@ -99,7 +99,7 @@ this is a *unary* AST node with a single child:
 ```
   // Return an A_FUNCTION node which has the function's nameslot
   // and the compound statement sub-tree
-  return(mkuastunary(A_FUNCTION, tree, nameslot));
+  return(mkastunary(A_FUNCTION, tree, nameslot));
 ```
 
 The child has the sub-tree which holds the compound statement that

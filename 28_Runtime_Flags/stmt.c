@@ -44,7 +44,7 @@ static struct ASTnode *if_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, 0);
   rparen();
 
   // Get the AST for the compound statement
@@ -77,7 +77,7 @@ static struct ASTnode *while_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, 0);
   rparen();
 
   // Get the AST for the compound statement
@@ -113,7 +113,7 @@ static struct ASTnode *for_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, 0);
   semi();
 
   // Get the post_op statement and the ')'
@@ -159,7 +159,7 @@ static struct ASTnode *return_statement(void) {
     fatal("Incompatible type to return");
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, 0);
 
   // Get the ')'
   rparen();

@@ -155,7 +155,7 @@ static struct ASTnode *return_statement(void) {
     fatal("Incompatible type to return");
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, 0);
 
   // Get the ')'
   rparen();

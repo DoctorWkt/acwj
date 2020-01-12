@@ -101,9 +101,9 @@ struct ASTnode *binexpr(int ptp) {
 
     // Widen either side if required. type vars are A_WIDEN now
     if (lefttype)
-      left = mkuastunary(lefttype, right->type, left, 0);
+      left = mkastunary(lefttype, right->type, left, 0);
     if (righttype)
-      right = mkuastunary(righttype, left->type, right, 0);
+      right = mkastunary(righttype, left->type, right, 0);
 
     // Join that sub-tree with ours. Convert the token
     // into an AST operation at the same time.

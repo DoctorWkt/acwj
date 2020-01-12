@@ -253,7 +253,7 @@ Once we have parsed a function and its body, we put the A_FUNCTION node on the t
 ```
   // Build the A_FUNCTION node which has the function's symbol pointer
   // and the compound statement sub-tree
-  tree = mkuastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel);
+  tree = mkastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel);
 
   // Do optimisations on the AST tree
   tree= optimise(tree);

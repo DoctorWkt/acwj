@@ -188,7 +188,7 @@ get the AST for the expression and ensure that its is of integer type.
 ```
   // Build an A_SWITCH subtree with the expression as
   // the child
-  n= mkuastunary(A_SWITCH, 0, left, NULL, 0);
+  n= mkastunary(A_SWITCH, 0, left, NULL, 0);
 
   // Now parse the cases
   Switchlevel++;
@@ -283,9 +283,9 @@ We can now perform the code common to both.
         // Build a sub-tree with the compound statement as the left child
         // and link it in to the growing A_CASE tree
         if (casetree==NULL) {
-          casetree= casetail= mkuastunary(ASTop, 0, left, NULL, casevalue);
+          casetree= casetail= mkastunary(ASTop, 0, left, NULL, casevalue);
         } else {
-          casetail->right= mkuastunary(ASTop, 0, left, NULL, casevalue);
+          casetail->right= mkastunary(ASTop, 0, left, NULL, casevalue);
           casetail= casetail->right;
         }
         break;

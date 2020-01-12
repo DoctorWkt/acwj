@@ -37,7 +37,7 @@ struct ASTnode *mkastleaf(int op, int type,
 }
 
 // Make a unary AST node: only one child
-struct ASTnode *mkuastunary(int op, int type, struct ASTnode *left,
+struct ASTnode *mkastunary(int op, int type, struct ASTnode *left,
 			    struct symtable *sym, int intvalue) {
   return (mkastnode(op, type, left, NULL, NULL, sym, intvalue));
 }

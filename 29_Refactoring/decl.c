@@ -211,7 +211,7 @@ struct ASTnode *function_declaration(int type) {
   }
   // Return an A_FUNCTION node which has the function's id
   // and the compound statement sub-tree
-  return (mkuastunary(A_FUNCTION, type, tree, id));
+  return (mkastunary(A_FUNCTION, type, tree, id));
 }
 
 

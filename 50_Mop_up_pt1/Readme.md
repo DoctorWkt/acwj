@@ -25,7 +25,7 @@ In `switch_statement()` in `stmt.c`:
         left= compound_statement(1); casecount++;
         ...
         // Build a sub-tree with the compound statement as the left child
-        casetail->right= mkuastunary(ASTop, 0, left, NULL, casevalue);
+        casetail->right= mkastunary(ASTop, 0, left, NULL, casevalue);
 ```
 
 What we want is to allow an empty compound statement, so that any case

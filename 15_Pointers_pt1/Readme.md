@@ -216,7 +216,7 @@ struct ASTnode *prefix(void) {
         fatal("* operator must be followed by an identifier or *");
 
       // Prepend an A_DEREF operation to the tree
-      tree = mkuastunary(A_DEREF, value_at(tree->type), tree, 0);
+      tree = mkastunary(A_DEREF, value_at(tree->type), tree, 0);
       break;
     default:
       tree = primary();

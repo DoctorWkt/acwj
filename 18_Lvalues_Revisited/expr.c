@@ -25,7 +25,7 @@ struct ASTnode *funccall(void) {
   // Build the function call AST node. Store the
   // function's return type as this node's type.
   // Also record the function's symbol-id
-  tree = mkuastunary(A_FUNCCALL, Gsym[id].type, tree, id);
+  tree = mkastunary(A_FUNCCALL, Gsym[id].type, tree, id);
 
   // Get the ')'
   rparen();
@@ -152,7 +152,7 @@ struct ASTnode *prefix(void) {
 	fatal("* operator must be followed by an identifier or *");
 
       // Prepend an A_DEREF operation to the tree
-      tree = mkuastunary(A_DEREF, value_at(tree->type), tree, 0);
+      tree = mkastunary(A_DEREF, value_at(tree->type), tree, 0);
       break;
     default:
       tree = primary();

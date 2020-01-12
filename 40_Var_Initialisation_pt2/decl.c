@@ -386,7 +386,7 @@ static struct symtable *function_declaration(char *funcname, int type,
   }
   // Build the A_FUNCTION node which has the function's symbol pointer
   // and the compound statement sub-tree
-  tree = mkuastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel);
+  tree = mkastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel);
 
   // Generate the assembly code for it
   if (O_dumpAST) {

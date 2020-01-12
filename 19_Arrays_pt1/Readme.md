@@ -343,7 +343,7 @@ static struct ASTnode *array_access(void) {
   // added to it, and dereference the element. Still an lvalue
   // at this point.
   left = mkastnode(A_ADD, Gsym[id].type, left, NULL, right, 0);
-  left = mkuastunary(A_DEREF, value_at(left->type), left, 0);
+  left = mkastunary(A_DEREF, value_at(left->type), left, 0);
   return (left);
 }
 ```

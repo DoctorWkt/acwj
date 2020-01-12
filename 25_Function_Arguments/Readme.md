@@ -167,7 +167,7 @@ static struct ASTnode *funccall(void) {
   // Build the function call AST node. Store the
   // function's return type as this node's type.
   // Also record the function's symbol-id
-  tree = mkuastunary(A_FUNCCALL, Symtable[id].type, tree, id);
+  tree = mkastunary(A_FUNCCALL, Symtable[id].type, tree, id);
 
   // Get the ')'
   rparen();

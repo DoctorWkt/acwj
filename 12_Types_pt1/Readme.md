@@ -282,9 +282,9 @@ I've modified the code in `binexpr()` in `expr.c` to do this:
 
     // Widen either side if required. type vars are A_WIDEN now
     if (lefttype)
-      left = mkuastunary(lefttype, right->type, left, 0);
+      left = mkastunary(lefttype, right->type, left, 0);
     if (righttype)
-      right = mkuastunary(righttype, left->type, right, 0);
+      right = mkastunary(righttype, left->type, right, 0);
 
     // Join that sub-tree with ours. Convert the token
     // into an AST operation at the same time.
@@ -320,7 +320,7 @@ static struct ASTnode *print_statement(void) {
     fatal("Incompatible types");
 
   // Widen the tree if required. 
-  if (righttype) tree = mkuastunary(righttype, P_INT, tree, 0);
+  if (righttype) tree = mkastunary(righttype, P_INT, tree, 0);
 ```
 
 ## Using `type_compatible()` to Assign to a Variable
@@ -352,7 +352,7 @@ static struct ASTnode *assignment_statement(void) {
 
   // Widen the left if required.
   if (lefttype)
-    left = mkuastunary(lefttype, right->type, left, 0);
+    left = mkastunary(lefttype, right->type, left, 0);
 ```
 
 Note the 1 at the the end to this call to `type_compatible()`.

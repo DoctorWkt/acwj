@@ -44,7 +44,7 @@ static struct ASTnode *if_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
   rparen();
 
   // Get the AST for the statement
@@ -77,7 +77,7 @@ static struct ASTnode *while_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
   rparen();
 
   // Get the AST for the statement.
@@ -113,7 +113,7 @@ static struct ASTnode *for_statement(void) {
   // the tree's operation is a comparison.
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, NULL, 0);
   semi();
 
   // Get the post_op expression and the ')'
@@ -159,7 +159,7 @@ static struct ASTnode *return_statement(void) {
     fatal("Incompatible type to return");
 
   // Add on the A_RETURN node
-  tree = mkuastunary(A_RETURN, P_NONE, tree, NULL, 0);
+  tree = mkastunary(A_RETURN, P_NONE, tree, NULL, 0);
 
   // Get the ')' and ';'
   rparen();
@@ -214,7 +214,7 @@ static struct ASTnode *switch_statement(void) {
 
   // Build an A_SWITCH subtree with the expression as
   // the child
-  n= mkuastunary(A_SWITCH, 0, left, NULL, 0);
+  n= mkastunary(A_SWITCH, 0, left, NULL, 0);
 
   // Now parse the cases
   Switchlevel++;
@@ -262,9 +262,9 @@ static struct ASTnode *switch_statement(void) {
 	// Build a sub-tree with any compound statement as the left child
 	// and link it in to the growing A_CASE tree
 	if (casetree==NULL) {
-	  casetree= casetail= mkuastunary(ASTop, 0, body, NULL, casevalue);
+	  casetree= casetail= mkastunary(ASTop, 0, body, NULL, casevalue);
 	} else {
-	  casetail->right= mkuastunary(ASTop, 0, body, NULL, casevalue);
+	  casetail->right= mkastunary(ASTop, 0, body, NULL, casevalue);
 	  casetail= casetail->right;
 	}
 	break;

@@ -328,7 +328,7 @@ IF, WHILE and FOR loops, I've added this code:
   // Force a non-comparison expression to be boolean
   condAST = binexpr(0);
   if (condAST->op < A_EQ || condAST->op > A_GE)
-    condAST = mkuastunary(A_TOBOOL, condAST->type, condAST, 0);
+    condAST = mkastunary(A_TOBOOL, condAST->type, condAST, 0);
 ```
 
 I've introduced a new AST node type, A_TOBOOL. This will generate code

@@ -41,7 +41,7 @@ static struct ASTnode *print_statement(void) {
   tree = binexpr(0);
 
   // Make an print AST tree
-  tree = mkuastunary(A_PRINT, tree, 0);
+  tree = mkastunary(A_PRINT, tree, 0);
 
   // Match the following semicolon
   // and return the AST
