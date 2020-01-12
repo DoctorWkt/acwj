@@ -5,7 +5,7 @@ variable initialisation was easy.
 
 We want to be able to do this sort of thing inside functions:
 
-```
+```c
   int x= 2, y= x+3, z= 5 * x - y;
   char *foo= "Hello world";
 ```
@@ -41,7 +41,7 @@ that it has built.
 If we are in local context and we hit an '=' in a scalar variable's declaration,
 here is what we do:
 
-```
+```c
   struct ASTnode *varnode, *exprnode;
   struct ASTnode **tree;                 // is the ptr ptr argument that we get passed
 
@@ -72,7 +72,7 @@ That's it. We simulate the AST tree building that would normally occur in `expr.
 an assignment expression. Once done, we pass back the assignment tree. This
 bubbles back up to `declaration_list()`. It now does:
 
-```
+```c
   struct ASTnode **gluetree;            // is the ptr ptr argument that we get passed
   struct ASTnode *tree;
   *gluetree= NULL;
@@ -98,7 +98,7 @@ has an A_ASSIGN child with an A_IDENT child and an expression child.
 
 And, way up in `single_statement()` in `stmt.c`:
 
-```
+```c
     ...
     case T_IDENT:
       // We have to see if the identifier matches a typedef.
@@ -126,7 +126,7 @@ And, way up in `single_statement()` in `stmt.c`:
 The above changes were so short and simple that they compiled and worked first time.
 This is not a regular occurrence! Our test program, `tests/input100.c` is this:
 
-```
+```c
 #include <stdio.h>
 int main() {
   int x= 3, y=14;

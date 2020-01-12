@@ -3,7 +3,7 @@
 A couple of parts ago, I introduced pointers and implemented some code to
 check type compatibility. At the time, I realised that, for code like:
 
-```
+```c
   int   c;
   int  *e;
 
@@ -17,7 +17,7 @@ in memory after `c`. In other words, we would have to scale the integer.
 We need to do this for pointer, and later on we will need to do this for
 arrays. Consider the code:
 
-```
+```c
   int list[10];
   int x= list[3];
 ```
@@ -72,7 +72,7 @@ twice and see what happens for each call.
 `modify_type()` in `types.c` is the replacement code for `type_compatible()`.
 The API for the function is:
 
-```
+```c
 // Given an AST tree and a type which we want it to become,
 // possibly modify the tree by widening or scaling so that
 // it is compatible with this type. Return the original tree
@@ -86,7 +86,7 @@ Question: why do we need whatever binary operation is being performed on
 the tree and some other tree? The answer is that we can only add to or
 subtract from pointers. We can't do anything else, e.g.
 
-```
+```c
   int x;
   int *ptr;
 
@@ -100,7 +100,7 @@ Here is the code for now. There are lots of specific tests, and at present
 I can't see a way to rationalise all the possible tests. Also, it will need
 to be extended later.
 
-```
+```c
 struct ASTnode *modify_type(struct ASTnode *tree, int rtype, int op) {
   int ltype;
   int lsize, rsize;
@@ -153,7 +153,7 @@ type to the parent's type. The A_SCALE operation multiplies the child's
 value by the size which is store in the new `struct ASTnode` union field
 (in `defs.h`):
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   ...
@@ -171,7 +171,7 @@ This is fine when we indeed only have one tree. There are three calls now
 to `modify_type()` in `stmt.c`. They are all similar, so here is the one
 from  `assignment_statement()`:
 
-```
+```c
   // Make the AST node for the assignment lvalue
   right = mkastleaf(A_LVIDENT, Gsym[id].type, id);
 
@@ -196,7 +196,7 @@ Thus, we can't just see if one result from `modify_type()` is NULL: we
 need to see both be NULL to assume a type incompatibility. Here's the
 new comparison code in `binexpr()`:
 
-```
+```c
 struct ASTnode *binexpr(int ptp) {
   struct ASTnode *left, *right;
   struct ASTnode *ltemp, *rtemp;
@@ -247,7 +247,7 @@ we also need to implement a multiply for a more general scale factor.
 
 Here is the new code that does this in `genAST()` in `gen.c`:
 
-```
+```c
     case A_SCALE:
       // Small optimisation: use shift if the
       // scale value is a known power of two
@@ -269,7 +269,7 @@ by a constant. When we add the C '<<' operator later, I will write a
 more general shift left function. For now, we can use the `salq` instruction
 with an integer literal value:
 
-```
+```c
 // Shift a register left by a constant
 int cgshlconst(int r, int val) {
   fprintf(Outfile, "\tsalq\t$%d, %s\n", val, reglist[r]);
@@ -281,7 +281,7 @@ int cgshlconst(int r, int val) {
 
 My test program for the scaling functionality is `tests/input16.c`:
 
-```
+```c
 int   c;
 int   d;
 int  *e;
@@ -334,7 +334,7 @@ Now when we run our `input16.c` test, `e= &c + 1; f= *e;` gets the address
 of the integer one up from `c` and stores that integer's value in `f`. As
 we declared:
 
-```
+```c
   int   c;
   int   d;
   ...

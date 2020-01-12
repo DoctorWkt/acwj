@@ -11,13 +11,13 @@ are still missing. These include:
 I also implemented the implicit "not zero operator" which treats an
 expression rvalue as a boolean value for selection and loop statements, e.g.
 
-```
+```c
   for (str= "Hello"; *str; str++) ...
 ```
 
 instead of writing
 
-```
+```c
   for (str= "Hello"; *str != 0; str++) ...
 ```
 
@@ -59,7 +59,7 @@ set of binary operator tokens. Thus, here are the definitions of the
 tokens, the AST node types and the operator precedence table from `defs.h`
 and `expr.c`:
 
-```
+```c
 // Token types
 enum {
   T_EOF,
@@ -234,7 +234,7 @@ expression. So let's look at the new code:
 string literals and identifiers. It also recognises parenthesised expressions.
 Only the identifiers can be followed by postfix operators.
 
-```
+```c
 static struct ASTnode *primary(void) {
   ...
   switch (Token.token) {
@@ -250,7 +250,7 @@ static struct ASTnode *primary(void) {
 I've moved the parsing of function calls and array references out to
 `postfix()`, and this is where we parse the postfix `++` and `--` operators:
 
-```
+```c
 // Parse a postfix expression and return
 // an AST node representing it. The
 // identifier is already in Text.
@@ -323,7 +323,7 @@ selection_statement
 Therefore, we'll have to do this semantically. In `stmt.c` where I parse
 IF, WHILE and FOR loops, I've added this code:
 
-```
+```c
   // Parse the following expression
   // Force a non-comparison expression to be boolean
   condAST = binexpr(0);
@@ -346,7 +346,7 @@ All of these are simple calls out to matching functions in the
 platform-specific code generator in `cg.c`. So the new code in `genAST()`
 in `gen.c` is simply:
 
-```
+```c
     case A_AND:
       return (cgand(leftreg, rightreg));
     case A_OR:
@@ -390,7 +390,7 @@ That means we can now look at the back-end functions to generate real x86-64
 assembly code. For most of the bitwise operations, the x86-64 platform
 has assembly instructions to do them:
 
-```
+```c
 int cgand(int r1, int r2) {
   fprintf(Outfile, "\tandq\t%s, %s\n", reglist[r1], reglist[r2]);
   free_register(r1); return (r2);
@@ -420,7 +420,7 @@ int cginvert(int r) {
 With the shift operations, as far as I can tell the shift amount has to
 be loaded into the `%cl` register first.
 
-```
+```c
 int cgshl(int r1, int r2) {
   fprintf(Outfile, "\tmovb\t%s, %%cl\n", breglist[r2]);
   fprintf(Outfile, "\tshlq\t%%cl, %s\n", reglist[r1]);
@@ -437,7 +437,7 @@ int cgshr(int r1, int r2) {
 The operations that deal with boolean expressions (where the result
 must be either 0 or 1) are a bit more complicated.
 
-```
+```c
 // Logically negate a register's value
 int cglognot(int r) {
   fprintf(Outfile, "\ttest\t%s, %s\n", reglist[r], reglist[r]);
@@ -454,7 +454,7 @@ register proper.
 
 And here is the code to convert an integer into a boolean value:
 
-```
+```c
 // Convert an integer value to a boolean value. Jump if
 // it's an IF or WHILE operation
 int cgboolean(int r, int op, int label) {
@@ -485,7 +485,7 @@ As we already have a `cgloadglob()` function to load a global variable's
 value, let's modify it to also alter the variable as required. The code
 is ugly but it does work.
 
-```
+```c
 // Load a value from a variable into a register.
 // Return the number of the register. If the
 // operation is pre- or post-increment/decrement,

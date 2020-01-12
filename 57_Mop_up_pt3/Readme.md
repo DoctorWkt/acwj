@@ -24,7 +24,7 @@ incdir.h:
 
 and in `defs.h` we now have:
 
-```
+```c
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,7 +39,7 @@ code.
 
 I've added these three external variables in `include/stdio.h`:
 
-```
+```c
 extern FILE *stdin;
 extern FILE *stdout;
 extern FILE *stderr;
@@ -49,7 +49,7 @@ but when I tried to use them they were being treated as local variables!
 It turns out my logic to choose a global variable was wrong. In
 `genAST()` in `gen.c`, we now have:
 
-```
+```c
     case A_IDENT:
       // Load our value if we are an rvalue
       // or we are being dereferenced
@@ -80,7 +80,7 @@ token.
 Here is the basic Pratt algorihm again, as shown by the code in
 `binexpr()` in `expr.c`:
 
-```
+```c
   // Get the tree on the left.
   // Fetch the next token at the same time.
   left = prefix();
@@ -115,20 +115,20 @@ the previous token. Now let's look at how this got broken.
 
 Consider this expression that checks if three pointers are valid:
 
-```
+```c
   if (a == NULL || b == NULL || c == NULL)
 ```
 
 The `==` operator has higher precedence that the `||` operator, so the
 Pratt parser should treat this the same as:
 
-```
+```c
   if ((a == NULL) || (b == NULL) || (c == NULL))
 ```
 
 Now, NULL is defined as this expression, and it includes a cast:
 
-```
+```c
 #define NULL (void *)0
 ```
 
@@ -170,7 +170,7 @@ A while back, I realised that if we were adding an integer value to a
 pointer, we needed to scale the integer by the type size that the pointer
 points at. For example:
 
-```
+```c
 int list[]= {3, 5, 7, 9, 11, 13, 15};
 int *lptr;
 
@@ -189,7 +189,7 @@ Now, we do this for the `+` and `-` operators, but I forgot to implement
 it for the `+=` and `-=` operators. Fortunately this was easy to fix.
 At the bottom of `modify_type()` in `types.c`, we now have:
 
-```
+```c
   // We can scale only on add and subtract operations
   if (op == A_ADD || op == A_SUBTRACT ||
       op == A_ASPLUS || op == A_ASMINUS) {

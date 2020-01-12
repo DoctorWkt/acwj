@@ -8,7 +8,7 @@ which involve the scanner and the parser.
 We start with this common C construct to indicate that a function has no
 parameters:
 
-```
+```c
 int fred(void);         // Void means no parameters, but
 int fred();             // No parameters also means no parameters
 ```
@@ -50,7 +50,7 @@ Now, why do we need this? It's because our pseudo-code for dealing with
 
 We need to do the peek because both of the following are legal:
 
-```
+```c
 int fred(void);
 int jane(void *ptr, int x, int y);
 ```
@@ -65,7 +65,7 @@ token intact.
 
 In `data.h` we have a new token variable:
 
-```
+```c
 extern_ struct token Token;             // Last token scanned
 extern_ struct token Peektoken;         // A look-ahead token
 ```
@@ -73,7 +73,7 @@ extern_ struct token Peektoken;         // A look-ahead token
 and `Peektoken.token` is intialised to zero by code in `main.c`. We modify
 the main `scan()` function in `scan.c` as follows:
 
-```
+```c
 // Scan and return the next token found in the input.
 // Return 1 if token valid, 0 if no tokens left.
 int scan(struct token *t) {
@@ -100,7 +100,7 @@ return.
 Now that we can peek ahead at the next token, let's put it into action.
 We modify the code in `param_declaration_list()` as follows:
 
-```
+```c
   // Loop getting any parameters
   while (Token.token != T_RPAREN) {
 
@@ -141,7 +141,7 @@ Luckily, the [SubC](http://www.t3x.org/subc/) compiler written by Nils M Holm
 has code to do this, and I can borrow it wholesale to add to our compiler.
 We need to modify the `scanint()` function in `scan.c` to do this:
 
-```
+```c
 // Scan and return an integer literal
 // value from the input file.
 static int scanint(int c) {
@@ -186,7 +186,7 @@ and many thanks to Nils for writing the code.
 
 The next problem I hit was code in our compiler that says:
 
-```
+```c
    if (*posn == '\0')
 ```
 
@@ -196,7 +196,7 @@ which are specified as octal values. But character literals
 which are specified as hexadecimal values are also possible, e.g. '\0x41'.
 Again, the code from SubC comes to our rescue:
 
-```
+```c
 // Read in a hexadecimal constant from the input
 static int hexchar(void) {
   int c, h, n = 0, f = 0;

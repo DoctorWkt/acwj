@@ -17,7 +17,7 @@ I'll let you look at the changes to `scan.c`.
 
 Now, when adding new tokens, we also have to update the:
 
-```
+```c
 // List of token strings, for debugging purposes
 char *Tstring[] = {
   "EOF", "=", "+=", "-=", "*=", "/=",
@@ -43,7 +43,7 @@ token description for the tokens after "default". Oops!
 The `sizeof()` operator is part of expression parsing, as it takes an
 expression and returns a new value. We can do things like:
 
-```
+```c
   int x= 43 + sizeof(char);
 ```
 
@@ -54,7 +54,7 @@ add `sizeof()` is as part of parsing primary expressions.
 In fact, once I found my silly bugs, the amount of new code to do `sizeof()`
 was small. Here it is:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -100,7 +100,7 @@ self-compiling.
 The file `tests/input115.c` has a set of tests for the primitive types,
 a pointer and for the structures in our compiler:
 
-```
+```c
 struct foo { int x; char y; long z; }; 
 typedef struct foo blah;
 

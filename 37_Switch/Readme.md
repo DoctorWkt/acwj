@@ -6,7 +6,7 @@ I'll cover. So let's start with an example and look at the implications.
 
 ## An Example Switch Statement
 
-```
+```c
   switch(x) {
     case 1:  printf("One\n");  break;
     case 2:  printf("Two\n");  break;
@@ -37,7 +37,7 @@ as a multi-way 'if' statement. This would mean that we would compare
 over sections of assembly code as required. This would work but it makes
 the assembly code inefficient, especially if you consider this example:
 
-```
+```c
   switch (2 * x - (18 +y)/z) { ... }
 ```
 
@@ -151,14 +151,14 @@ a 'switch' statement. There is quite a lot of error checking code here,
 so I will take it in small sections. This code is in `stmt.c` and
 is called from `single_statement()`:
 
-```
+```c
     case T_SWITCH:
       return (switch_statement());
 ```
 
 Let's go..
 
-```
+```c
 // Parse a switch statement and return its AST
 static struct ASTnode *switch_statement(void) {
   struct ASTnode *left, *n, *c, *casetree= NULL, *casetail;
@@ -185,7 +185,7 @@ in that we will have to deal with some state in this function. This first
 section is easy, though: parse the `switch (expression) {` syntax, 
 get the AST for the expression and ensure that its is of integer type.
 
-```
+```c
   // Build an A_SWITCH subtree with the expression as
   // the child
   n= mkuastunary(A_SWITCH, 0, left, NULL, 0);
@@ -200,7 +200,7 @@ occur when we are inside at least one loop. Well, now we also have to
 let `break;` happen when there is at least one 'switch' statement. Thus,
 there is a new global variable, `Switchlevel` to record this.
 
-```
+```c
   // Now parse the cases
   Switchlevel++;
   while (inloop) {
@@ -221,7 +221,7 @@ ending the loop. We also check that we have seen at least one case.
 
 Now we move on to the parsing of `case` and `default`:
 
-```
+```c
       case T_CASE:
       case T_DEFAULT:
         // Ensure this isn't after a previous 'default'
@@ -233,7 +233,7 @@ We have a lot of common code to perform, so both tokens fall into the
 same code. First, ensure that we haven't already seen a default case,
 and this has to be the last case in the series.
 
-```
+```c
         // Set the AST operation. Scan the case value if required
         if (Token.token==T_DEFAULT) {
           ASTop= A_DEFAULT; seendefault= 1; scan(&Token);
@@ -243,7 +243,7 @@ and this has to be the last case in the series.
 If we are parsing `default:`, then there is no following integer value.
 Skip over the keyword and record that we have seen a default case.
 
-```
+```c
         } else  {
           ASTop= A_CASE; scan(&Token);
           left= binexpr(0);
@@ -275,7 +275,7 @@ Along the way, we have set the `ASTop` variable to either A_CASE for
 a case with an integer literal value or A_DEFAULT for the default case.
 We can now perform the code common to both.
 
-```
+```c
         // Scan the ':' and get the compound expression
         match(T_COLON, ":");
         left= compound_statement(); casecount++;
@@ -297,7 +297,7 @@ this sub-tree as the left child, and link this to the linked list
 of A_CASE/A_DEFAULT nodes: `casetree` is the head and `casetail`
 is the tail of this list.
 
-```
+```c
       default:
         fatald("Unexpected token in switch", Token.token);
     }
@@ -307,7 +307,7 @@ is the tail of this list.
 There should only be `case` and `default` keywords in the 'switch' body,
 so ensure that this is the case.
 
-```
+```c
   Switchlevel--;
 
   // We have a sub-tree with the cases and any default. Put the
@@ -332,7 +332,7 @@ At this point I think it would be worth seeing the assembly output of
 an example 'switch' statement so that you can see how the code matches
 the graphic of execution flow that I gave at the top. Here is the example:
 
-```
+```c
 #include <stdio.h>
 
 int x; int y;
@@ -424,14 +424,14 @@ of useful functions in `cg.c` which we can reuse.
 In `genAST()` in `gen.c`, up near the top we identify an A_SWITCH
 node and call a function to deal with this node and the tree below it.
 
-```
+```c
     case A_SWITCH:
       return (genSWITCH(n));
 ```
 
 So let's look at this new function in stages:
 
-```
+```c
 // Generate the code for a SWITCH statement
 static int genSWITCH(struct ASTnode *n) {
   int *caseval, *caselabel;
@@ -449,7 +449,7 @@ The reason for the `+1` here is that we may have a default
 case which needs a label even though it doesn't have a
 case value.
 
-```
+```c
   // Generate labels for the top of the jump table, and the
   // end of the switch statement. Set a default label for
   // the end of the switch, in case we don't have a default.
@@ -461,7 +461,7 @@ case value.
 These labels are made but not output as assembly yet.
 Until we have a default label, we set it to `Lend`.
 
-```
+```c
   // Output the code to calculate the switch condition
   reg = genAST(n->left, NOLABEL, NOLABEL, NOLABEL, 0);
   cgjump(Ljumptop);
@@ -472,7 +472,7 @@ We output the code to jump to the code after the
 jump table even though it hasn't been output. We can
 also free all the registers at this point.
 
-```
+```c
   // Walk the right-child linked list to
   // generate the code for each case
   for (i = 0, c = n->right; c != NULL; i++, c = c->right) {
@@ -504,7 +504,7 @@ Also note that `genAST()` gets passed `Lend` which is the
 label after our 'switch' code. This allows any `break;`
 in the case body to jump out to what comes next.
 
-```
+```c
   // Ensure the last case jumps past the switch table
   cgjump(Lend);
 
@@ -558,7 +558,7 @@ L14:                                    # Switch jump table
 Here is how we generate all of this.
 
 
-```
+```c
 // Generate a switch jump table and the code to
 // load the registers and call the switch() code
 void cgswitch(int reg, int casecount, int toplabel,
@@ -572,7 +572,7 @@ void cgswitch(int reg, int casecount, int toplabel,
 
 This is the `L14:` above.
 
-```
+```c
   // Heuristic. If we have no cases, create one case
   // which points to the default case
   if (casecount == 0) {
@@ -588,7 +588,7 @@ that points at the default case. The case
 value is irrelevant: if it matches, fine. If
 not, we jump to the default case anyway.
 
-```
+```c
   // Generate the switch jump table.
   fprintf(Outfile, "\t.quad\t%d\n", casecount);
   for (i = 0; i < casecount; i++)
@@ -598,7 +598,7 @@ not, we jump to the default case anyway.
 
 Here is the code to generate the jump table. Nice and easy.
 
-```
+```c
   // Load the specific registers
   cglabel(toplabel);
   fprintf(Outfile, "\tmovq\t%s, %%rax\n", reglist[reg]);
@@ -617,7 +617,7 @@ I've augmented our example with a loop so that all
 cases in the 'switch' statement get tested This is
 the file `tests/input74.c`:
 
-```
+```c
 #include <stdio.h>
 
 int main() {

@@ -19,7 +19,7 @@ The first two should be simple to implement:
 The third one is much harder. Here's an example. Let's keep two private counters
 with functions to increment them:
 
-```
+```c
 int inc_counter1(void) {
   static int counter= 0;
   return(counter);
@@ -61,7 +61,7 @@ The `static` keyword gets parsed in the same place as `extern`. We also
 want to reject any attempt to use the `static` keyword in a local context. So
 in `decl.c`, we modify `parse_type()`:
 
-```
+```c
 // Parse the current token and return a primitive type enum value,
 // a pointer to any composite type and possibly modify
 // the class of the type.
@@ -103,7 +103,7 @@ nearly every place in the compiler, any use of the C_GLOBAL class to
 also include C_STATIC. This occurs numerous times across multiple files,
 but you should look out for code like this:
 
-```
+```c
     if (class == C_GLOBAL || class == C_STATIC) ...
 ```
 
@@ -115,7 +115,7 @@ Once we have finished parsing static declarations, we need to remove them
 from the global symbol table. In `do_compile()` in `main.c`, just after
 we close the input file, we now do this:
 
-```
+```c
   genpreamble();                // Output the preamble
   global_declarations();        // Parse the global declarations
   genpostamble();               // Output the postamble
@@ -128,7 +128,7 @@ table. For any static node, we relink the list to remove it. I'm not a whiz
 at linked list code, so I wrote out all the possibly alternatives on a sheet
 of paper to come up with the following code:
 
-```
+```c
 // Remove all static symbols from the global symbol table
 void freestaticsyms(void) {
   // g points at current node, prev at the previous one
@@ -167,7 +167,7 @@ input file.
 There are three programs to test the changes, `tests/input116.c` through to
 `tests/input118.c`. Let's look at the first one:
 
-```
+```c
 #include <stdio.h>
 
 static int counter=0;

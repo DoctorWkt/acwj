@@ -24,7 +24,7 @@ that it can't be evaluated with a fixed number of registers.
 Consider this expression, and remember the order of precedence of the C
 operators:
 
-```
+```c
   int x= 5 || 6 && 7 | 8 & 9 << 2 + 3 * 4;
 ```
 
@@ -113,7 +113,7 @@ to lower the number of registers allocated.
 
 Consider the expression:
 
-```
+```c
   2 + (3 + (4 + (5 + (6 + (7 + 8)))))
 ```
 
@@ -124,7 +124,7 @@ seven register allocations.
 However, addition is *commutative*, and therefore we can re-visualise the above
 expression as:
 
-```
+```c
   ((((2 + 3) + 4) + 5) + 6) + 7
 ```
 
@@ -142,7 +142,7 @@ evil*" -- Donald Knuth.
 
 Let's start with the most primitive new functions in `cg.c`:
 
-```
+```c
 // Push and pop a register on/off the stack
 static void pushreg(int r) {
   fprintf(Outfile, "\tpushq\t%s\n", reglist[r]);
@@ -161,7 +161,7 @@ and we might use them for something else later.
 
 Next up is a new static variable in `cg.c`:
 
-```
+```c
 static int spillreg=0;
 ```
 
@@ -183,7 +183,7 @@ We spill a register when there are no free registers. We will choose
 the `spillreg` (modulo NUMFREEREGS) register to spill. In the 
 `alloc_register()` function in `cg.c`:
 
-```
+```c
 int alloc_register(void) {
   int reg;
 
@@ -213,7 +213,7 @@ compiler can keep this promise.
 
 The new code in `free_register()` in `cg.c` is:
 
-```
+```c
 static void free_register(int reg) {
   ...
   // If this was a spilled register, get it back
@@ -238,7 +238,7 @@ As I mentioned before, a clever compiler would determine which registers
 *had* to be spilled before a function call. This is not a clever
 compiler, and so we have these new functions:
 
-```
+```c
 // Spill all registers on the stack
 void spill_all_regs(void) {
   int i;
@@ -266,7 +266,7 @@ was the one last spilled. We had better check that this is the case.
 
 For binary expressions, `genAST()` in `gen.c` does this:
 
-```
+```c
   // Get the left and right sub-tree values
   leftreg = genAST(n->left, NOLABEL, NOLABEL, NOLABEL, n->op);
   rightreg = genAST(n->right, NOLABEL, NOLABEL, NOLABEL, n->op);
@@ -288,7 +288,7 @@ register.
 I've gone through `cg.c` and made some modifications to the binary
 expression generators to do this. An example is `cgadd()` in `cg.c`:
 
-```
+```c
 // Add two registers together and return
 // the number of the register with the result
 int cgadd(int r1, int r2) {
@@ -332,7 +332,7 @@ between `gen.c` and `cg.c` as follows.
 
 In `gen_funccall()` in `gen.c`:
 
-```
+```c
 static int gen_funccall(struct ASTnode *n) {
   ...
 
@@ -349,7 +349,7 @@ static int gen_funccall(struct ASTnode *n) {
 
 which does steps 1, 2 and 3: spill, copy, call. And in `cgcall()` in `cg.c`:
 
-```
+```c
 int cgcall(struct symtable *sym, int numargs) {
   int outr;
 
@@ -375,7 +375,7 @@ which does the final two steps: reload and copy the return value.
 Here are some examples which cause register spills: function calls and
 complex expressions. We'll start with `tests/input136.c`:
 
-```
+```c
 int add(int x, int y) {
   return(x+y);
 }
@@ -415,7 +415,7 @@ Yes, there is plenty of scope for optimisation here. KISS, though.
 
 In `tests/input137.c`, there is this expression:
 
-```
+```c
   x= a + (b + (c + (d + (e + (f + (g + h))))));
 ```
 

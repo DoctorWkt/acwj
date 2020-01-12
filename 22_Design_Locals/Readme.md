@@ -27,7 +27,7 @@ However, I only want to add two scopes: *local* and *global*. C actually creates
 a new scope for every compound statement. In the following example, there
 are three different `a` variables in three different scopes:
 
-```
+```c
 #include <stdio.h>
 int a = 2;              // Global scope
 
@@ -73,7 +73,7 @@ on with this document! As Eli's article is in the public domain, I'm reproducing
 his picture of the stack frame and the parameters in registers below for
 the function
 
-```
+```c
 long myfunc(long a, long b, long c, long d,
             long e, long f, long g, long h)
 {
@@ -164,7 +164,7 @@ C has the concept of
 [storage classes](https://en.wikipedia.org/wiki/C_syntax#Storage_class_specifiers), and we'll have to implement at least some of these classes.
 SubC implements several of the storage classes:
 
-```
+```c
 /* storage classes */
 enum {
         CPUBLIC = 1,            // publicly visible symbol
@@ -224,7 +224,7 @@ parameters passed as registers in their registers: this would make access to the
 faster and keep the stack frame smaller. But this isn't always possible for this
 reason. Consider this code:
 
-```
+```c
 void myfunction(int a) {        // a is a parameter in a register
   int b;                        // b is a local variable on the stack
 

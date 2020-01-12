@@ -12,7 +12,7 @@ deal with:
 
 As examples of the above:
 
-```
+```c
 enum fred { x, y, z };
 enum fred { a, b };             // fred is redefined
 enum jane { x, y };             // x and y are redefined
@@ -33,7 +33,7 @@ for details.
 We need to record the details of the declared enums and typedefs, so there
 are two new symbol table lists in `data.h`:
 
-```
+```c
 extern_ struct symtable *Enumhead,  *Enumtail;    // List of enum types and values
 extern_ struct symtable *Typehead,  *Typetail;    // List of typedefs
 ```
@@ -42,7 +42,7 @@ and in `sym.c` there are associated functions to add entries to each list
 and to search each list for specific names. Nodes in these lists are
 marked as being one of (from `defs.h`):
 
-```
+```c
   C_ENUMTYPE,                   // A named enumeration type
   C_ENUMVAL,                    // A named enumeration value
   C_TYPEDEF                     // A named typedef
@@ -72,7 +72,7 @@ we need the ability to search for C_ENUMTYPEs or for C_ENUMVALs.
 Before I give the code to do this, let's just look at some examples
 of what we need to parse:
 
-```
+```c
 enum fred { a, b, c };                  // a is 0, b is 1, c is 2
 enum foo  { d=2, e=6, f };              // d is 2, e is 6, f is 7
 enum bar  { g=2, h=6, i } var1;         // var1 is really an int
@@ -82,7 +82,7 @@ enum      { j, k, l }     var2;         // var2 is really an int
 Firstly, where does enum parsing get attached to our existing parsing code?
 As with structs and unions, in the code that parses types (in `decl.c`):
 
-```
+```c
 // Parse the current token and return
 // a primitive type enum value and a pointer
 // to any composite type.
@@ -111,7 +111,7 @@ an actual type (followed by an identifier).
 
 Let's now look at the `enum_declaration()` code in stages.
 
-```
+```c
 // Parse an enum declaration
 static void enum_declaration(void) {
   struct symtable *etype = NULL;
@@ -134,7 +134,7 @@ We only have one global variable, `Text`, to hold a scanned-in word, and
 we have to be able to parse `enum foo var1`. If we scan in the token after
 the `foo`, we will lose the `foo` string. So we need to `strdup()` this.
 
-```
+```c
   // If the next token isn't a LBRACE, check
   // that we have an enum type name, then return
   if (Token.token != T_LBRACE) {
@@ -149,7 +149,7 @@ Therefore `foo` must already exist as a known enum type. We can return
 with no value, as the type of every enum is P_INT, which is set in the
 code that calls `enum_declaration()`.
 
-```
+```c
   // We do have an LBRACE. Skip it
   scan(&Token);
 
@@ -165,7 +165,7 @@ code that calls `enum_declaration()`.
 Now we are parsing something like `enum foo { ...`, so we must check
 that `foo` has not already been declared as an enum type.
 
-```
+```c
   // Loop to get all the enum values
   while (1) {
     // Ensure we have an identifier
@@ -182,7 +182,7 @@ that `foo` has not already been declared as an enum type.
 Again, we `strdup()` the enum value identifier.
 We also check that this enum value identifier hasn't already been defined.
 
-```
+```c
     // If the next token is an '=', skip it and
     // get the following int literal
     if (Token.token == T_ASSIGN) {
@@ -198,7 +198,7 @@ This is why we had to `strdup()` as the scanning of an integer literal
 will walk over the `Text` global variable. We scan in the '=' and integer literal
 tokens here and set the `intval` variable to be the integer literal value.
 
-```
+```c
     // Build an enum value node for this identifier.
     // Increment the value for the next enum identifier.
     etype = addenum(name, C_ENUMVAL, intval++);
@@ -227,7 +227,7 @@ in an expression. If we find an enum name, we convert it into an A_INTLIT
 AST node with a specific value. The location to do this is `postfix()`
 in `expr.c`
 
-```
+```c
 // Parse a postfix expression and return
 // an AST node representing it. The
 // identifier is already in Text.
@@ -250,7 +250,7 @@ All done! There are several test programs that confirm we are spotting
 redefined enum types and names, but the `test/input63.c` code demonstrates
 enums working:
 
-```
+```c
 int printf(char *fmt);
 
 enum fred { apple=1, banana, carrot, pear=10, peach, mango, papaya };
@@ -285,7 +285,7 @@ and build a C_TYPEDEF symbol node with the name. We can store the `type` and
 
 The parsing code is nice and simple. We hook into `parse_type()` in `decl.c`:
 
-```
+```c
     case T_TYPEDEF:
       type = typedef_declaration(ctype);
       if (Token.token == T_SEMI)
@@ -296,7 +296,7 @@ The parsing code is nice and simple. We hook into `parse_type()` in `decl.c`:
 Here is the `typedef_declaration()` code. Note that it returns the actual
 `type` and `ctype` in case the declaration is followed by a variable name.
 
-```
+```c
 // Parse a typedef declaration and return the type
 // and ctype that it represents
 int typedef_declaration(struct symtable **ctype) {
@@ -329,7 +329,7 @@ We now have a list of typedef definitions in a symbol table list.
 How do we use these definitions? We effectively have added new type keywords
 to our grammar, e.g.
 
-```
+```c
 FILE    *zin;
 int32_t cost;
 ```
@@ -338,7 +338,7 @@ It just means that when we are parsing a type and we hit a keyword that
 we don't recognise, we can look that work up in the typedef list. So,
 we get to modify `parse_type()` again:
 
-```
+```c
     case T_IDENT:
       type = type_of_typedef(Text, ctype);
       break;
@@ -346,7 +346,7 @@ we get to modify `parse_type()` again:
 
 Both `type` and `ctype` are returned by `type_of_typedef()`:
 
-```
+```c
 // Given a typedef name, return the type it represents
 int type_of_typedef(char *name, struct symtable **ctype) {
   struct symtable *t;
@@ -364,7 +364,7 @@ int type_of_typedef(char *name, struct symtable **ctype) {
 Note that, as yet, I haven't written the code to be "recursive". For example,
 the current code won't parse this example:
 
-```
+```c
 typedef int FOO;
 typedef FOO BAR;
 BAR x;                  // x is of type BAR -> type FOO -> type int
@@ -372,7 +372,7 @@ BAR x;                  // x is of type BAR -> type FOO -> type int
 
 But it does compile `tests/input68.c`:
 
-```
+```c
 int printf(char *fmt);
 
 typedef int FOO;

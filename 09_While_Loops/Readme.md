@@ -45,7 +45,7 @@ The BNF grammar for the WHILE loop is:
 and we need a function in `stmt.c` to parse this. Here it is; note the
 simplicity of this compared to the parsing of IF statements:
 
-```
+```c
 // Parse a WHILE statement
 // and return its AST
 struct ASTnode *while_statement(void) {
@@ -83,7 +83,7 @@ insert appropriate jumps to exit the loop and to return to the top of the
 loop. Again, this is much simpler than the code to generate IF statements.
 In `gen.c`:
 
-```
+```c
 // Generate the code for a WHILE statement
 // and an optional ELSE clause
 static int genWHILE(struct ASTnode *n) {
@@ -117,7 +117,7 @@ One thing I had to do was recognise that the parent AST node
 of the comparison operators could now be A_WHILE, so in `genAST()`
 the code for the comparison operators looks like:
 
-```
+```c
     case A_EQ:
     case A_NE:
     case A_LT:
@@ -155,7 +155,7 @@ input06: OK
 
 You can also do a `make test6`. This compiles the `tests/input06` file:
 
-```
+```c
 { int i;
   i=1;
   while (i <= 10) {

@@ -15,7 +15,7 @@ be a rewrite of some of the code that deals with the symbol table.
 As a quick recap, below are a set of example global variable assignments
 that I want to support:
 
-```
+```c
 int x= 2;
 char y= 'a';
 char *str= "Hello world";
@@ -33,7 +33,7 @@ variables. I'll come back to that later, if we need it.
 
 In the last part of the journey, I'd written this in `decl.c`:
 
-```
+```c
 static struct symtable *symbol_declaration(...) {
   ...
   // The array or scalar variable is being initialised
@@ -64,7 +64,7 @@ only things which we can assign to global variables. We need to ensure
 that the type of each literal is compatible with the variable type that we
 are assigning. To this end, there's a new function in `decl.c`:
 
-```
+```c
 // Given a type, check that the latest token is a literal
 // of that type. If an integer literal, return this value.
 // If a string literal, return the label number of the string.
@@ -91,7 +91,7 @@ int parse_literal(int type) {
 
 The first IF statement ensures that we can do:
 
-```
+```c
 char *str= "Hello world";
 ```
 
@@ -107,7 +107,7 @@ literal it parses. Now we need a location in each variable's symbol entry
 to store this. So, I've added (and/or modified) these fields in the
 symbol entry structure in `defs.h`:
 
-```
+```c
 // Symbol table structure
 struct symtable {
   ...
@@ -127,7 +127,7 @@ integer values to `initlist`. Let's look at assignment to a scalar variable.
 
 The `scalar_declaration()` function is modified as follows:
 
-```
+```c
 static struct symtable *scalar_declaration(...) {
   ...
     // The variable is being initialised
@@ -173,7 +173,7 @@ for the variable in memory.
 
 As a quick example:
 
-```
+```c
 int x= 5;
 char *y= "Hello";
 ```
@@ -208,7 +208,7 @@ changes I've made to do this.
 
 Firstly, we have a bug fix. In `types.c`:
 
-```
+```c
 // Return true if a type is an int type
 // of any size, false otherwise
 int inttype(int type) {
@@ -221,7 +221,7 @@ treated as an integer type. Oops!
 
 In `sym.c` we now deal with the fact that each variable now has a:
 
-```
+```c
   int size;                     // Total size in bytes of this symbol
   int nelems;                   // Functions: # params. Arrays: # elements
 ```
@@ -238,7 +238,7 @@ parameters. And for all other symbol tables, the value is unused.
 
 We now calculate the `size` value in `newsym()`:
 
-```
+```c
   // For pointers and integer types, set the size
   // of the symbol. structs and union declarations
   // manually set this up themselves.
@@ -254,7 +254,7 @@ Note the comment about structs and unions. We can't call `addstruct()`
 (which calls `newsym()`) with the details of a struct's size,
 because:
 
-```
+```c
 struct foo {            // We call addglob() here
   int x;
   int y;                // before we know the size of the structure
@@ -264,7 +264,7 @@ struct foo {            // We call addglob() here
 
 So the code in `composite_declaration()` in `decl.c` now does this:
 
-```
+```c
 static struct symtable *composite_declaration(...) {
   ...
   // Build the composite type
@@ -297,7 +297,7 @@ positive number for arrays.
 
 We can finally get to array initialisation. I want to allow three forms:
 
-```
+```c
 int a[10];                                      // Ten zeroed elements
 char b[]= { 'q', 'w', 'e', 'r', 't', 'y' };     // Six elements
 char c[10]= { 'q', 'w', 'e', 'r', 't', 'y' };   // Ten elements, zero padded
@@ -309,7 +309,7 @@ I was going to call an `array_initialisation()` function, but I decided to
 move all of the initialisation code into `array_declaration()` in `decl.c`.
 We will take it in stages.
 
-```
+```c
 // Given the type, name and class of an variable, parse
 // the size of the array, if any. Then parse any initialisation
 // value and allocate storage for it.
@@ -336,7 +336,7 @@ If there's a number between the '[' ']' tokens, parse it and set `nelems`
 to this value. If there is no number, we leave it set to -1 to indicate this.
 We also check that the number is positive and non-zero.
 
-```
+```c
     // Array initialisation
   if (Token.token == T_ASSIGN) {
     if (class != C_GLOBAL)
@@ -349,7 +349,7 @@ We also check that the number is positive and non-zero.
 
 Right now I'm only dealing with global arrays.
 
-```
+```c
 #define TABLE_INCREMENT 10
 
     // If the array already has nelems, allocate that many elements
@@ -366,7 +366,7 @@ the array was given a fixed size. However, for arrays with no fixed size,
 we cannot predict how big the initialisation list will be. So we must be
 prepared to grow the list.
 
-```
+```c
     // Loop getting a new literal value from the list
     while (1) {
 
@@ -380,7 +380,7 @@ prepared to grow the list.
 Get the next literal value and ensure we don't have more initial values
 that the array size if it was specified.
 
-```
+```c
       // Increase the list size if the original size was
       // not set and we have hit the end of the current list
       if (nelems == -1 && i == maxelems) {
@@ -391,7 +391,7 @@ that the array size if it was specified.
 
 Here is where we increase the initialisation list size as necessary.
 
-```
+```c
       // Leave when we hit the right curly bracket
       if (Token.token == T_RBRACE) {
         scan(&Token);
@@ -406,7 +406,7 @@ Here is where we increase the initialisation list size as necessary.
 Parse the closing right curly bracket or a comma that separates values.
 Once out of the loop, we now have an `initlist` with values in it.
 
-```
+```c
     // Zero any unused elements in the initlist.
     // Attach the list to the symbol table entry
     for (j=i; j < sym->nelems; j++) initlist[j]=0;
@@ -420,7 +420,7 @@ specified size of the initialisation list, so zero out all the ones
 that were not initialised. It is here that we attach the initialisation
 list to the symbol table entry.
 
-```
+```c
   // Set the size of the array and the number of elements
   sym->nelems= nelems;
   sym->size= sym->nelems * typesize(type, ctype);
@@ -444,7 +444,7 @@ code that generates the assembly for the memory storage.
 `genglobsym()` is the front-end function which simply calls `cgglobsym()`.
 Let's look at this function in `cg.c`:
 
-```
+```c
 // Generate a global symbol but not functions
 void cgglobsym(struct symtable *node) {
   int size, type;
@@ -470,7 +470,7 @@ void cgglobsym(struct symtable *node) {
 Right now, arrays have their `type` set to be a pointer to the underlying
 element type. This allows us to do:
 
-```
+```c
   char a[45];
   char *b;
   b= a;         // as they are of same type
@@ -480,7 +480,7 @@ In terms of generating storage, we need to know the size of the elements,
 so we call `value_at()` to do this. For scalars, `size` and `type` are
 stored as-is in the symbol table entry.
 
-```
+```c
   // Generate the global identity and the label
   cgdataseg();
   fprintf(Outfile, "\t.globl\t%s\n", node->name);
@@ -489,7 +489,7 @@ stored as-is in the symbol table entry.
 
 As before. But now the code is different:
 
-```
+```c
   // Output space for one or more elements
   for (i=0; i < node->nelems; i++) {
   
@@ -534,7 +534,7 @@ of the integer literal value.
 
 Here is a small example of an array initialisation:
 
-```
+```c
 int x[4]= { 1, 4, 17 };
 ```
 

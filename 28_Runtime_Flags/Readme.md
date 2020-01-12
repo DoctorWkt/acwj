@@ -51,7 +51,7 @@ file.
 The `argv[]` parsing code in `main()` is now changed to deal with this, and
 there are several more option variables to hold the results.
 
-```
+```c
   // Initialise our variables
   O_dumpAST = 0;        // If true, dump the AST trees
   O_keepasm = 0;        // If true, keep any assembly files
@@ -95,7 +95,7 @@ We can compile and assemble each input file easily, but there may be a
 number of object files that we need to link together at the end. So we have
 some local variables in `main()` to store the object file names:
 
-```
+```c
 #define MAXOBJ 100
   char *objlist[MAXOBJ];        // List of object file names
   int objcnt = 0;               // Position to insert next name
@@ -103,7 +103,7 @@ some local variables in `main()` to store the object file names:
 
 We first process all the input source files in turn:
 
-```
+```c
   // Work on each input file in turn
   while (i < argc) {
     asmfile = do_compile(argv[i]);      // Compile the source file
@@ -133,7 +133,7 @@ But we can't open up the hard-coded filename
 
 We have a helper function to alter filenames.
 
-```
+```c
 // Given a string with a '.' and at least a 1-character suffix
 // after the '.', change the suffix to be the given character.
 // Return the new string or NULL if the original string could
@@ -165,7 +165,7 @@ the rest is error checking.
 
 Here is the code that we used to have, now repackaged into a new function.
 
-```
+```c
 // Given an input filename, compile that file
 // down to assembly code. Return the new file's name
 static char *do_compile(char *filename) {
@@ -208,7 +208,7 @@ variable called `Outfilename`. This allows the `fatal()` function and
 friends in `misc.c` to remove assembly files if we never fully generated them,
 e.g.
 
-```
+```c
 // Print out fatal messages
 void fatal(char *s) {
   fprintf(stderr, "%s on line %d\n", s, Line);
@@ -224,7 +224,7 @@ Now that we have assembly output files, we can now call an external
 assembler to do this. This is defined as ASCMD in `defs.h`. Here's
 the function to do this:
 
-```
+```c
 #define ASCMD "as -o "
 // Given an input filename, assemble that file
 // down to object code. Return the object filename
@@ -261,7 +261,7 @@ as -o  tests/input54.o tests/input54.s
 Down in `main()` we build up a list of object files that `do_assemble()`
 returns to us:
 
-```
+```c
       objlist[objcnt++] = objfile;      // Add the object file's name
       objlist[objcnt] = NULL;           // to the list of object files
 ```
@@ -272,7 +272,7 @@ it uses `snprintf()` and `system()`. The difference is that we must
 track where we are up to in our command buffer, and how much room is left
 to do more `snprintf()`ing.
 
-```
+```c
 #define LDCMD "cc -o "
 // Given a list of object files and an output filename,
 // link all of the object filenames together.
@@ -334,7 +334,7 @@ step, but I decided against it. The main reason is that I would need to
 parse the filenames and line numbers that the pre-processor embeds in its
 output, e.g.
 
-```
+```c
 # 1 "tests/input54.c"
 # 1 "<built-in>"
 # 1 "<command-line>"

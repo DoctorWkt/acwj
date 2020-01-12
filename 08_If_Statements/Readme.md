@@ -79,7 +79,7 @@ end, I've changed the grammar so that all groups of statements are wrapped aroun
 We also need '(' ... ')' parentheses to hold the IF expression, plus keywords 'if' and
 'else'. Thus, the new tokens are (in `defs.h`):
 
-```
+```c
   T_LBRACE, T_RBRACE, T_LPAREN, T_RPAREN,
   // Keywords
   ..., T_IF, T_ELSE
@@ -91,7 +91,7 @@ The single-character tokens should be obvious and I won't give the code to scan 
 The keywords should also be pretty obvious, but I'll give the scanning code from
 `keyword()` in `scan.c`:
 
-```
+```c
   switch (*s) {
     case 'e':
       if (!strcmp(s, "else"))
@@ -174,7 +174,7 @@ dangling else problem. Later on, I'll make the '{' ... '}' optional.
 
 The old `void statements()` function is now `compound_statement()` and looks like this:
 
-```
+```c
 // Parse a compound statement
 // and return its AST
 struct ASTnode *compound_statement(void) {
@@ -248,7 +248,7 @@ Later on, I'll probably generate an AST tree for each function. Later.
 
 Because we are a recursive descent parser, parsing the IF statement is not too bad:
 
-```
+```c
 // Parse an IF statement including
 // any optional ELSE clause
 // and return its AST
@@ -291,7 +291,7 @@ six comparison operators A_EQ, A_NE, A_LT, A_GT, A_LE or A_GE.
 I nearly smuggled something past you without properly explaining it. In
 the last line of `if_statement()` I build an AST node with:
 
-```
+```c
    mkastnode(A_IF, condAST, trueAST, falseAST, 0);
 ```
 
@@ -304,7 +304,7 @@ IF statement will have three children:
 
 So we now need an AST node structure with three children (in `defs.h`):
 
-```
+```c
 // AST node types.
 enum {
   ...
@@ -345,7 +345,7 @@ glue them together.
 
 Review the end of the `compound_statement()` loop code:
 
-```
+```c
       if (left != NULL)
         left = mkastnode(A_GLUE, left, NULL, tree, 0);
 ```
@@ -386,7 +386,7 @@ statement (jump on the opposite comparison) or a normal expression
 To this end, I've modified `getAST()` so that we can pass in the
 parent AST nodes operation:
 
-```
+```c
 // Given an AST, the register (if any) that holds
 // the previous rvalue, and the AST op of the parent,
 // generate assembly code recursively.
@@ -400,7 +400,7 @@ int genAST(struct ASTnode *n, int reg, int parentASTop) {
 
 The code in `genAST()` now has to deal with specific AST nodes:
 
-```
+```c
   // We now have specific AST node handling at the top
   switch (n->op) {
     case A_IF:
@@ -419,7 +419,7 @@ The code in `genAST()` now has to deal with specific AST nodes:
 If we don't return, we carry on to do the normal binary operator AST nodes,
 with one exception: the comparison nodes:
 
-```
+```c
     case A_EQ:
     case A_NE:
     case A_LT:
@@ -443,7 +443,7 @@ I'll cover the new functions `cgcompare_and_jump()` and
 We deal with the A_IF AST node with a specific function, along with
 a function to generate new label numbers:
 
-```
+```c
 // Generate and return a new label number
 static int label(void) {
   static int id = 1;
@@ -497,7 +497,7 @@ static int genIFAST(struct ASTnode *n) {
 
 Effectively, the code is doing:
 
-```
+```c
   genAST(n->left, Lfalse, n->op);       // Condition and jump to Lfalse
   genAST(n->mid, NOREG, n->op);         // Statements after 'if'
   cgjump(Lend);                         // Jump to Lend
@@ -515,7 +515,7 @@ last part of the journey.
 For the normal comparison functions, we now pass in the AST operation
 to choose the relevant x86-64 `set` instruction:
 
-```
+```c
 // List of comparison instructions,
 // in AST order: A_EQ, A_NE, A_LT, A_GT, A_LE, A_GE
 static char *cmplist[] =
@@ -542,7 +542,7 @@ instead of the `and $255` in the old code.
 
 We need a functions to generate a label and to jump to it:
 
-```
+```c
 // Generate a label
 void cglabel(int l) {
   fprintf(Outfile, "L%d:\n", l);
@@ -558,7 +558,7 @@ Finally, we need a function to do a comparison and to jump based on
 the opposite comparison. So, using the AST comparison node type, we
 do the opposite comparison:
 
-```
+```c
 // List of inverted jump instructions,
 // in AST order: A_EQ, A_NE, A_LT, A_GT, A_LE, A_GE
 static char *invcmplist[] = { "jne", "je", "jge", "jle", "jg", "jl" };
@@ -581,7 +581,7 @@ int cgcompare_and_jump(int ASTop, int r1, int r2, int label) {
 
 Do a `make test` which compiles the `input05` file:
 
-```
+```c
 {
   int i; int j;
   i=6; j=12;

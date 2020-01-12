@@ -48,7 +48,7 @@ I've taken a different tack. I've modified our Abstract Syntax Tree node
 to have a `type` field which holds the type of the tree at that point.
 In `defs.h`, here are the types I've created so far:
 
-```
+```c
 // Primitive types
 enum {
   P_NONE, P_VOID, P_CHAR, P_INT
@@ -65,7 +65,7 @@ If you look in `tree.c`, you will see that the functions to build AST
 nodes have been modified to also assign to the `type` field in the new
 AST node structure (in `defs.h`):
 
-```
+```c
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
   int type;                     // Type of any expression this tree generates
@@ -77,7 +77,7 @@ struct ASTnode {
 
 We now have at least two ways to declare global variables:
 
-```
+```c
   int x; char y;
 ```
 
@@ -86,7 +86,7 @@ each variable? We need to modify the `symtable` structure. I've also added
 the details of the "structural type" of the symbol which I'll use in the
 future (in `defs.h`):
 
-```
+```c
 // Structural types
 enum {
   S_VARIABLE, S_FUNCTION
@@ -103,7 +103,7 @@ struct symtable {
 There's new code in `newglob()` in `sym.c` to initialise these new
 fields:
 
-```
+```c
 int addglob(char *name, int type, int stype) {
   ...
   Gsym[y].type = type;
@@ -117,7 +117,7 @@ int addglob(char *name, int type, int stype) {
 It's time to separate out the parsing of the type from the parsing
 of the variable itself. So, in `decl.c` we now have:
 
-```
+```c
 // Parse the current token and
 // return a primitive type enum value
 int parse_type(int t) {
@@ -159,7 +159,7 @@ reject type clashes. Let's get on with the job!
 We'll start with the parsing of integer literal values and
 variable identifiers. One wrinkle is that we want to be able to do:
 
-```
+```c
   char j; j= 2;
 ```
 
@@ -168,7 +168,7 @@ the value when we try to store it in the P_CHAR `j` variable. For
 now, I've added some semantic code to keep small integer literal
 values as P_CHARs:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -218,7 +218,7 @@ reject the expression if the two types are incompatible.
 For now, I have a new file `types.c` with a function that compares
 the types on either side. Here's the code:
 
-```
+```c
 // Given two primitive types, return true if they are compatible,
 // false otherwise. Also return either zero or an A_WIDEN
 // operation if one has to be widened to match the other.
@@ -273,7 +273,7 @@ I've used `type_compatible()` in three different places in this version
 of the compiler. We'll start with merging expressions with binary operators.
 I've modified the code in `binexpr()` in `expr.c` to do this:
 
-```
+```c
     // Ensure the two types are compatible.
     lefttype = left->type;
     righttype = right->type;
@@ -304,7 +304,7 @@ Now, where else do we need to widen expression values?
 When we use the `print` keyword, we need to have an `int` expression
 for it to print. So we need to change `print_statement()` in `stmt.c`:
 
-```
+```c
 static struct ASTnode *print_statement(void) {
   struct ASTnode *tree;
   int lefttype, righttype;
@@ -331,7 +331,7 @@ expression. We've got to reject any attempt to store a wide type into
 a narrow variable. Here is the new code in `assignment_statement()` in
 `stmt.c`:
 
-```
+```c
 static struct ASTnode *assignment_statement(void) {
   struct ASTnode *left, *right, *tree;
   int lefttype, righttype;
@@ -378,7 +378,7 @@ this is used in the generic code generator in `gen.c`.
 
 Let's start with generating the storage for variables.
 
-```
+```c
 // Generate a global symbol
 void cgglobsym(int id) {
   // Choose P_INT or P_CHAR
@@ -393,7 +393,7 @@ We extract the type from the variable slot in the symbol table and choose
 to allocate 1 or 8 bytes for it depending on this type. Now we need to
 load the value into a register:
 
-```
+```c
 // Load a value from a variable into a register.
 // Return the number of the register
 int cgloadglob(int id) {
@@ -413,7 +413,7 @@ instruction zeroes the 8-byte register and then moves a single byte into it.
 This also implicitly widens the one byte value to eight bytes. Our storage
 function is similar:
 
-```
+```c
 // Store a register's value into a variable
 int cgstorglob(int r, int id) {
   // Choose P_INT or P_CHAR
@@ -431,7 +431,7 @@ instruction to move a single byte.
 Luckily, the `cgloadglob()` function has already done the widening of
 P_CHAR variables. So this is the code for our new `cgwiden()` function:
 
-```
+```c
 // Widen the value in the register from the old
 // to the new type, and return a register with
 // this new value
@@ -454,7 +454,7 @@ The only major change is the code to deal with the new A_WIDEN AST node type.
 We don't need this node (as `cgwiden()` does nothing), but it's here for
 other hardware platforms:
 
-```
+```c
     case A_WIDEN:
       // Widen the child's type to the parent's type
       return (cgwiden(leftreg, n->left->type, n->type));
@@ -464,7 +464,7 @@ other hardware platforms:
 
 Here is my test input file, `tests/input10`:
 
-```
+```c
 void main()
 {
   int i; char j;

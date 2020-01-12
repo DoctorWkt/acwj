@@ -15,7 +15,7 @@ A common use of lazy evaluation is to see if a pointer is pointing at
 a specific value, but only if the pointer is actually pointing at something.
 The `test/input138.c` has an example of this:
 
-```
+```c
   int *aptr;
   ...
   if (aptr && *aptr == 1)
@@ -33,7 +33,7 @@ dereference and crash the program.
 The problem is that our current implementation of `&&` and `||` *does*
 evaluate both operands. In `genAST()` in `gen.c`:
 
-```
+```c
   // Get the left and right sub-tree values
   leftreg = genAST(n->left, NOLABEL, NOLABEL, NOLABEL, n->op);
   rightreg = genAST(n->right, NOLABEL, NOLABEL, NOLABEL, n->op);
@@ -60,7 +60,7 @@ different enough that I've written a new code generator in `gen.c`.
 It gets called *before* we run `genAST()` on the left- and right-hand
 operands. The code is (in stages):
 
-```
+```c
 // Generate the code for an
 // A_LOGAND or A_LOGOR operation
 static int gen_logandor(struct ASTnode *n) {
@@ -82,7 +82,7 @@ set the result to zero (false). Also, once the expression has been
 evaluated we can free all the registers. This also helps to ease the
 pressure on register allocation.
 
-```
+```c
   // Generate the code for the right expression
   // followed by the jump to the false label
   reg= genAST(n->right, NOLABEL, NOLABEL, NOLABEL, 0);
@@ -94,7 +94,7 @@ We do exactly the same for the right-hand operand. If it was false, we
 jump to the `Lfalse` label. If we don't jump, the `&&` result must be
 true. For `&&`, we now do:
 
-```
+```c
   cgloadboolean(reg, 1);
   cgjump(Lend);
   cglabel(Lfalse);
@@ -138,7 +138,7 @@ and which jumps over the true setting code.
 
 `test/input138.c` also has code to print out an AND and an OR truth table:
 
-```
+```c
   // See if generic AND works
   for (x=0; x <= 1; x++)
     for (y=0; y <= 1; y++) {

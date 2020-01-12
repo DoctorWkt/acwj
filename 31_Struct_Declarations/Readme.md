@@ -17,7 +17,7 @@ member fields.
 
 So, we now have:
 
-```
+```c
 struct symtable {
   char *name;                   // Name of a symbol
   int type;                     // Primitive type for the symbol
@@ -30,7 +30,7 @@ struct symtable {
 
 We also have two new lists for symbols in `data.h`:
 
-```
+```c
 // Symbol table lists
 struct symtable *Globhead, *Globtail;     // Global variables and functions
 struct symtable *Loclhead, *Locltail;     // Local variables
@@ -85,7 +85,7 @@ types (e.g. `int`) and composite types (e.g. `struct foo`). And now
 that it can return a composite type, I had to find a way to return
 the pointer to the node that defines this composite type:
 
-```
+```c
 // Parse the current token and return
 // a primitive type enum value and a pointer
 // to any composite type.
@@ -109,7 +109,7 @@ or to parse the declaration of the new struct type.
 In our old code, there was a function called `param_declaration()` that
 parsed a list of parameters separated by commas, e.g.
 
-```
+```c
 int fred(int x, char y, long z);
 ```
 
@@ -118,7 +118,7 @@ Well, a struct and union declaration also has a list of variables,
 except that they are separated by semicolons and surrounded by curly
 brackets, e.g.
 
-```
+```c
 struct fred { int x; char y; long z; };
 ```
 
@@ -126,7 +126,7 @@ It makes sense to refactor the function to parse both lists. It now
 is passed two tokens: the separating token, e.g. T_SEMI and the ending
 token, e.g. T_RBRACE. Thus, we can use it to parse both styles of lists.
 
-```
+```c
 // Parse a list of variables.
 // Add them as symbols to one of the symbol table lists, and return the
 // number of variables. If funcsym is not NULL, there is an existing function
@@ -144,13 +144,13 @@ static int var_declaration_list(struct symtable *funcsym, int class,
 
 When we are parsing function parameter lists, we call:
 
-```
+```c
     var_declaration_list(oldfuncsym, C_PARAM, T_COMMA, T_RPAREN);
 ```
 
 When we are parsing struct member lists, we call:
 
-```
+```c
     var_declaration_list(NULL, C_MEMBER, T_SEMI, T_RBRACE);
 ```
 
@@ -165,7 +165,7 @@ parse the whole struct.
 
 Let's take this in stages.
 
-```
+```c
 static struct symtable *struct_declaration(void) {
   struct symtable *ctype = NULL;
   struct symtable *m;
@@ -186,7 +186,7 @@ At this point we have seen `struct` possibly followed by an identifier.
 If this is an existing struct type, `ctype` now points at the existing
 type node. Otherwise, `ctype` is NULL.
 
-```
+```c
   // If the next token isn't an LBRACE , this is
   // the usage of an existing struct type.
   // Return the pointer to the type.
@@ -202,14 +202,14 @@ We didn't see a '{', so this has to be just the naming of an existing type.
 pointer to this existing struct type. This is going to go back to
 `parse_type()` when we did:
 
-```
+```c
       type = P_STRUCT; *ctype = struct_declaration();
 ```
 
 But, assuming we didn't return, we must have found a '{', and this signals
 the definition of a struct type. Let's go on...
 
-```
+```c
   // Ensure this struct type hasn't been
   // previously defined
   if (ctype)
@@ -224,7 +224,7 @@ We can't declare a struct with the same name twice, so prevent this.
 Then build the beginnings of the new struct type as a node in the
 symbol table. All we have so far is its name and that it is of P_STRUCT type.
 
-```
+```c
   // Scan in the list of members and attach
   // to the struct type's node
   var_declaration_list(NULL, C_MEMBER, T_SEMI, T_RBRACE);
@@ -236,7 +236,7 @@ to the list that `Membhead` and `Membtail` point to. This list is only
 temporary, because the next lines of code move the member list into the 
 new struct type node:
 
-```
+```c
   ctype->member = Membhead;
   Membhead = Membtail = NULL;
 ```
@@ -251,7 +251,7 @@ Some of this is very hardware-specific due to the alignment of scalar
 values in memory. So I'll give the code as it stands now, and then
 follow the function call structure later.
 
-```
+```c
   // Set the offset of the initial member
   // and find the first free byte after it
   m = ctype->member;
@@ -267,7 +267,7 @@ member could be stored. But now we need to worry about alignment.
 As an example, on a 32-bit architecture where 4-byte scalar values have
 to be aligned on a 4-byte boundary:
 
-```
+```c
 struct {
   char x;               // At offset 0
   int y;                // At offset 4, not 1
@@ -276,7 +276,7 @@ struct {
 
 So here is the code to calculate the offset of each successive member:
 
-```
+```c
   // Set the position of each successive member in the struct
   for (m = m->next; m != NULL; m = m->next) {
     // Set the offset for this member
@@ -300,7 +300,7 @@ position which is available for the next member.
 Once we have done the above for all the members in the list, the
 `offset` is the size in bytes of the overall struct. So:
 
-```
+```c
   // Set the overall size of the struct
   ctype->size = offset;
   return (ctype);
@@ -312,7 +312,7 @@ Once we have done the above for all the members in the list, the
 It's time to follow all the new functions to see what they do and how they
 do it. We'll start with `typesize()` in `types.c`:
 
-```
+```c
 // Given a type and a composite type pointer, return
 // the size of this type in bytes
 int typesize(int type, struct symtable *ctype) {
@@ -339,7 +339,7 @@ the *direction* in which we need to find the next aligned position.
 
 Also, the knowledge of alignment is hardware specific, so:
 
-```
+```c
 int genalign(int type, int offset, int direction) {
   return (cgalign(type, offset, direction));
 }
@@ -347,7 +347,7 @@ int genalign(int type, int offset, int direction) {
 
 and we turn our attention to `cgalign()` in `cg.c`:
 
-```
+```c
 // Given a scalar type, an existing memory offset
 // (which hasn't been allocated to anything yet)
 // and a direction (1 is up, -1 is down), calculate
@@ -425,7 +425,7 @@ that the value's "high end" won't hit what's above it:
 So now we can parse a struct type, and declare a global variable to this type.
 Now let's modify the code to allocate the memory space for a global variable:
 
-```
+```c
 // Generate a global symbol but not functions
 void cgglobsym(struct symtable *node) {
   int size;
@@ -462,7 +462,7 @@ for global struct variables.
 
 I have this test program, `z.c`:
 
-```
+```c
 struct fred { int x; char y; long z; };
 struct foo { char y; long z; } var1;
 struct { int x; };
