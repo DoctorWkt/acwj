@@ -9,7 +9,7 @@ later on we will change them to be local variable declarations.
 I also want to extend our grammar so that we can declare multiple
 variables with the same type at the same time, e.g.
 
-```
+```c
   int x, y, z;
 ```
 
@@ -63,7 +63,7 @@ into internal loops.
 As there are one or more global declarations, we can loop parsing
 each one. When we run out of tokens, we can leave the loop.
 
-```
+```c
 // Parse one or more global declarations, either
 // variables or functions
 void global_declarations(void) {
@@ -108,7 +108,7 @@ here, we can generate the code from the AST tree immediately. This code
 was in `main()` but has now been moved here. `main()` now only has to 
 call `global_declarations()`:
 
-```
+```c
   scan(&Token);                 // Get the first token from the input
   genpreamble();                // Output the preamble
   global_declarations();        // Parse the global declarations
@@ -127,7 +127,7 @@ code for it. But now we need to add in a loop. If there's a following ',',
 loop back to get the next identifier with the same type. And if there's
 a following ';', that's the end of the variable declarations.
 
-```
+```c
 // Parse the declaration of a list of variables.
 // The identifier has been scanned & we have the type
 void var_declaration(int type) {
@@ -167,7 +167,7 @@ Thus, I've left the call to `var_declaration()` in `single_statement()`
 in `stmt.c`. Later on, we will modify this to declare local variables.
 But for now, all of the variables in this example program are globals:
 
-```
+```c
 int   d, f;
 int  *e;
 

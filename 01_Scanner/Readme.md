@@ -12,7 +12,7 @@ We will start with a language that has only five lexical elements:
 Each token that we scan is going to be stored in this structure
 (from `defs.h`):
 
-```
+```c
 // Token structure
 struct token {
   int token;
@@ -22,7 +22,7 @@ struct token {
 
 where the `token` field can be one of these values (from `defs.h`):
 
-```
+```c
 // Tokens
 enum {
   T_PLUS, T_MINUS, T_STAR, T_SLASH, T_INTLIT
@@ -41,7 +41,7 @@ ahead in the input stream. We also want to track what line we are currently
 on so that we can print the line number in our debug messages. All of this
 is done by the `next()` function:
 
-```
+```c
 // Get the next character from the input file.
 static int next(void) {
   int c;
@@ -62,7 +62,7 @@ static int next(void) {
 The `Putback` and `Line` variables are defined in `data.h` along with
 our input file pointer:
 
-```
+```c
 extern_ int     Line;
 extern_ int     Putback;
 extern_ FILE    *Infile;
@@ -74,7 +74,7 @@ But `main.c` will remove the `extern_`; hence, these variables will
 
 Finally, how do we put a character back into the input stream? Thus:
 
-```
+```c
 // Put back an unwanted character
 static void putback(int c) {
   Putback = c;
@@ -86,7 +86,7 @@ static void putback(int c) {
 We need a function that reads and silently skips whitespace characters
 until it gets a non-whitespace character, and returns it. Thus:
 
-```
+```c
 // Skip past input that we don't need to deal with, 
 // i.e. whitespace, newlines. Return the first
 // character we do need to deal with.
@@ -107,7 +107,7 @@ So now we can read characters in while skipping whitespace; we can also
 put back a character if we read one character too far ahead. We can
 now write our first lexical scanner:
 
-```
+```c
 // Scan and return the next token found in the input.
 // Return 1 if token valid, 0 if no tokens left.
 int scan(struct token *t) {
@@ -155,7 +155,7 @@ In fact, we already have to face this situation as we also need to
 recognise integer literal values like `3827` and `87731`. Here is the
 missing `default` code from the `switch` statement:
 
-```
+```c
   default:
 
     // If it's a digit, scan the
@@ -175,7 +175,7 @@ with this first character. It will return the scanned integer value. To
 do this, it has to read each character in turn, check that it's a
 legitimate digit, and build up the final number. Here is the code:
 
-```
+```c
 // Scan and return an integer literal
 // value from the input file. Store
 // the value as a string in Text.
@@ -217,7 +217,7 @@ as well.
 
 Here's the code for `chrpos()`:
 
-```
+```c
 // Return the position of character c
 // in string s, or -1 if c not found
 static int chrpos(char *s, int c) {
@@ -235,7 +235,7 @@ And that's it for the lexical scanner code in `scan.c` for now.
 The code in `main.c` puts the above scanner to work. The `main()`
 function opens up a file and then scans it for tokens:
 
-```
+```c
 void main(int argc, char *argv[]) {
   ...
   init();
@@ -250,7 +250,7 @@ void main(int argc, char *argv[]) {
 And `scanfile()` loops while there is a new token and prints out the
 details of the token:
 
-```
+```c
 // List of printable tokens
 char *tokstr[] = { "+", "-", "*", "/", "intlit" };
 
@@ -317,7 +317,7 @@ Single character tokens are easy to scan, but multi-character tokens are
 a bit harder. But at the end, the `scan()` function returns the next token
 from the input file in a `struct token` variable:
 
-```
+```c
 struct token {
   int token;
   int intvalue;

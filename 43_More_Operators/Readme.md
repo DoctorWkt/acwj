@@ -23,7 +23,7 @@ Next up, I hit `enum { NOREG = -1 ...` in `defs.h` and realised that the
 scanner wasn't dealing with integer literals which start with a minus sign.
 So I've added this code to `scan()` in `scan.c`:
 
-```
+```c
     case '-':
       if ((c = next()) == '-') {
         t->token = T_DEC;
@@ -50,7 +50,7 @@ In the AST node and symbol table node structures, I've been using unions to
 try and keep the size of each node down. I guess I'm a bit old school and
 I worry about wasting memory. An example is the AST node structure:
 
-```
+```c
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
   ...
@@ -66,7 +66,7 @@ and especially an unnamed union inside a struct. I could add this functionality,
 but it will be easier to redo the two structs where I do this. So, I've
 made these changes:
 
-```
+```c
 // Symbol table structure
 struct symtable {
   char *name;                   // Name of a symbol
@@ -111,7 +111,7 @@ on the resulting AST tree. This should result in a single A_INTLIT node
 from which I can extract the literal value. I could even let `binexpr()`
 parse any casts, e.g.
 
-```
+```c
  char x= (char)('a' + 1024);
 ```
 
@@ -135,7 +135,7 @@ tokens: T_ASPLUS, T_ASMINUS, T_ASSTAR and T_ASSLASH. These have
 corresponding AST operations: A_ASPLUS, A_ASMINUS, A_ASSTAR, A_ASSLASH. The AST operations **must** have the same enum value as the tokens
 because of this function in `expr.c`:
 
-```
+```c
 // Convert a binary operator token into a binary AST operation.
 // We rely on a 1:1 mapping from token to AST operation
 static int binastop(int tokentype) {
@@ -151,7 +151,7 @@ According to [this list of C operators](https://en.cppreference.com/w/c/language
 our existing assignment operator, so we can modify the `OpPrec[]` table in
 `expr.c` as follows:
 
-```
+```c
 // Operator precedence for each token. Must
 // match up with the order of tokens in defs.h
 static int OpPrec[] = {
@@ -165,7 +165,7 @@ static int OpPrec[] = {
 But that list of C operators also notes that the assignment operators are
 *right_associative*. This means, for example, that:
 
-```
+```c
    a += b + c;          // needs to be parsed as
    a += (b + c);        // not
    (a += b) + c;
@@ -173,7 +173,7 @@ But that list of C operators also notes that the assignment operators are
 
 So we also need to update this function in `expr.c` to do this:
 
-```
+```c
 // Return true if a token is right-associative,
 // false otherwise.
 static int rightassoc(int tokentype) {
@@ -193,7 +193,7 @@ Now that we can parse expressions with the four new operators, we need to
 deal with the AST that is created for each expression. One thing we need to
 do is dump the AST tree. So, in `dumpAST()` in `tree.c`, I added this code:
 
-```
+```c
     case A_ASPLUS:
       fprintf(stdout, "A_ASPLUS\n"); return;
     case A_ASMINUS:
@@ -249,7 +249,7 @@ Now, we don't *have* to rewrite the tree as long as we perform the tree walking
 
 So in `genAST()`, we have:
 
-```
+```c
 int genAST(...) {
   ...
   // Get the left and right sub-tree values. This code already here.
@@ -268,7 +268,7 @@ an A_ADD operation on these children, then followed by an assignment back into `
 
 So, the `genAST()` code now has this:
 
-```
+```c
   switch (n->op) {
     ... 
     case A_ASPLUS:
@@ -309,7 +309,7 @@ on the children. But before we can drop into the A_ASSIGN we have to move
 the left-child pointer over to be the right child. Why? Because the A_ASSIGN
 code expects the destination to be the right child:
 
-```
+```c
       return (cgstorlocal(leftreg, n->right->sym));
 ```
 
@@ -322,7 +322,7 @@ as the four we just added.
 
 The `tests/input110.c` program is our testing program:
 
-```
+```c
 #include <stdio.h>
 
 int x;

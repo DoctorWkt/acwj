@@ -138,7 +138,7 @@ Don't worry, I'll be here when you get back.
 The structure of each node in the AST that we will build is described in
 `defs.h`:
 
-```
+```c
 // AST node types
 enum {
   A_ADD, A_SUBTRACT, A_MULTIPLY, A_DIVIDE, A_INTLIT
@@ -168,7 +168,7 @@ general function, `mkastnode()`, takes values for all four
 fields in an AST node. It allocates the node, populates the field
 values and returns a pointer to the node:
 
-```
+```c
 // Build and return a generic AST node
 struct ASTnode *mkastnode(int op, struct ASTnode *left,
                           struct ASTnode *right, int intvalue) {
@@ -192,7 +192,7 @@ struct ASTnode *mkastnode(int op, struct ASTnode *left,
 Given this, we can write more specific functions that make a leaf AST
 node (i.e. one with no children), and make an AST node with a single child:
 
-```
+```c
 // Make an AST leaf node
 struct ASTnode *mkastleaf(int op, int intvalue) {
   return (mkastnode(op, NULL, NULL, intvalue));
@@ -238,7 +238,7 @@ separate. So, to start with, I'm going to have a function to map
 the token values into AST node operation values. This, along with the
 rest of the parser, is in `expr.c`:
 
-```
+```c
 // Convert a token into an AST operation.
 int arithop(int tok) {
   switch (tok) {
@@ -264,7 +264,7 @@ syntax checking in our parser.
 We need a function to check that the next token is an integer literal,
 and to build an AST node to hold the literal value. Here it is:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -289,20 +289,20 @@ This assumes that there is a global variable `Token`, and that it
 already has the most recent token scanned in from the input. In
 `data.h`:
 
-```
+```c
 extern_ struct token    Token;
 ```
 
 and in `main()`:
 
-```
+```c
   scan(&Token);                 // Get the first token from the input
   n = binexpr();                // Parse the expression in the file
 ```
 
 Now we can write the code for the parser:
 
-```
+```c
 // Return an AST tree whose root is a binary operator
 struct ASTnode *binexpr(void) {
   struct ASTnode *n, *left, *right;
@@ -404,7 +404,7 @@ interpretTree0(tree with +):
 
 This is in `interp.c` and follows the above pseudo-code:
 
-```
+```c
 // Given an AST, interpret the
 // operators in it and return
 // a final value.
@@ -444,7 +444,7 @@ sematic checking in our parser.
 There is some other code here and the, like the call to the interpreter
 in `main()`:
 
-```
+```c
   scan(&Token);                 // Get the first token from the input
   n = binexpr();                // Parse the expression in the file
   printf("%d\n", interpretAST(n));      // Calculate the final result

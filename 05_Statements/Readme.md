@@ -46,7 +46,7 @@ In `scan.c`, I've added this code which I've borrowed from the SubC
 compiler. It reads in alphanumeric characters into a 
 buffer until it hits a non-alphanumeric character.
 
-```
+```c
 // Scan an identifier from the input file and
 // store it in buf[]. Return the identifier's length
 static int scanident(int c, char *buf, int lim) {
@@ -79,7 +79,7 @@ an optimisation: match against the first letter before doing the `strcmp()`.
 This speeds up the comparison against dozens of keywords. Right now we
 don't need this optimisation but I've put it in for later:
 
-```
+```c
 // Given a word from the input, return the matching
 // keyword token number or 0 if it's not a keyword.
 // Switch on the first letter so that we don't have
@@ -98,7 +98,7 @@ static int keyword(char *s) {
 Now, at the bottom of the switch statement in `scan()`, we add this code
 to recognise semicolons and keywords:
 
-```
+```c
     case ';':
       t->token = T_SEMI;
       break;
@@ -131,7 +131,7 @@ to recognise semicolons and keywords:
 I've also added a global `Text` buffer to store the keywords and
 identifiers:
 
-```
+```c
 #define TEXTLEN         512             // Length of symbols in input
 extern_ char Text[TEXTLEN + 1];         // Last identifier scanned
 ```
@@ -145,7 +145,7 @@ that the rest of the compiler should only ever call the functions in
 
 To this end, I've defined some new "front-end" functions in `gen.c`:
 
-```
+```c
 void genpreamble()        { cgpreamble(); }
 void genpostamble()       { cgpostamble(); }
 void genfreeregs()        { freeall_registers(); }
@@ -160,7 +160,7 @@ BNF grammar for statements which I gave up above. This is done with
 this single function. I've converted the recursive definition into
 a loop:
 
-```
+```c
 // Parse one or more statements
 void statements(void) {
   struct ASTnode *tree;
@@ -199,7 +199,7 @@ to print out the final value.
 There are a couple of new helper functions in the above code, which I've put
 into a new file, `misc.c`:
 
-```
+```c
 // Ensure that the current token is t,
 // and fetch the next token. Otherwise
 // throw an error 
@@ -226,7 +226,7 @@ more short functions to call `match()` to make our syntax checking easier.
 `main()` used to call `binexpr()` directly to parse the single expression
 in the old input files. Now it does this:
 
-```
+```c
   scan(&Token);                 // Get the first token from the input
   genpreamble();                // Output the preamble
   statements();                 // Parse the statements in the input
@@ -252,7 +252,7 @@ print
 Yes I've decided to check that we have have tokens spread out across multiple
 lines. To compile and run the input file, do a `make test`:
 
-```
+```make
 $ make test
 cc -o comp1 -g cg.c expr.c gen.c main.c misc.c scan.c stmt.c tree.c
 ./comp1 input01

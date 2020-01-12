@@ -29,7 +29,7 @@ lines that the pre-processor inserts as part of its operation.
 
 Consider this short program (with lines numbered):
 
-```
+```c
 1 #include <stdio.h>
 2 
 3 int main() {
@@ -41,7 +41,7 @@ Consider this short program (with lines numbered):
 Here is what we (the compiler) might receive from the pre-processor
 after it processes this file:
 
-```
+```c
 # 1 "z.c"
 # 1 "<built-in>"
 # 1 "<command-line>"
@@ -82,7 +82,7 @@ being processed.
 We have a new global variable, `char *Infilename`, defined in `data.h`.
 In the `do_compile()` function in `main.c` we now do this:
 
-```
+```c
 // Given an input filename, compile that file
 // down to assembly code. Return the new file's name
 static char *do_compile(char *filename) {
@@ -104,7 +104,7 @@ explained where `CPPCMD` and `INCDIR` come from.
 
 `CPPCMD` is defined as the name of the pre-processor command in `defs.h`:
 
-```
+```c
 #define CPPCMD "cpp -nostdinc -isystem "
 ```
 
@@ -115,7 +115,7 @@ next thing on the command line which is `INCDIR`.
 `INCDIR` is actually defined in the `Makefile`, as this is a common place
 to put things that can be changed at configuration time:
 
-```
+```make
 # Define the location of the include directory
 # and the location to install the compiler binary
 INCDIR=/tmp/include
@@ -124,7 +124,7 @@ BINDIR=/tmp
 
 The compiler binary is now compiled with this `Makefile` rule:
 
-```
+```make
 cwj: $(SRCS) $(HSRCS)
         cc -o cwj -g -Wall -DINCDIR=\"$(INCDIR)\" $(SRCS)
 ```
@@ -138,7 +138,7 @@ In the `include/` directory in this area, I've made a start on some
 header files that are plain enough for our compiler to digest. We can't
 use the real system header files, as they contain lines like:
 
-```
+```c
 extern int _IO_feof (_IO_FILE *__fp) __attribute__ ((__nothrow__ , __leaf__));
 extern int _IO_ferror (_IO_FILE *__fp) __attribute__ ((__nothrow__ , __leaf__));
 ```
@@ -146,7 +146,7 @@ extern int _IO_ferror (_IO_FILE *__fp) __attribute__ ((__nothrow__ , __leaf__));
 which would cause our compiler to have a fit! There is now a rule in the
 `Makefile` to copy our own header files to the `INCDIR` directory:
 
-```
+```make
 install: cwj
         mkdir -p $(INCDIR)
         rsync -a include/. $(INCDIR)
@@ -165,7 +165,7 @@ I've modified the scanner to do this, as this already deals with incrementing
 the line number. So in `scan.c`, I've made this change to the `scan()`
 function:
 
-```
+```c
 // Get the next character from the input file.
 static int next(void) {
   int c, l;
@@ -233,7 +233,7 @@ prevents the contents of the header file being included a second time.
 
 As an example, here is what is currently in `include/stdio.h`:
 
-```
+```c
 #ifndef _STDIO_H_
 # define _STDIO_H_
 
@@ -274,7 +274,7 @@ As always, the code is there for you to read.
 
 In `defs.h` we have a new storage class:
 
-```
+```c
 // Storage classes
 enum {
   C_GLOBAL = 1,                 // Globally visible symbol
@@ -287,7 +287,7 @@ enum {
 The reason I put this in is because we already have this code for
 global symbols in `sym.c`:
 
-```
+```c
 // Create a symbol node to be added to a symbol table list.
 struct symtable *newsym(char *name, int type, struct symtable *ctype,
                         int stype, int class, int size, int posn) {
@@ -309,7 +309,7 @@ We want `extern` symbols added to the global list, but we don't want to call
 To this end, I've modified `addglob()` to take a `class` argument which is
 passed to `newsym()`:
 
-```
+```c
 // Add a symbol to the global symbol list
 struct symtable *addglob(char *name, int type, struct symtable *ctype,
                          int stype, int class, int size) {
@@ -375,7 +375,7 @@ Oh well, we are building a subset of the C language here!
 As with the last five or six parts of this journey, I've made changes
 to `parse_type()` in `decl.c` again:
 
-```
+```c
 int parse_type(struct symtable **ctype, int *class) {
   int type, exstatic=1;
 
@@ -406,7 +406,7 @@ and ensure we pass a suitable `class` value to both of them.
 In `var_declaration_list()` in `decl.c` where we are parsing a list of
 variables or parameters, we already get the storage class for these variables:
 
-```
+```c
 static int var_declaration_list(struct symtable *funcsym, int class,
                                 int separate_token, int end_token);
 ```
@@ -414,7 +414,7 @@ static int var_declaration_list(struct symtable *funcsym, int class,
 So we can pass the `class` to `parse_type()` which may change it, then
 call `var_declaration()` with the actual class:
 
-```
+```c
     ...
     // Get the type and identifier
     type = parse_type(&ctype, &class);
@@ -426,7 +426,7 @@ call `var_declaration()` with the actual class:
 
 And in `var_declaration()`:
 
-```
+```c
       switch (class) {
         case C_EXTERN:
         case C_GLOBAL:
@@ -439,7 +439,7 @@ For local variables, we need to turn our attention to `single_statement()`
 in `stmt.c`. I also should, at this point, say that I'd previously forgot
 to add the cases for structs, unions, enums and typedefs here.
 
-```
+```c
 // Parse a single statement and return its AST
 static struct ASTnode *single_statement(void) {
   int type, class= C_LOCAL;
@@ -478,7 +478,7 @@ Note that we start with `class= C_LOCAL`, but it might get modified
 by `parse_type()` before being passed to `var_declaration()`. This allows
 us to write code that looks like:
 
-```
+```c
 int main() {
   extern int foo;
   ...
@@ -490,7 +490,7 @@ int main() {
 I've got one test program, `test/input70.c` which uses one of our new
 header files to confirm that the pre-processor works:
 
-```
+```c
 #include <stdio.h>
 
 typedef int FOO;

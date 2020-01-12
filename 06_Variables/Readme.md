@@ -35,7 +35,7 @@ Every compiler is going to need a
 we will hold more than just global variables. But for now, here is
 the structure of an entry in the table (from `defs.h`):
 
-```
+```c
 // Symbol table structure
 struct symtable {
   char *name;                   // Name of a symbol
@@ -44,7 +44,7 @@ struct symtable {
 
 We have an array of symbols in `data.h`:
 
-```
+```c
 #define NSYMBOLS        1024            // Number of symbol table entries
 extern_ struct symtable Gsym[NSYMBOLS]; // Global symbol table
 static int Globs = 0;                   // Position of next free global symbol slot
@@ -74,14 +74,14 @@ If you look at the example input file, we need a few new tokens:
 
 The scanning of '=' is easy to add to `scan()`:
 
-```
+```c
   case '=':
     t->token = T_EQUALS; break;
 ```
 
 We can add the 'int' keyword to `keyword()`:
 
-```
+```c
   case 'i':
     if (!strcmp(s, "int"))
       return (T_INT);
@@ -92,7 +92,7 @@ For identifiers, we are already using `scanident()` to store words into the
 `Text` variable. Instead of dying if a word is not a keyword, we can
 return a T_IDENT token:
 
-```
+```c
    if (isalpha(c) || '_' == c) {
       // Read in a keyword or identifier
       scanident(c, Text, TEXTLEN);
@@ -132,7 +132,7 @@ to parse print statements. But, as we now have three types of statements,
 it makes sense to write a  function to deal with each one. Our top-level
 `statements()` function in `stmt.c` now looks like:
 
-```
+```c
 // Parse one or more statements
 void statements(void) {
 
@@ -165,7 +165,7 @@ Let's look at variable declarations. This
 is in a new file, `decl.c`, as we are going to have lots of other types
 of declarations in the future.
 
-```
+```c
 // Parse the declaration of a variable
 void var_declaration(void) {
 
@@ -182,7 +182,7 @@ void var_declaration(void) {
 
 The `ident()` and `semi()` functions are wrappers around `match()`:
 
-```
+```c
 void semi(void)  { match(T_SEMI, ";"); }
 void ident(void) { match(T_IDENT, "identifier"); }
 ```
@@ -196,7 +196,7 @@ multiple times (for now).
 
 Here's the code for `assignment_statement()` in `stmt.c`:
 
-```
+```c
 void assignment_statement(void) {
   struct ASTnode *left, *right, *tree;
   int id;
@@ -264,7 +264,7 @@ We now need to store either an integer literal value in A_INTLIT AST nodes, or
 the details of the symbol for A_IDENT AST nodes. I've added a *union* to the
 AST structure to do this (in `defs.h`):
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
@@ -281,7 +281,7 @@ struct ASTnode {
 
 Let's now look at the changes to `genAST()` in `gen.c`
 
-```
+```c
 int genAST(struct ASTnode *n, int reg) {
   int leftreg, rightreg;
 
@@ -348,7 +348,7 @@ You would have noticed that I changed the name of the old `cgload()`
 function to `cgloadint()`. This is more specific. We now have a
 function to load the value out of a global variable (in `cg.c`):
 
-```
+```c
 int cgloadglob(char *identifier) {
   // Get a new register
   int r = alloc_register();
@@ -361,7 +361,7 @@ int cgloadglob(char *identifier) {
 
 Similarly, we need a function to save a register into a variable:
 
-```
+```c
 // Store a register's value into a variable
 int cgstorglob(int r, char *identifier) {
   fprintf(Outfile, "\tmovq\t%s, %s(\%%rip)\n", reglist[r], identifier);
@@ -371,7 +371,7 @@ int cgstorglob(int r, char *identifier) {
 
 We also need a function to create a new global integer variable:
 
-```
+```c
 // Generate a global symbol
 void cgglobsym(char *sym) {
   fprintf(Outfile, "\t.comm\t%s,8,8\n", sym);
@@ -382,7 +382,7 @@ Of course, we can't let the parser access this code directly. Instead,
 there is a function in the generic code generator in `gen.c` 
 that acts as the interface:
 
-```
+```c
 void genglobsym(char *s) { cgglobsym(s); }
 ```
 
@@ -392,7 +392,7 @@ So now we can assign to variables. But how do we get a variable's value into
 an expression. Well, we already have a `primary()` function to get an
 integer literal. Let's modify it to also load a variable's value:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -480,7 +480,7 @@ I've probably made a few other changes. The only main one that I can
 remember is to create some helper functions in `misc.c` to make it
 easier to report fatal errors:
 
-```
+```c
 // Print out fatal messages
 void fatal(char *s) {
   fprintf(stderr, "%s on line %d\n", s, Line); exit(1);

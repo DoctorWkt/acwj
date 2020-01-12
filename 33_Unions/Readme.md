@@ -16,7 +16,7 @@ As always, I'll omit the code that does the scanning.
 
 As with structs, there is a singly-linked list to store unions (in `data.h`):
 
-```
+```c
 extern_ struct symtable *Unionhead, *Uniontail;   // List of struct types
 ```
 
@@ -37,7 +37,7 @@ whole functions.
 In `parse_type()`, we now scan the T_UNION token and call the function to parse
 both struct and union types:
 
-```
+```c
   case T_STRUCT:
     type = P_STRUCT;
     *ctype = composite_declaration(P_STRUCT);
@@ -55,7 +55,7 @@ last part of our journey. It now takes the type that we are parsing.
 
 Here are the changes:
 
-```
+```c
 // Parse composite type declarations: structs or unions.
 // Either find an existing struct/union declaration, or build
 // a struct/union symbol table entry and return its pointer.
@@ -99,7 +99,7 @@ would be worth merging the struct and union type lists into a single list.
 As with the union declarations, we can reuse the code that deals with
 structs in expressions. In fact, there are very few changes to make in `expr.c`.
 
-```
+```c
 // Parse the member reference of a struct or union
 // and return an AST tree for it. If withpointer is true,
 // the access is through a pointer to the member.
@@ -116,7 +116,7 @@ Again, that's it. The rest of the code was generic enough that we can use it for
 unions unmodified. And I think there was only one other major change, which was
 to a function in `types.c`:
 
-```
+```c
 // Given a type and a composite type pointer, return
 // the size of this type in bytes
 int typesize(int type, struct symtable *ctype) {
@@ -130,7 +130,7 @@ int typesize(int type, struct symtable *ctype) {
 
 Here's our test program, `test/input62.c`:
 
-```
+```c
 int printf(char *fmt);
 
 union fred {

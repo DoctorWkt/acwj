@@ -12,7 +12,7 @@ but only with a number of elements, no assignment of values.
 The declaration side is easy, we just add these lines to
 `array_declaration()` in `decl.c`:
 
-```
+```c
   // Add this as a known array. We treat the
   // array as a pointer to its elements' type
   switch (class) {
@@ -26,7 +26,7 @@ The declaration side is easy, we just add these lines to
 
 Now, we must prevent assignment to local arrays:
 
-```
+```c
   // Array initialisation
   if (Token.token == T_ASSIGN) {
     if (class != C_GLOBAL && class != C_STATIC)
@@ -35,7 +35,7 @@ Now, we must prevent assignment to local arrays:
 
 I also added some more error checking:
 
-```
+```c
   // Set the size of the array and the number of elements
   // Only externs can have no elements.
   if (class != C_EXTERN && nelems<=0)
@@ -54,7 +54,7 @@ and pointer types as local variables.
 Now that each symbol has its size (which `sizeof()` uses), we can change
 the code in this function to use the symbol's size:
 
-```
+```c
 // Create the position of a new local variable.
 static int newlocaloffset(int size) {
   // Decrement the offset by a minimum of 4 bytes
@@ -67,7 +67,7 @@ static int newlocaloffset(int size) {
 And in the code that generates the function's preamble, `cgfuncpreamble()`,
 we only have to make these changes:
 
-```
+```c
   // Copy any in-register parameters to the stack, up to six of them
   // The remaining parameters are already on the stack
   for (parm = sym->member, cnt = 1; parm != NULL; parm = parm->next, cnt++) {
@@ -95,7 +95,7 @@ to explore later.
 
 `test/input140.c` declares:
 
-```
+```c
 int main() {
   int  i;
   int  ary[5];

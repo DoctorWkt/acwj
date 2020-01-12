@@ -8,7 +8,7 @@ that we use in the compiler's own source code.
 C allows the declaration of string literals by splitting them across
 multiple lines or as multiple strings, e.g.
 
-```
+```c
   char *c= "hello " "there, "
            "how " "are " "you?";
 ```
@@ -22,7 +22,7 @@ My solution is to do it in the parser, with a bit of help from the code
 generator. In `primary()` in `expr.c`, the code that deals with string
 literals now looks like this:
 
-```
+```c
   case T_STRLIT:
     // For a STRLIT token, generate the assembly for it.
     id = genglobstr(Text, 0);   // 0 means generate a label
@@ -50,7 +50,7 @@ Also, `genglobstrend()` now has the job of NUL terminating the string literal.
 
 C allows both empty statements and empty compound statements, e.g.
 
-```
+```c
   while ((c=getc()) != 'x') ;           // ';' is an empty statement
 
   int fred() { }                        // Function with empty body
@@ -59,7 +59,7 @@ C allows both empty statements and empty compound statements, e.g.
 and I use both of these in the compiler, so we need to support both of them.
 In `stmt.c`, the code now does this:
 
-```
+```c
 static struct ASTnode *single_statement(void) {
   struct ASTnode *stmt;
   struct symtable *ctype;
@@ -108,7 +108,7 @@ variable) or not NULL (is an existing variable).
 If the symbol exists, it's actually quite complicated to ensure that
 it's a safe redeclaration.
 
-```
+```c
 // Given a pointer to a symbol that may already exist
 // return true if this symbol doesn't exist. We use
 // this function to convert externs into globals
@@ -152,7 +152,7 @@ remove the symbol from the symbol table and add in a new, global, symbol.
 
 The next bug I hit was something like this:
 
-```
+```c
   int *x;
   int y;
 
@@ -169,7 +169,7 @@ I've fixed this by adding some more code to the top of `modify_type()`
 in `types.c`. If we are doing an `&&` or an `||` operation, then
 we need either integer or pointer types on each side of the operation.
 
-```
+```c
 struct ASTnode *modify_type(struct ASTnode *tree, int rtype,
                             struct symtable *rctype, int op) {
   int ltype;
@@ -201,7 +201,7 @@ the `return` keyword.
 
 So, in `return_statement()` in `stmt.c`, we now have:
 
-```
+```c
 // Parse a return statement and return its AST
 static struct ASTnode *return_statement(void) {
   struct ASTnode *tree= NULL;
@@ -236,7 +236,7 @@ Now that we have parsed the `return` function, we may create an A_RETURN
 AST node with a NULL child. So now we have to deal with this in the code
 generator. The top of `cgreturn()` in `cg.c` now has:
 
-```
+```c
 // Generate code to return a value from a function
 void cgreturn(int reg, struct symtable *sym) {
 

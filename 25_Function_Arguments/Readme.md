@@ -97,7 +97,7 @@ We now have to parse a comma-separated list of expressions, and build that
 A_GLUE AST tree with child expressions on the right, and previous expression
 trees on the left. Here is the code in `expr.c`:
 
-```
+```c
 // expression_list: <null>
 //        | expression
 //        | expression ',' expression_list
@@ -145,7 +145,7 @@ static struct ASTnode *expression_list(void) {
 That turned out to be much easier to code than I was expecting. Now, we need
 to interface this with the existing function call parser:
 
-```
+```c
 // Parse a function call and return its AST
 static struct ASTnode *funccall(void) {
   struct ASTnode *tree;
@@ -193,7 +193,7 @@ There is a non-trivial amount of code needed to walk this new AST structure,
 so I now have a function to deal with function calls. In `genAST()` we now
 have:
 
-```
+```c
   // n is the AST node being processed
   switch (n->op) {
     ...
@@ -204,7 +204,7 @@ have:
 
 The code to walk the new AST structure is here:
 
-```
+```c
 // Generate the code to copy the arguments of a
 // function call to its parameters, then call the
 // function itself. Return the register that holds 
@@ -260,7 +260,7 @@ We have created a new one, `cgcopyarg()`, and modified an existing one,
 
 But first, a reminder that we have these lists of registers:
 
-```
+```c
 #define FIRSTPARAMREG 9         // Position of first parameter register
 static char *reglist[] =
   { "%r10", "%r11", "%r12", "%r13", "%r9", "%r8", "%rcx", "%rdx", "%rsi", "%rdi" };
@@ -281,7 +281,7 @@ is zero-based. You will see a few `+1` or `-1` adjustments in the code below.
 
 Here is `cgcopyarg()`:
 
-```
+```c
 // Given a register with an argument value,
 // copy this argument into the argposn'th
 // parameter in preparation for a future function
@@ -304,7 +304,7 @@ void cgcopyarg(int r, int argposn) {
 
 Nice and simple except for the `+1`. Now the code for `cgcall()`:
 
-```
+```c
 // Call a function with the given symbol id
 // Pop off any arguments pushed on the stack
 // Return the register with the result

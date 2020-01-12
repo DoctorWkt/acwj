@@ -76,7 +76,7 @@ Here is the code to fold AST sub-trees which are binary operations on
 two children. I'm only folding a few operations; there are many more
 in `expr.c` that we could also fold.
 
-```
+```c
 // Fold an AST tree with a binary operator
 // and two A_INTLIT children. Return either 
 // the original tree or a new leaf node.
@@ -92,7 +92,7 @@ Another function will call `fold2()` and this ensures that both `n->left`
 and `n->right` are non-NULL pointers to A_INTLIT leaf nodes. Now that we
 have the values from both children, we can get to work.
 
-```
+```c
   // Perform some of the binary operations.
   // For any AST op we can't do, return
   // the original tree.
@@ -124,7 +124,7 @@ an executable! Obviously, there is opportunity for a `fatal()` call here.
 We leave the switch statement with a single value `val` that represents
 the calculated value of the sub-tree. Time to replace the sub-tree.
 
-```
+```c
   // Return a leaf node with the new value
   return (mkastleaf(A_INTLIT, n->type, NULL, val));
 }
@@ -138,7 +138,7 @@ Now that you've seen folding on binary operations, the code for unary
 operations should be straight forward. I am only folding two unary
 operations, but there is room to add more.
 
-```
+```c
 // Fold an AST tree with a unary operator
 // and one INTLIT children. Return either 
 // the original tree or a new leaf node.
@@ -193,7 +193,7 @@ We have two functions to deal with the edges of the tree. Now we can
 code up the recursive function to optimise the edges and work from the
 edges back up to the root of the tree.
 
-```
+```c
 // Attempt to do constant folding on
 // the AST tree with the root node n
 static struct ASTnode *fold(struct ASTnode *n) {
@@ -238,7 +238,7 @@ will be others later. Thus, it makes sense to write a front-end function
 that applies all the optimisations to the tree. Here it is with just
 constant folding:
 
-```
+```c
 // Optimise an AST tree by
 // constant folding in all sub-trees
 struct ASTnode *optimise(struct ASTnode *n) {
@@ -250,7 +250,7 @@ struct ASTnode *optimise(struct ASTnode *n) {
 We can  extend it later. This gets called in `function_declaration()` in `decl.c`.
 Once we have parsed a function and its body, we put the A_FUNCTION node on the top of the tree, and:
 
-```
+```c
   // Build the A_FUNCTION node which has the function's symbol pointer
   // and the compound statement sub-tree
   tree = mkastunary(A_FUNCTION, type, tree, oldfuncsym, endlabel);
@@ -264,7 +264,7 @@ Once we have parsed a function and its body, we put the A_FUNCTION node on the t
 The following program, `tests/input111.c`, should put the folding code
 through its paces.
 
-```
+```c
 #include <stdio.h>
 int main() {
   int x= 2000 + 3 + 4 * 5 + 6;

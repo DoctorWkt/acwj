@@ -11,7 +11,7 @@ operators: `==`, `!=`, `<`, `>`, `<=` and `>=`.
 
 We will have six new tokens, so let's add them to `defs.h`:
 
-```
+```c
 // Token types
 enum {
   T_EOF,
@@ -36,7 +36,7 @@ Now we have to scan them in. Note that we have to distinguish between
 an extra character from the input and put it back if we don't need it.
 Here's the new code in `scan()` from `scan.c`:
 
-```
+```c
   case '=':
     if ((c = next()) == '=') {
       t->token = T_EQ;
@@ -95,7 +95,7 @@ node types was only going to get bigger. So I decided to rearrange the
 AST node types so that there is a 1:1 mapping between them for all the
 binary operators (in `defs.h`):
 
-```
+```c
 // AST node types. The first few line up
 // with the related tokens
 enum {
@@ -109,7 +109,7 @@ enum {
 Now in `expr.c`, I can simplify the token to AST node conversion and also
 add in the new tokens' precedence:
 
-```
+```c
 // Convert a binary operator token into an AST operation.
 // We rely on a 1:1 mapping from token to AST operation
 static int arithop(int tokentype) {
@@ -135,7 +135,7 @@ That's it for the parsing and operator precedence!
 As the six new operators are binary operators, it's easy to modify the
 generic code generator in `gen.c` to deal with them:
 
-```
+```c
   case A_EQ:
     return (cgequal(leftreg, rightreg));
   case A_NE:
@@ -190,7 +190,7 @@ The solution is to `andq` the register after the `setX` instruction to
 get rid of the unwanted bits. In `cg.c` there is a general comparison
 function to do this:
 
-```
+```c
 // Compare two registers.
 static int cgcompare(int r1, int r2, char *how) {
   fprintf(Outfile, "\tcmpq\t%s, %s\n", reglist[r2], reglist[r1]);
@@ -213,7 +213,7 @@ want.
 Now that we have this general function, we can write the six actual
 comparison functions:
 
-```
+```c
 int cgequal(int r1, int r2) { return(cgcompare(r1, r2, "sete")); }
 int cgnotequal(int r1, int r2) { return(cgcompare(r1, r2, "setne")); }
 int cglessthan(int r1, int r2) { return(cgcompare(r1, r2, "setl")); }
@@ -229,7 +229,7 @@ the other register returns with the result.
 
 Have a look at the `input04` input file:
 
-```
+```c
 int x;
 x= 7 < 9;  print x;
 x= 7 <= 9; print x;

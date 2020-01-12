@@ -8,7 +8,7 @@ the case for this part of the journey.
 We added our initial support for pointers in part 15 so that we could
 write code line this:
 
-```
+```c
   int  x;
   int *y;
   int  z;
@@ -19,7 +19,7 @@ That's all fine and good, but I knew that we would eventually have to
 support the use of pointers on the left-hand side of assignment statements,
 e.g.
 
-```
+```c
   *y = 14;
 ```
 
@@ -55,7 +55,7 @@ only nod to the concept of the lvalue is to mark identifiers on the
 left of an assignment as an A_LVIDENT. We manually deal with this in
 `genAST()`:
 
-```
+```c
     case A_IDENT:
       return (cgloadglob(n->v.id));
     case A_LVIDENT:
@@ -83,7 +83,7 @@ I'm loath to keep adding more fields to the AST node, but this is
 what I ended up doing. We now have a field to indicate if the node
 should generate lvalue code or rvalue code:
 
-```
+```c
 // Abstract Syntax Tree structure
 struct ASTnode {
   int op;                       // "Operation" to be performed on this tree
@@ -139,7 +139,7 @@ According to [this list of C operators](https://en.cppreference.com/w/c/language
 `+` or `-`. We there need to rearrange our list of operators and their
 precedences. In `defs.h`:
 
-```
+```c
 // Token types
 enum {
   T_EOF,
@@ -151,7 +151,7 @@ enum {
 In `expr.c`, we need to update the code that holds the precedences for
 our binary operators:
 
-```
+```c
 // Operator precedence for each token. Must
 // match up with the order of tokens in defs.h
 static int OpPrec[] = {
@@ -179,7 +179,7 @@ For now, the statement parser in `single_statement()` in `stmt.c`
 assumes that what's coming up next is an expression if it doesn't
 recognise the first token:
 
-```
+```c
 static struct ASTnode *single_statement(void) {
   int type;
 
@@ -197,7 +197,7 @@ This does mean that `2+3;` will be treated as a legal statement for now.
 We will fix this later. And in `compound_statement()` we also ensure
 that the expression is followed by a semicolon:
 
-```
+```c
     // Some statements must be followed by a semicolon
     if (tree != NULL && (tree->op == A_ASSIGN ||
                          tree->op == A_RETURN || tree->op == A_FUNCCALL))
@@ -270,7 +270,7 @@ has the same precedence as the operator we are up to. That's a simple
 modification to the parser's logic. I've introduced a new function
 in `expr.c` to determine if an operator is right-associative:
 
-```
+```c
 // Return true if a token is right-associative,
 // false otherwise.
 static int rightassoc(int tokentype) {
@@ -284,7 +284,7 @@ static int rightassoc(int tokentype) {
 In `binexpr()` we alter the while loop as mentioned before, and we
 also put in A_ASSIGN-specific code to swap the child trees around:
 
-```
+```c
 struct ASTnode *binexpr(int ptp) {
   struct ASTnode *left, *right;
   struct ASTnode *ltemp, *rtemp;
@@ -346,7 +346,7 @@ each AST tree to standard output. It's not sophisticated. The compiler
 now has a `-T` command line argument which sets an internal flag,
 `O_dumpAST`. And the `global_declarations()` code in `decl.c` now does:
 
-```
+```c
        // Parse a function declaration and
        // generate the assembly code for it
        tree = function_declaration(type);
@@ -415,7 +415,7 @@ is only the AST node types which could possibly be lvalues that the code
 in `genAST()` in `gen.c` needs to worry about. Here is what I have for these
 node types:
 
-```
+```c
     case A_IDENT:
       // Load our value if we are an rvalue
       // or we are being dereferenced
@@ -446,7 +446,7 @@ node types:
 The only change to `cg.c` is a function which allows us to store a value through
 a pointer:
 
-```
+```c
 // Store through a dereferenced pointer
 int cgstorderef(int r1, int r2, int type) {
   switch (type) {

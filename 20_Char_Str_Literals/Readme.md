@@ -30,7 +30,7 @@ definition of a single character and ends with another single quote.
 The code to interpret that single character is complicated, so let's
 modify `scan()` in `scan.c` to call it:
 
-```
+```c
       case '\'':
       // If it's a quote, scan in the
       // literal character value and
@@ -50,7 +50,7 @@ deal with Unicode. That's what I'm doing here.
 
 The code for the `scanch()`function comes from SubC with a few simplifications:
 
-```
+```c
 // Return the next character from a character
 // or string literal
 static int scanch(void) {
@@ -88,7 +88,7 @@ A string literal starts with a double quote, is followed by zero or more
 characters and ends with another double quote. As with character literals,
 we need to call a separate function in `scan()`:
 
-```
+```c
     case '"':
       // Scan in a literal string
       scanstr(Text);
@@ -99,7 +99,7 @@ we need to call a separate function in `scan()`:
 We create one of the new T_STRLIT and scan the string into the `Text` buffer.
 Here is the code for `scanstr()`:
 
-```
+```c
 // Scan in a string literal from the input file,
 // and store it in buf[]. Return the length of
 // the string. 
@@ -144,7 +144,7 @@ primary_expression
 
 and thus we know that we should modify `primary()` in `expr.c`:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -177,7 +177,7 @@ I'll come back to the generation of the assembly output, done by
 Right now, a string literal is treated as an anonymous pointer. Here's
 the AST tree for the statement:
 
-```
+```c
   char *s;
   s= "Hello world";
 
@@ -194,7 +194,7 @@ In the generic code generator, there are very few changes. We need a function
 to generate the storage for a new string. We need to allocate a label for it
 and then output the string's contents (in `gen.c`):
 
-```
+```c
 int genglobstr(char *strvalue) {
   int l= genlabel();
   cgglobstr(l, strvalue);
@@ -205,7 +205,7 @@ int genglobstr(char *strvalue) {
 And we need to recognise the A_STRLIT AST node type and generate assembly
 code for it. In `genAST()`,
 
-```
+```c
     case A_STRLIT:
         return (cgloadglobstr(n->v.id));
 ```
@@ -216,7 +216,7 @@ We finally get to the actuall new assembly output functions. There are
 two: one to generate the string's storage and the other to load the
 base address of the string.
 
-```
+```c
 // Generate a global string and its start label
 void cgglobstr(int l, char *strvalue) {
   char *cptr;
@@ -238,7 +238,7 @@ int cgloadglobstr(int id) {
 ```
 
 Going back to our example:
-```
+```c
   char *s;
   s= "Hello world";
 ```
@@ -270,7 +270,7 @@ another bug in the existing code. When scaling an integer value to
 match the type size that a pointer points to, I forgot to do nothing
 when the scale was 1. The code in `modify_type()` in `types.c` is now:
 
-```
+```c
     // Left is int type, right is pointer type and the size
     // of the original type is >1: scale the left
     if (inttype(ltype) && ptrtype(rtype)) {

@@ -36,7 +36,7 @@ This is the goal, but we have to get a few things done first.
 To start with, function declarations in ANSI C are a comma-separated
 list of types and variable names, e.g.
 
-```
+```c
 int function(int x, char y, long z) { ... }
 ```
 
@@ -52,7 +52,7 @@ going to introduce function parameters.
 
 I've added a new storage class definition in `defs.h`:
 
-```
+```c
 // Storage classes
 enum {
         C_GLOBAL = 1,           // Globally visible symbol
@@ -91,7 +91,7 @@ the previous callers of `var_declaration()`.
 We now have a new function, `param_declaration()` whose job is to read the
 list of (zero or more) parameters that follow after the opening parenthesis:
 
-```
+```c
 // param_declaration: <null>
 //           | variable_declaration
 //           | variable_declaration ',' param_declaration
@@ -130,7 +130,7 @@ The two '1' arguments to `var_declaration()` indicate that this is a local
 variable and also a parameter declaration. And in `var_declaration()`, we
 now do:
 
-```
+```c
     // Add this as a known scalar
     // and generate its space in assembly
     if (islocal) {
@@ -153,7 +153,7 @@ call to `addlocl()`. So what's going on, then?
 
 I've modified `addlocal()` to also add a parameter to the global end:
 
-```
+```c
 int addlocl(char *name, int type, int stype, int isparam, int size) {
   int localslot, globalslot;
   ...
@@ -174,7 +174,7 @@ not C_LOCAL.
 Given that the global end now contains symbols which are not C_GLOBAL,
 we need to modify the code to search for global symbols:
 
-```
+```c
 // Determine if the symbol s is in the global symbol table.
 // Return its slot position or -1 if not found.
 // Skip C_PARAM entries
@@ -204,7 +204,7 @@ I've removed this function. Also, the code to calculate an offset for
 a new local variable only needs to be visible in `cg.c`, so I've
 renamed it:
 
-```
+```c
 // Position of next local variable relative to stack base pointer.
 // We store the offset as positive to make aligning the stack pointer easier
 static int localOffset;
@@ -227,7 +227,7 @@ We have six new register that are going to hold argument values, so we
 had better name them somewhere. I've extended the list of register names
 thus:
 
-```
+```c
 #define NUMFREEREGS 4
 #define FIRSTPARAMREG 9         // Position of first parameter register
 static int freereg[NUMFREEREGS];
@@ -248,7 +248,7 @@ start at this end and work backwards.
 Now we turn our attention to the function that's going to do all the work
 for us, `cgfuncpreamble()`. Let's look at the code in stages:
 
-```
+```c
 // Print out a function preamble
 void cgfuncpreamble(int id) {
   char *name = Symtable[id].name;
@@ -273,7 +273,7 @@ down to where the current stack pointer is. We also know that any
 on-stack arguments will be 16 above the new base pointer, and we know
 which will be the register with the first parameter in it.
 
-```
+```c
   // Copy any in-register parameters to the stack
   // Stop after no more than six parameter registers
   for (i = NSYMBOLS - 1; i > Locls; i--) {
@@ -291,7 +291,7 @@ that isn't a C_PARAM, i.e. a C_LOCAL. Call `newlocaloffset()` to
 generate an offset from the base pointer on the stack, and copy
 the register argument to this location on the stack.
 
-```
+```c
   // For the remainder, if they are a parameter then they are
   // already on the stack. If only a local, make a stack position.
   for (; i > Locls; i--) {
@@ -311,7 +311,7 @@ We now have our new stack frame set up with all the local variables that
 we need. All that is left is to align the stack pointer on a multiple of
 sixteen:
 
-```
+```c
   // Align the stack pointer to be a multiple of 16
   // less than its previous value
   stackOffset = (localOffset + 15) & ~15;
@@ -324,7 +324,7 @@ remember this value as, at the function's postamble, we need to increase
 the stack value by the amount that we lowered it, as well as restore the old
 stack base pointer:
 
-```
+```c
 // Print out a function postamble
 void cgfuncpostamble(int id) {
   cglabel(Symtable[id].endlabel);
@@ -342,7 +342,7 @@ the compiler doesn't yet generate code to pass arguments in registers etc.
 So, to test this change to our compiler, we write some functions with
 parameters and compile them with our compiler (`input27a.c`):
 
-```
+```c
 int param8(int a, int b, int c, int d, int e, int f, int g, int h) {
   printint(a); printint(b); printint(c); printint(d);
   printint(e); printint(f); printint(g); printint(h);
@@ -371,7 +371,7 @@ int param0() {
 
 And we write a separate file, `input27b.c`, and compile this with `gcc`:
 
-```
+```c
 #include <stdio.h>
 extern int param8(int a, int b, int c, int d, int e, int f, int g, int h);
 extern int param5(int a, int b, int c, int d, int e);

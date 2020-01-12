@@ -33,7 +33,7 @@ Now that we want to implement function prototypes, it's not always true
 that a parameter list will become the actual function's parameters. Consider
 this function prototype:
 
-```
+```c
   int fred(char a, int foo, long bar);
 ```
 
@@ -75,7 +75,7 @@ I got this done in the last few hours, so here are the code changes.
 
 I've changed the parameter list of a couple of functions in `sym.c`:
 
-```
+```c
 int addglob(char *name, int type, int stype, int class, int endlabel, int size);
 int addlocl(char *name, int type, int stype, int class, int size);
 ```
@@ -92,7 +92,7 @@ its parameter list from the global to the local symbol table. As this is
 really something specific to the symbol table, I've added this function to
 `sym.c`:
 
-```
+```c
 // Given a function's slot number, copy the global parameters
 // from its prototype to be local parameters
 void copyfuncparams(int slot) {
@@ -115,7 +115,7 @@ start with the small ones and work up to the big ones.
 I've changed the parameter list to `var_declaration()` in the same way
 that I did for the `sym.c` functions:
 
-```
+```c
 void var_declaration(int type, int class) {
   ...
   addglob(Text, pointer_to(type), S_ARRAY, class, 0, Token.intvalue);
@@ -135,7 +135,7 @@ We have big changes here, as we might already have a parameter list in
 the global symbol table as an existing prototype. If we do, we need to
 check the number and types in the new list against the prototype.
 
-```
+```c
 // Parse the parameters in parentheses after the function name.
 // Add them as symbols to the symbol table and return the number
 // of parameters. If id is not -1, there is an existing function
@@ -225,7 +225,7 @@ or it could be a full function. And we won't know until we parse either the
 ';' (for a prototype) or the '{' (for a full function). So let's take
 the exposition of the code in stages.
 
-```
+```c
 // Parse the declaration of function.
 // The identifier has been scanned & we have the type.
 struct ASTnode *function_declaration(int type) {
@@ -258,7 +258,7 @@ This is nearly the same as the previous version of the code, except that
 number when there is a previous prototype. We only add the function's
 name to the global symbol table if it's not already there.
 
-```
+```c
   // If this is a new function declaration, update the
   // function symbol entry with the number of parameters
   if (id == -1)
@@ -281,7 +281,7 @@ with this NULL value: no big change.
 If we continue on, we are now dealing with a full function declaration
 with a body.
 
-```
+```c
   // This is not just a prototype.
   // Copy the global parameters to be local parameters
   if (id == -1)
@@ -306,7 +306,7 @@ compiler detects syntax and semantic errors.
 
 A quick *grep* of `decl.c` shows these new errors are detected:
 
-```
+```c
 fatald("Type doesn't match prototype for parameter", paramcnt + 1);
 fatals("Parameter count mismatch for function", Symtable[id].name);
 ```
@@ -318,7 +318,7 @@ We do have two new working test programs, `input29.c` and `input30.c`.
 The first one is the same as `input28.c` except that I've put the
 prototypes of all the functions at the top of the program:
 
-```
+```c
 int param8(int a, int b, int c, int d, int e, int f, int g, int h);
 int fred(int a, int b, int c);
 int main();
@@ -328,7 +328,7 @@ This, and all previous test programs, still work. `input30.c`, though, is
 probably the first non-trivial program that our compiler has been given.
 It opens its own source file and prints it to standard output:
 
-```
+```c
 int open(char *pathname, int flags);
 int read(int fd, char *buf, int count);
 int write(int fd, void *buf, int count);

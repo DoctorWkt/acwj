@@ -40,7 +40,7 @@ We already do this sort of thing to get to the end of an 'if' or 'while'
 statement. Here's some of the code for generating the assembly for 'if'
 from `gen.c`:
 
-```
+```c
 // Generate the code for an IF statement
 // and an optional ELSE clause
 static int genIF(struct ASTnode *n) {
@@ -66,7 +66,7 @@ For loops, we need to pass to `genAST()` the label which is at the
 loop's end and also the label just before the code that evaluates the
 loop's condition. To this end, I've changed the interface to `genAST()`:
 
-```
+```c
 int genAST(struct ASTnode *n, int iflabel, int looptoplabel,
            int loopendlabel, int parentASTop);
 ```
@@ -75,7 +75,7 @@ We keep the existing `iflabel` and augment this with the two loop labels.
 Now we need to pass to `genAST()` the labels that are generated for each loop.
 So, in the code to generate the 'while' loop code:
 
-```
+```c
 static int genWHILE(struct ASTnode *n) {
   int Lstart, Lend;
 
@@ -137,7 +137,7 @@ new loop labels. Let's look at where else we need to propagate loop labels.
 
 When I first implemented `break`, I wrote this test program
 
-```
+```c
 int main() {
   int x;
   x = 0;
@@ -162,7 +162,7 @@ realised that:
 
 So I also had to modify the argument list for `genIF()`:
 
-```
+```c
 static int genIF(struct ASTnode *n, int looptoplabel, int loopendlabel);
 ```
 
@@ -173,7 +173,7 @@ where the loop labels do get propagated.
 Finally, we actually do need to generate the assembly code for `break`
 and `continue`. Here is the code to do it in `genAST()` in `gen.c`:
 
-```
+```c
     case A_BREAK:
       cgjump(loopendlabel);
       return (NOREG);
@@ -192,7 +192,7 @@ be easy to parse. There is, of course, a small wrinkle.
 We parse individual statements in `single_statement()` in `stmt.c`, so
 the change is small:
 
-```
+```c
     case T_BREAK:
       return (break_statement());
     case T_CONTINUE:
@@ -202,7 +202,7 @@ the change is small:
 with a slight change in `compound_statement()` to ensure that the
 statement is followed by a semicolon:
 
-```
+```c
 compound_statement(void) {
   struct ASTnode *left = NULL;
   struct ASTnode *tree;
@@ -223,7 +223,7 @@ compound_statement(void) {
 
 Now the wrinkle. This following program is not legal:
 
-```
+```c
 int main() {
   break;
 }
@@ -234,7 +234,7 @@ the loops we are parsing, and only allow a `break` or `continue` statement
 when the depth is not zero. Thus, the functions to parse these keywords
 look like:
 
-```
+```c
 // Parse a break statement and return its AST
 static struct ASTnode *break_statement(void) {
 
@@ -261,14 +261,14 @@ static struct ASTnode *continue_statement(void) {
 We are going to need a `Looplevel` variable to track the level of the
 loops being parsed. This is in `data.h`:
 
-```
+```c
 extern_ int Looplevel;                  // Depth of nested loops
 ```
 
 We need to set the level up as required. Each time we start a new
 function, the level is set to zero (in `decl.c`):
 
-```
+```c
 // Parse the declaration of function.
 struct ASTnode *function_declaration(int type) {
   ...
@@ -283,7 +283,7 @@ struct ASTnode *function_declaration(int type) {
 Now, each time we parse a loop, we increment the loop level for the
 loop's body (in `stmt.c`):
 
-```
+```c
 // Parse a WHILE statement and return its AST
 static struct ASTnode *while_statement(void) {
   ...
@@ -314,7 +314,7 @@ not inside a loop.
 
 Here is the test code, `tests/input71.c`:
 
-```
+```c
 #include <stdio.h>
 
 int main() {

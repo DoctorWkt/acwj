@@ -43,7 +43,7 @@ So we'll start with the function call parser,
 has already been scanned in and the function's name is in the `Text`
 global variable:
 
-```
+```c
 // Parse a function call with a single expression
 // argument and return its AST
 struct ASTnode *funccall(void) {
@@ -96,7 +96,7 @@ To solve this problem, I've modified the scanner so that we can put
 back an unwanted token: this will be returned when we get the next token
 instead of a brand-new token. The new code in `scan.c` is:
 
-```
+```c
 // A pointer to a rejected token
 static struct token *Rejtoken = NULL;
 
@@ -130,7 +130,7 @@ So now we can look at where, in `expr.c` we need to differentiate
 between a variable name and a function call: it's in `primary()`.
 The new code is:
 
-```
+```c
 // Parse a primary factor and return an
 // AST node representing it.
 static struct ASTnode *primary(void) {
@@ -168,7 +168,7 @@ statement. Here, we have to distinguish between:
 
 Thus, the new statement code in `stmt.c` is similar to the above:
 
-```
+```c
 // Parse an assignment statement and return its AST
 static struct ASTnode *assignment_statement(void) {
   struct ASTnode *left, *right, *tree;
@@ -207,13 +207,13 @@ return at all.
 Somehow we need to know which function we are actually in, when we get to
 a return statement. I've added a global variable in `data.h`:
 
-```
+```c
 extern_ int Functionid;         // Symbol id of the current function
 ```
 
 and this is set up in `function_declaration()` in `decl.c`:
 
-```
+```c
 struct ASTnode *function_declaration(void) {
   ...
   // Add the function to the symbol table
@@ -228,7 +228,7 @@ With `Functionid` set up each time we enter a function declaration, we
 can get back to parsing and checking the semantics of a return statement.
 The new code is `return_statement()` in `stmt.c`:
 
-```
+```c
 // Parse a return statement and return its AST
 static struct ASTnode *return_statement(void) {
   struct ASTnode *tree;
@@ -278,7 +278,7 @@ that I wanted to refactor it. Now that I've added the `long` type, it's
 become necessary to do this. So here is the new version in `types.c`.
 You may want to revisit the commentary on it from the last part of the journey.
 
-```
+```c
 // Given two primitive types,
 // return true if they are compatible,
 // false otherwise. Also return either
@@ -315,7 +315,7 @@ int type_compatible(int *left, int *right, int onlyright) {
 I now call `genprimsize()` in the generic code generator which calls
 `cgprimsize()` in `cg.c` to get the size of the various types:
 
-```
+```c
 // Array of type sizes in P_XXX order.
 // 0 means no size. P_NONE, P_VOID, P_CHAR, P_INT, P_LONG
 static int psize[] = { 0,       0,      1,     4,     8 };
@@ -334,7 +334,7 @@ This makes the type sizes platform dependent; other platforms can choose
 different type sizes. It probably means my code to mark a P_INTLIT as a
 `char` not an `int` will need to be refactored:
 
-```
+```c
   if ((Token.intvalue) >= 0 && (Token.intvalue < 256))
 ```
 
@@ -347,7 +347,7 @@ return statement.
 
 Down at the bottom of `function_declaration()` in `decl.c`, I now have:
 
-```
+```c
   struct ASTnode *tree, *finalstmt;
   ...
   // If the function type isn't P_VOID, check that
@@ -392,7 +392,7 @@ our compiler.
 
 There is not much new code in `genAST()` in `gen.c`:
 
-```
+```c
     case A_RETURN:
       cgreturn(leftreg, Functionid);
       return (NOREG);
@@ -413,7 +413,7 @@ generator, `cg.c`. Let's have a look at this.
 Firstly, we now have `char`, `int` and `long`, and the x86-64 requires
 us to use the right register names for each type:
 
-```
+```c
 // List of available registers and their names.
 static int freereg[4];
 static char *reglist[4] = { "%r8", "%r9", "%r10", "%r11" };
@@ -426,7 +426,7 @@ static char *dreglist[4] = { "%r8d", "%r9d", "%r10d", "%r11d" }
 Variables now have three possible type. The code we generate needs to
 reflect this. Here are the changed functions:
 
-```
+```c
 // Generate a global symbol
 void cgglobsym(int id) {
   int typesize;
@@ -489,7 +489,7 @@ with the argument value into `%rdi`. On return, we need to copy
 the returned value from `%rax` into the register that will have this
 new value:
 
-```
+```c
 // Call a function with one argument from the given register
 // Return the register with the result
 int cgcall(int r, int id) {
@@ -511,7 +511,7 @@ code in `function_declaration()` to make a label and store it in the
 symbol table. As the return value leaves in the `%rax` register, we
 need to copy into this register before we jump to the end label:
 
-```
+```c
 // Generate code to return a value from a function
 void cgreturn(int reg, int id) {
   // Generate code depending on the function's type
@@ -537,7 +537,7 @@ void cgreturn(int reg, int id) {
 There are no changes to the preamble, but previously we were setting
 `%rax` to zero on the return. We have to remove this bit of code:
 
-```
+```c
 // Print out a function postamble
 void cgfuncpostamble(int id) {
   cglabel(Gsym[id].endlabel);
@@ -556,7 +556,7 @@ the output from our compiler.
 
 There is a new test program, `tests/input14`:
 
-```
+```c
 int fred() {
   return(20);
 }
@@ -589,7 +589,7 @@ cc -o out out.s lib/printint.c
 
 Note that we link our assembly output with `lib/printint.c`:
 
-```
+```c
 #include <stdio.h>
 void printint(long x) {
   printf("%ld\n", x);
