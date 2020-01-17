@@ -71,7 +71,7 @@ struct ASTnode *multiplicative_expr(void) {
     // If no tokens left, return just the left node
     tokentype = Token.token;
     if (tokentype == T_EOF)
-      return (left);
+      break;
   }
 
   // Return whatever tree we have created
@@ -107,7 +107,7 @@ struct ASTnode *additive_expr(void) {
     // And get the next token at our precedence
     tokentype = Token.token;
     if (tokentype == T_EOF)
-      return (left);
+      break;
   }
 
   // Return whatever tree we have created
