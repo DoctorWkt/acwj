@@ -73,7 +73,7 @@ I'll try to cover the changes as well as the additions along the way.
 ## New Tokens and the Dangling Else
 
 We are going to need a bunch of new tokens in our language. I also (for now) want to
-avoid the [dangling else problem](https:en.wikipedia.org/wiki/Dangling_else). To that
+avoid the [dangling else problem](https://en.wikipedia.org/wiki/Dangling_else). To that
 end, I've changed the grammar so that all groups of statements are wrapped around
 '{'  ... '}' curly brackets; I called such a grouping a "compound statement".
 We also need '(' ... ')' parentheses to hold the IF expression, plus keywords 'if' and
