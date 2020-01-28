@@ -136,6 +136,51 @@ identifiers:
 extern_ char Text[TEXTLEN + 1];         // Last identifier scanned
 ```
 
+## Changes to the Expression Parser
+
+Up to now our input files have contained just a single expression; therefore,
+in our Pratt parser code in `binexpr()` (in `expr.c`), we had this code to
+exit the parser:
+
+```c
+  // If no tokens left, return just the left node
+  tokentype = Token.token;
+  if (tokentype == T_EOF)
+    return (left);
+```
+
+With our new grammar, each expression is terminated by a semicolon. Thus,
+we need to change the code in the expression parser to spot the `T_SEMI`
+tokens and exit the expression parsing:
+
+```c
+// Return an AST tree whose root is a binary operator.
+// Parameter ptp is the previous token's precedence.
+struct ASTnode *binexpr(int ptp) {
+  struct ASTnode *left, *right;
+  int tokentype;
+
+  // Get the integer literal on the left.
+  // Fetch the next token at the same time.
+  left = primary();
+
+  // If we hit a semicolon, return just the left node
+  tokentype = Token.token;
+  if (tokentype == T_SEMI)
+    return (left);
+
+    while (op_precedence(tokentype) > ptp) {
+      ...
+
+          // Update the details of the current token.
+    // If we hit a semicolon, return just the left node
+    tokentype = Token.token;
+    if (tokentype == T_SEMI)
+      return (left);
+    }
+}
+```
+
 ## Changes to the Code Generator
 
 I want to keep the generic code generator in `gen.c`
