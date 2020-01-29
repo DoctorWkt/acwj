@@ -15,7 +15,7 @@ missing features.
 I started with `cwj -S defs.h` and found several header files missing. For now
 they exist but are empty. With these in place, the compiler crashes with a
 segfault. I had a few pointers which should be initialised to NULL and places
-where I wasn't checking for a NULL pointer.constant folding
+where I wasn't checking for a NULL pointer.
 
 ## Missing Features
 
