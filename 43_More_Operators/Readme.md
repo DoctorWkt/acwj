@@ -44,6 +44,13 @@ as the two tokens '1', 'int literal -1', but I forgot that `next()` doesn't
 skip the space. So, by having a space between the '-' and the '1', the
 expression `1 - 1` is correctly parsed as '1', '-', '1'.
 
+However, as [Luke Gruber](https://github.com/luke-gru) has pointed out,
+this also means that the input `1-1` **is** treated as `1 -1` instead of
+`1 - 1`. In other words, the scanner is too greedy and forces `-1` to
+always be treated as a T_INTLIT when sometimes it shouldn't be. I'm going
+to leave this for now, as we can work around it when writing our source
+code. Obviously, in a production compiler this would have to be fixed.
+
 ## Misfeatures
 
 In the AST node and symbol table node structures, I've been using unions to
