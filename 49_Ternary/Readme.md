@@ -19,7 +19,7 @@ of the whole expression.
 One subtlety here is that, for example, in:
 
 ```c
-   x= y != 5 : y++ ? ++y;
+   x= y != 5 ? y++ : ++y;
 ```
 
 If `y != 5` then `x= y++`, otherwise `x= ++y`. Either way, `y` is only
@@ -37,7 +37,7 @@ else
 However, the ternary operator is an expression, so we can also do:
 
 ```c
-  x= 23 * (y != 5 : y++ ? ++y) - 18;
+  x= 23 * (y != 5 ? y++ : ++y) - 18;
 ```
 
 This can't be easily converted into an IF statement now. However, we can
