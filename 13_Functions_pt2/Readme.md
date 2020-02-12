@@ -39,7 +39,7 @@ parentheses we must have exactly one argument. I want this to be used
 as both an expression and also as a standalone statement.
 
 So we'll start with the function call parser,
-`function_declaration()` in `expr.c`. When we get called, the identifier
+`funccall()` in `expr.c`. When we get called, the identifier
 has already been scanned in and the function's name is in the `Text`
 global variable:
 
