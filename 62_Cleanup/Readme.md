@@ -90,6 +90,14 @@ int cgalign(int type, int offset, int direction) {
 Everything but P_CHAR gets aligned on a 4-byte alignment,
 including structs and unions.
 
+## Known but Unfixed Bugs
+
+Now that this Github repository is up and has gained some attention,
+several people have reported bugs and misfeatures.
+The list of open and closed issues is here:
+![https://github.com/DoctorWkt/acwj/issues](https://github.com/DoctorWkt/acwj/issues). If you spot any bugs or misfeatures, feel free to report them.
+However, I can't promise I'll get time to fix them all!
+
 ## What's Next
 
 I've been reading up on register allocation, and I think I'll add
