@@ -210,6 +210,28 @@ where `how` is one of the `setX` instructions. Note that we perform
 because this is actually `reglist[r1] - reglist[r2]` which is what we really
 want.
 
+## x86-64 Registers
+
+We need to take a short diversion here to discuss the registers in the
+x86-64 architecture. x86-64 has several 64-bit general purpose registers,
+but we can also use different register names to access and work on
+subsections of these registers.
+
+![](https://i.stack.imgur.com/N0KnG.png)
+
+The above image from *stack.imgur.com* shows that, for the 64-bit *r8* register,
+we can access the low 32 bits of this register by using the "*r8d*" register.
+Similarly, the "*r8w*" register is the low 16 bits and the "*r8b*" register
+is the low 8 bits of the *r8* register.
+
+In the `cgcompare()` function, the code uses the `reglist[]` array to
+compare the two 64-bit registers, but then sets a flag in the 8-bit
+version of the second register by using the names in the `breglist[]` array.
+The x86-64 architecture only allows the `setX` instructions to operate on
+the 8-bit register names, thus the need for the `breglist[]` array.
+
+## Creating Several Compare Instructions
+
 Now that we have this general function, we can write the six actual
 comparison functions:
 
