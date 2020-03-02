@@ -137,7 +137,7 @@ There are three functions that deal with register allocation:
 
 I'm not going to go through the code as it's straight forward but with
 some error checking. Right now, if I run out of registers then the
-progam will crash. Later on, I'll deal with the situation when we have
+program will crash. Later on, I'll deal with the situation when we have
 run out of free registers.
 
 The code works on generic registers: r0, r1, r2 and r3. There is a table
