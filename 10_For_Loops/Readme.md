@@ -111,7 +111,7 @@ That's good for compound statements but it won't work for FOR loops.
 I would have to write something like:
 
 ```c
-  for (i=1; ; i < 10 ; i= i + 1; )
+  for (i=1 ; i < 10 ; i= i + 1; )
 ```
 
 because each assignment statement *must* end with a semicolon.
