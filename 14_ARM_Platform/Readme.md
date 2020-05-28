@@ -187,7 +187,7 @@ we want is true or false, e.g.
 
 ```
                 moveq r4, #1            # Set r4 to 1 if values were equal
-                movne r4, #0            # Set r4 to 1 if values were not equal
+                movne r4, #0            # Set r4 to 0 if values were not equal
 ```
 
 ## A Comparison of Similar x86-64 and ARM Assembly Output
