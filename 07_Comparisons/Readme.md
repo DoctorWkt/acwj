@@ -87,7 +87,7 @@ By now you would have worked out that:
 The implication is that I'm writing a compiler for enough of a subset of
 C (just as SubC) so that it will compile itself. Therefore, I should use
 the normal
-[C operator precedence order](https://en.cppreference.com/w/c/language/operator_precedence). This means that the comparison operators have higher precedence
+[C operator precedence order](https://en.cppreference.com/w/c/language/operator_precedence). This means that the comparison operators have lower precedence
 than multiply and divide.
 
 I also realised that the switch statement I was using to map tokens to AST
