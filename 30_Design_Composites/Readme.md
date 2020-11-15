@@ -285,8 +285,8 @@ After modifying and compiling the above program a few times, the answers are:
 
  + We can't redeclare `enum fred`. This seems to be the only place where
    we need to remember the name of an enum list.
- + We can reuse the enum list identifer `fred` as a variable name.
- + We can't reuse the enum value identifer `mary` in another enum list,
+ + We can reuse the enum list identifier `fred` as a variable name.
+ + We can't reuse the enum value identifier `mary` in another enum list,
    nor as a variable name.
  + We can assign enum value anywhere: they seem to be treated simply as
    names for literal integer values.

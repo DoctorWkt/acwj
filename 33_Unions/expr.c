@@ -121,7 +121,7 @@ static struct ASTnode *member_access(int withpointer) {
   struct symtable *typeptr;
   struct symtable *m;
 
-  // Check that the identifer has been declared as a
+  // Check that the identifier has been declared as a
   // struct/union or a struct/union pointer
   if ((compvar = findsymbol(Text)) == NULL)
     fatals("Undeclared variable", Text);

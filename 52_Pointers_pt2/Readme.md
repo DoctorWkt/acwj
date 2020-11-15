@@ -17,7 +17,7 @@ a chain of pointers, e.g. something like the expression:
 ```
 
 The reason for this is that `primary()` is called and gets the value of
-the identifer at the beginning of the expression. If it sees a following
+the identifier at the beginning of the expression. If it sees a following
 postfix operator, it then calls `postfix()` to deal with it. `postfix()`
 deals with, for example, one `->` operator and returns. And that's it.
 There is no loop to follow a chain of `->` operators.

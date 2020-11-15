@@ -118,7 +118,7 @@ call `global_declarations()`:
 ### `var_declaration()`
 
 The parsing of functions is much the same as before, except the code
-to scan the type and identifer are done elsewhere, and we receive the
+to scan the type and identifier are done elsewhere, and we receive the
 `type` as an argument.
 
 The parsing of variables also loses the type and identifier scanning code.

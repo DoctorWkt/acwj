@@ -21,7 +21,7 @@ void semi(void) {
   match(T_SEMI, ";");
 }
 
-// Match an identifer and fetch the next token
+// Match an identifier and fetch the next token
 void ident(void) {
   match(T_IDENT, "identifier");
 }
