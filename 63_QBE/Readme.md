@@ -384,7 +384,7 @@ WHILE constructs.
 
 These are pretty straightforward. To access
 a field in a struct, take the base address and add on the offset of
-the element or field. For arrays elements, we need to scale the
+the field. For arrays elements, we need to scale the
 element's index by the size of each element. So this C code:
 
 ```c
