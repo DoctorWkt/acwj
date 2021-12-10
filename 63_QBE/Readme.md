@@ -52,8 +52,6 @@ Instead, I'm going to do a bit of a walk-through on the intermediate
 language that QBE uses and explain how I'm targetting this language
 in `cg.c`, my new code generator.
 
-So, let's begin!
-
 ## Temporary Locations, not Registers
 
 The QBE intermediate language is an abstract language and not the
