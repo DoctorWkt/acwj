@@ -141,7 +141,7 @@ This will allow the programmer to try to do:
    char *****fred;
 ```
 This will fail because `pointer_to()` can't convert
-a P_CHARPTR to a _PCHARPTRPTR (yet). But the code
+a P_CHARPTR to a P_CHARPTRPTR (yet). But the code
 in `parse_type()` is ready to do it!
 
 
