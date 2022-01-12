@@ -5,9 +5,9 @@
 // Parsing of statements
 // Copyright (c) 2019 Warren Toomey, GPL3
 
-// compound_statement:          // empty, i.e. no statement
-//      |      statement
-//      |      statement statements
+// compound_statement: '{' '}'          // empty, i.e. no statement
+//      |      '{' statement '}'
+//      |      '{' statement statements '}'
 //      ;
 //
 // statement: print_statement
