@@ -628,7 +628,7 @@ int cgcompare_and_jump(int ASTop, int r1, int r2, int label, int type) {
 
   // Check the range of the AST operation
   if (ASTop < A_EQ || ASTop > A_GE)
-    fatal("Bad ASTop in cgcompare_and_set()");
+    fatal("Bad ASTop in cgcompare_and_jump()");
 
   // Get a label for the next instruction
   label2 = genlabel();
