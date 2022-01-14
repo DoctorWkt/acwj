@@ -326,7 +326,7 @@ int cgcompare_and_jump(int ASTop, int r1, int r2, int label) {
 
   // Check the range of the AST operation
   if (ASTop < A_EQ || ASTop > A_GE)
-    fatal("Bad ASTop in cgcompare_and_set()");
+    fatal("Bad ASTop in cgcompare_and_jump()");
 
   fprintf(Outfile, "\tcmp\t%s, %s\n", reglist[r1], reglist[r2]);
   fprintf(Outfile, "\t%s\tL%d\n", brlist[ASTop - A_EQ], label);
