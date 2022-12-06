@@ -428,4 +428,4 @@ register values.
 
 In the next part of our compiler writing journey, I will start on the
 **WDIW** stage. We are going to need some strategies to make our work
-effective.
+effective. [Next step](../59_WDIW_pt1/Readme.md)

@@ -373,4 +373,4 @@ can compile! That's progress.
 ## Conclusion and What's Next
 
 In the next part of our compiler writing journey, I'll follow up on
-a comment above and improve the testing of our compiler's functionality.
+a comment above and improve the testing of our compiler's functionality. [Next step](../27_Testing_Errors/Readme.md)

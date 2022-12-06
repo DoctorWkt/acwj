@@ -104,4 +104,4 @@ I've been reading up on register allocation, and I think I'll add
 a linear scan register allocation mechanism to the compiler. To do
 this, though, I need to add an intermediate representation stage.
 This will be the goal for the next few stages, but so far I haven't
-done anything concrete.
+done anything concrete. [Next step](../63_QBE/Readme.md)

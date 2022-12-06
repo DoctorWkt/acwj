@@ -537,4 +537,4 @@ calculate the correct value of the expressions.
 
 In the next part of our compiler writing journey, we will modify
 the parser so that it also does the semantic analysis of the
-expressions to get the right maths results.
+expressions to get the right maths results. [Next step](../03_Precedence/Readme.md)

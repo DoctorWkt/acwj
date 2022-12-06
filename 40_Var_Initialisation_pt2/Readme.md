@@ -563,4 +563,4 @@ they say. I'm happy, though, because the changes to the symbol table
 make much more sense than what I had before.
 
 In the next part of our compiler writing journey, we will try to
-add local variable initialisation to the compiler.
+add local variable initialisation to the compiler. [Next step](../41_Local_Var_Init/Readme.md)

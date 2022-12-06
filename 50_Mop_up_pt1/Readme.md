@@ -281,4 +281,4 @@ functionality works.
 
 So that's a few small things fixed up in this part of our journey.
 What I will do now is step back, rethink the array/pointer design and
-try to fix this up in the next part of our compiler writing journey.
+try to fix this up in the next part of our compiler writing journey. [Next step](../51_Arrays_pt2/Readme.md)

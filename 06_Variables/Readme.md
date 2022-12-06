@@ -512,4 +512,4 @@ errors (variable use without a declaration).
 
 In the next part of our compiler writing journey, we will
 add the six comparison operators to our language. That will
-allow us to start on the control structures in the part after that.
+allow us to start on the control structures in the part after that. [Next step](../07_Comparisons/Readme.md)

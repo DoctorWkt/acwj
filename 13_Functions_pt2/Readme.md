@@ -619,4 +619,4 @@ plus a new data type. As I expected, it wasn't trivial but I think the
 changes are mostly sensible.
 
 In the next part of our compiler writing journey, we will port our
-compiler to a new hardware platform, the ARM CPU on a Raspberry Pi.
+compiler to a new hardware platform, the ARM CPU on a Raspberry Pi. [Next step](../14_ARM_Platform/Readme.md)

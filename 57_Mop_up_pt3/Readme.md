@@ -215,4 +215,4 @@ That's enough mopping up for now. When I fixed up the `+=` and `-=` problem,
 it highlighted a big issue with the `++` and `--` operators (prefix and
 postfix) as applied to pointers.
 
-In the next part of our compiler writing journey, I will tackle this issue.
+In the next part of our compiler writing journey, I will tackle this issue. [Next step](../58_Ptr_Increments/Readme.md)

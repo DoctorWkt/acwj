@@ -342,4 +342,4 @@ doing some thinking about the design of a solution, it turned out to be
 easier than I expected. Somehow I suspect the next step will be the tricky one.
 
 In the next part of our compiler writing journey, I will attempt to
-add function arguments and parameters to our compiler. Wish me luck!
+add function arguments and parameters to our compiler. Wish me luck! [Next step](../24_Function_Params/Readme.md)

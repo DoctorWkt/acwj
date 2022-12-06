@@ -521,4 +521,4 @@ lines of code we'll need to make the compiler self-compiling, but I'm going
 to hazard a guess of between 7,000 to 9,000 lines. We'll see!
 
 In the next part of our compiler writing journey, we will add the `break`
-and `continue` keywords to our loop constructs.
+and `continue` keywords to our loop constructs. [Next step](../36_Break_Continue/Readme.md)

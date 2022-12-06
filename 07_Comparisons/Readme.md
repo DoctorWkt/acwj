@@ -293,4 +293,4 @@ That was a nice and easy addition to the compiler. The next part of the
 journey will be much more complicated.
 
 In the next part of our compiler writing journey, we will add IF statements
-to the compiler and make use of the comparison operators that we just added.
+to the compiler and make use of the comparison operators that we just added. [Next step](../08_If_Statements/Readme.md)

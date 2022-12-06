@@ -460,4 +460,4 @@ but there is substantial room for improvement.
 
 While doing the above, I also fixed the problem with `&&` and `||`. I've
 decided to write these changes up in the next part, even though the
-code here already has these changes.
+code here already has these changes. [Next step](../55_Lazy_Evaluation/Readme.md)

@@ -358,4 +358,4 @@ int main()
 In the next part of our compiler writing journey, we will
 look at adding support for structs to our compiler. I think we
 might have to do another design step first before we get to
-implementing the changes.
+implementing the changes. [Next step](../29_Refactoring/Readme.md)

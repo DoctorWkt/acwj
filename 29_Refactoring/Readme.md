@@ -259,4 +259,4 @@ probably happen in the part where we implement enumerated values.
 
 In the next part of our compiler writing journey, I'll get back to
 what I wanted to cover in this part: the design side of implementing
-structs, unions and enums in our compiler.
+structs, unions and enums in our compiler. [Next step](../30_Design_Composites/Readme.md)

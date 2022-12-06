@@ -225,4 +225,4 @@ So we can stop now, our job is done! No, of course not. We are still
 working towards getting the compiler to compile itself.
 
 In the next part of our compiler writing journey, we will add FOR loops
-to the language.
+to the language. [Next step](../10_For_Loops/Readme.md)

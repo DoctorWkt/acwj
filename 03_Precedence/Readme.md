@@ -434,4 +434,4 @@ In the next part of our compiler writing journey, we will replace the
 interpreter. In its place, we will write a translator that generates
 x86-64 assembly code for each AST node that has a maths operator.
 We will also generate some assembly preamble and postamble to
-support the assembly code that the generator outputs.
+support the assembly code that the generator outputs. [Next step](../04_Assembly/Readme.md)

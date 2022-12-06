@@ -221,4 +221,4 @@ int main() {
 
 In the next part of our compiler writing journey, I will probably feed
 more of the compiler source to itself and see what we still have to
-implement.
+implement. [Next step](../46_Void_Functions/Readme.md)

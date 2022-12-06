@@ -298,4 +298,4 @@ it's good to see one type of optimisation now.
 
 In the next part of our compiler writing journey, we will replace our
 current global declaration parser with code that evaluates expressions
-using `binexpr()` and this new constant folding code.
+using `binexpr()` and this new constant folding code. [Next step](../45_Globals_Again/Readme.md)

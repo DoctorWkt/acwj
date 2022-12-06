@@ -208,4 +208,4 @@ going through the code, finding all C_GLOBAL uses and ensuring that I added
 appropriate C_STATIC code as well.
 
 In the next part of our compiler writing journey, I think it's time that
-I tackle the [ternary operator](https://en.wikipedia.org/wiki/%3F:).
+I tackle the [ternary operator](https://en.wikipedia.org/wiki/%3F:). [Next step](../49_Ternary/Readme.md)

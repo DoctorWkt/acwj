@@ -266,4 +266,4 @@ I think that's about all I want to do in terms of design before I start on
 the next parts of our compiler writing journey. I'll tackle local variables
 by themselves in the next part, and try to add in function calls and
 parameters in the following part. But it might take three or more steps
-to get all of the new proposed features implemented. We'll see.
+to get all of the new proposed features implemented. We'll see. [Next step](../23_Local_Variables/Readme.md)

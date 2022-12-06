@@ -361,4 +361,4 @@ add the ability to write function prototypes. This will allow us to
 link in outside functions. I'm thinking of those original Unix functions
 and system calls which are `int` and `char *` based such as `open()`,
 `read()`, `write()`, `strcpy()` etc. It will be nice to compile
-some useful programs with our compiler.
+some useful programs with our compiler. [Next step](../26_Prototypes/Readme.md)

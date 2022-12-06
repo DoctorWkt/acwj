@@ -600,4 +600,4 @@ In the next part of our compiler writing journey, I'll probably implement
 the declaration of struct types, but not actually write the code for them to
 be used. I'll do that in the following part. With both of these done, I'll
 hopefully be able to implement unions in a third part. Then, enums in the
-fourth part. We'll see!
+fourth part. We'll see! [Next step](../31_Struct_Declarations/Readme.md)

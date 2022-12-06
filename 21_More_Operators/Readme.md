@@ -589,4 +589,4 @@ revisit this later.
 In the next part of our compiler writing journey, I'd like to
 tackle local variables. Once we can get these to work, we can extend
 them to also include function parameters and arguments. This will
-take two or more steps.
+take two or more steps. [Next step](../22_Design_Locals/Readme.md)
