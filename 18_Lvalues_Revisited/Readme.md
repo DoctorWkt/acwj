@@ -491,4 +491,4 @@ I'd like to tackle arrays. This will be a combination of dereferencing,
 lvalues and rvalues, and scaling the array indices by the size of the
 array's elements. We have all the semantic components in place, but we'll
 need to add tokens, parsing and the actual index functionality. It should
-be an interesting topic like this one was.
+be an interesting topic like this one was. [Next step](../19_Arrays_pt1/Readme.md)

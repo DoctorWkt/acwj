@@ -202,4 +202,4 @@ We've made a good start at adding functions to our language. For now,
 it's a pretty simplistic function declaration only.
 
 In the next part of our compiler writing journey, we will begin
-the process to add types to our compiler.
+the process to add types to our compiler. [Next step](../12_Types_pt1/Readme.md)

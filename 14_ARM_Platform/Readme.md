@@ -285,4 +285,4 @@ As we go forward, I'll try to keep both `cg.c` and `cg_arm.c`
 functionally in sync.
 
 In the next part of our compiler writing journey, we will add the `char`
-pointer to the language, as well as the '*' and '&' unary operators.
+pointer to the language, as well as the '*' and '&' unary operators. [Next step](../15_Pointers_pt1/Readme.md)

@@ -320,4 +320,4 @@ we only expect C pre-processor lines when we see a '#' in column 1.
 
 In the next part of our compiler writing journey, I'll go back to feeding
 the compiler source code to itself, see what errors pop and up choose one
-or more to fix.
+or more to fix. [Next step](../53_Mop_up_pt2/Readme.md)

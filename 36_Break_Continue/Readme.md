@@ -362,4 +362,4 @@ in the process of implementing them.
 Now that we have the `break` keyword in the language, I will attempt to
 add `switch` statements in the next part of our compiler writing journey.
 This is going to require the addition of switch jump tables, and I know
-this is going to be complicated. So get ready for an interesting next step.
+this is going to be complicated. So get ready for an interesting next step. [Next step](../37_Switch/Readme.md)

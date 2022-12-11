@@ -270,4 +270,4 @@ Two big things that we will need to tackle are static functions and
 variables, and the `sizeof()` operator. 
 
 In the next part of our compiler writing journey, I will probably
-work on the `sizeof()` operator because `static` still scares me a bit!
+work on the `sizeof()` operator because `static` still scares me a bit! [Next step](../47_Sizeof/Readme.md)

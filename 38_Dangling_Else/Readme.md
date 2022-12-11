@@ -401,4 +401,4 @@ If you do, I hope that you found all the parts of the journey so far useful.
 
 In the next part of our compiler writing journey, I will pick something that
 currently doesn't work but we need to work to self-compile our compiler, and
-fix it.
+fix it. [Next step](../39_Var_Initialisation_pt1/Readme.md)

@@ -163,4 +163,4 @@ that pointer access into a union also works.
 ## Conclusion and What's Next
 
 This was another nice and easy part of our compiler writing journey.
-In the next part of our compiler writing journey, we will add enums.
+In the next part of our compiler writing journey, we will add enums. [Next step](../34_Enums_and_Typedefs/Readme.md)

@@ -321,4 +321,4 @@ identifiers, and to more cleanly separate the generic code generator and
 the CPU-specific generator.
 
 In the next part of our compiler writing journey, we will add variables
-to the language. This will require a significant amount of work.
+to the language. This will require a significant amount of work. [Next step](../06_Variables/Readme.md)

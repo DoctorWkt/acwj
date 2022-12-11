@@ -378,4 +378,4 @@ one to the address of `x`, which is incorrect. I'll
 have to work out how to fix this.
 
 In the next part of our compiler writing journey, we will
-try to fix this problem.
+try to fix this problem. [Next step](../16_Global_Vars/Readme.md)

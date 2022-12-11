@@ -234,4 +234,4 @@ stages, and try to work out what is causing the difference.
   output which would allow `gdb` to see the source line number that we
   are stopped on. It isn't working yet, but in case you look, you will
   see a new function `cglinenum()` in `cg.c`. When I get it working, I'll
-  write up some commentary on it.
+write up some commentary on it. [Next step](../60_TripleTest/Readme.md)

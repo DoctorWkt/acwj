@@ -148,4 +148,4 @@ These are all the possible things that I can of (at the moment)
 to continue the work on our compiler. I will get on to some of
 them, but at this point I'd be very happy to have other people
 help out with the project, and/or fork the compiler's code and
-do their own thing with it!
+do their own thing with it! [Next step](../62_Cleanup/Readme.md)

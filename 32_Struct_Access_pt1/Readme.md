@@ -244,4 +244,4 @@ features will have to be made more general. So there will be a "mop up" stage
 in this journey.
 
 Now that we have structs mostly working, in the next part of our compiler writing
-journey, I will try to add unions.
+journey, I will try to add unions. [Next step](../33_Unions/Readme.md)

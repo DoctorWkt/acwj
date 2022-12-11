@@ -494,4 +494,4 @@ code.
 
 In the next part of our compiler writing journey, I'll modify the compiler
 to make function calls with an arbirary number of arguments. Then I can
-move `input27a.c` and `input27b.c` into the `tests/` directory.
+move `input27a.c` and `input27b.c` into the `tests/` directory. [Next step](../25_Function_Arguments/Readme.md)

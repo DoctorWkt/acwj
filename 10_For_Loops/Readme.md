@@ -313,4 +313,4 @@ tackle next? There are so many things we could look at:
 
 I've decided to look at functions. So,
 in the next part of our compiler writing journey, we will begin
-the first of several stages to add functions to our language.
+the first of several stages to add functions to our language. [Next step](../11_Functions_pt1/Readme.md)

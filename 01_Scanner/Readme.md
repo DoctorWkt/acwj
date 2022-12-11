@@ -326,4 +326,4 @@ struct token {
 
 In the next part of our compiler writing journey, we will build
 a recursive descent parser to interpret the grammar of our input
-files, and calculate & print out the final value for each file.
+files, and calculate & print out the final value for each file. [Next step](../02_Parser/Readme.md)

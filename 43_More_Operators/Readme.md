@@ -361,4 +361,4 @@ right-associativity. After that, we could reuse some of the code generation
 code in `genAST()` to make our lives a bit easier.
 
 In the next part of our compiler writing journey, it looks like I'll be adding
-constant folding to the compiler.
+constant folding to the compiler. [Next step](../44_Fold_Optimisation/Readme.md)

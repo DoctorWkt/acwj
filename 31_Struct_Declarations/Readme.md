@@ -519,4 +519,4 @@ will be complicated.
 
 In the next part of our compiler writing journey, I will try to 
 add the code to parse the '.' token so that we can access members
-in a struct variable.
+in a struct variable. [Next step](../32_Struct_Access_pt1/Readme.md)

@@ -156,4 +156,4 @@ Finally, clone a copy of this Github repository.
 
 In the next part of our compiler writing journey, we will start with
 the code to scan our input file and find the *tokens* that are the
-lexical elements of our language.
+lexical elements of our language. [Next step](../01_Scanner/Readme.md)

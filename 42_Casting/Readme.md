@@ -383,4 +383,4 @@ covered most bases here but not all of them, so expect to see
 some `void *` edge cases that I haven't spotted yet.
 
 In the next part of our compiler writing journey, we'll add some missing
-operators.
+operators. [Next step](../43_More_Operators/Readme.md)

@@ -212,4 +212,4 @@ put comments into the code where I will have to write the assignment
 functionality to go with declarations.
 
 In the next part of our compiler writing journey, we will try to add
-global variable declarations with assignments to our compiler.
+global variable declarations with assignments to our compiler. [Next step](../40_Var_Initialisation_pt2/Readme.md)

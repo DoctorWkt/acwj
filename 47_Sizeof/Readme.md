@@ -137,4 +137,4 @@ Well, `sizeof()` turned out to be simple, at least for the functionality that
 we need for our compiler. In reality, `sizeof()` is quite complicated for
 a full-blown production C compiler.
 
-In the next part of our compiler writing journey, I will tackle `static`.
+In the next part of our compiler writing journey, I will tackle `static`. [Next step](../48_Static/Readme.md)

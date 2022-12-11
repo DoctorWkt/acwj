@@ -138,4 +138,4 @@ but just needed some more tweaking to cover all the functionality that
 we needed.
 
 In the next part of our compiler writing journey, we will go back to
-mopping up.
+mopping up. [Next step](../52_Pointers_pt2/Readme.md)

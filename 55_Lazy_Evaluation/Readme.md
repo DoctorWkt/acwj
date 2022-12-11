@@ -176,4 +176,4 @@ the only thing the compiler can't parse (in its own source code) is the
 declaration and use of local arrays. So, guess what...
 
 In the next part of our compiler writing journey, I'll try to work out
-how to declare and use local arrays.
+how to declare and use local arrays. [Next step](../56_Local_Arrays/Readme.md)

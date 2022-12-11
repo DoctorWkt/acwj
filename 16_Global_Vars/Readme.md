@@ -202,4 +202,4 @@ cc -o out out.s lib/printint.c
 ## Conclusion and What's Next
 
 In the next part of our compiler writing journey,
-I promise to tackle the issue of adding offsets to pointers.
+I promise to tackle the issue of adding offsets to pointers. [Next step](../17_Scaling_Offsets/Readme.md)

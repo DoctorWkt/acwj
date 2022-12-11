@@ -464,4 +464,4 @@ scale, add to the base address, and set as lvalue/rvalue. Once this
 was right, the existing code generator produces the right assembly output.
 
 In the next part of our compiler writing journey, we'll add character
-and string literals to our language and find a way to print them out.
+and string literals to our language and find a way to print them out. [Next step](../20_Char_Str_Literals/Readme.md)

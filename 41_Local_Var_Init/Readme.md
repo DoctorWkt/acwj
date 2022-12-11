@@ -151,4 +151,4 @@ Right now I'm guessing about 60 parts and an 75% chance of completing by year's 
 But we still have a bunch of small, but possibly difficult, features to add to the
 compiler.
 
-In the next part of our compiler writing journey, I will add cast parsing to the compiler.
+In the next part of our compiler writing journey, I will add cast parsing to the compiler. [Next step](../42_Casting/Readme.md)
