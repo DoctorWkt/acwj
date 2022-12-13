@@ -190,7 +190,7 @@ struct ASTnode *modify_type(struct ASTnode *tree, int rtype,
 ```
 
 I've also realised that I've implemented `&&` and `||` incorrectly, so
-I'll have to fix that. Now now, but soon.
+I'll have to fix that. Not now, but soon.
 
 ## Return with No Value
 
