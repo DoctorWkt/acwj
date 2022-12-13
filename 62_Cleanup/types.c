@@ -57,7 +57,7 @@ struct ASTnode *modify_type(struct ASTnode *tree, int rtype,
   if (op==A_LOGOR || op==A_LOGAND) {
     if (!inttype(ltype) && !ptrtype(ltype))
       return(NULL);
-    if (!inttype(ltype) && !ptrtype(rtype))
+    if (!inttype(rtype) && !ptrtype(rtype))
       return(NULL);
     return (tree);
   }
