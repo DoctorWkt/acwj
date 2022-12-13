@@ -240,38 +240,6 @@ void freeloclsyms(void) {
   Functionid = NULL;
 }
 
-// Remove all static symbols from the global symbol table
-void freestaticsyms(void) {
-  // g points at current node, prev at the previous one
-  struct symtable *g, *prev = NULL;
-
-  // Walk the global table looking for static entries
-  for (g = Globhead; g != NULL; g = g->next) {
-    if (g->class == C_STATIC) {
-
-      // If there's a previous node, rearrange the prev pointer
-      // to skip over the current node. If not, g is the head,
-      // so do the same to Globhead
-      if (prev != NULL)
-	prev->next = g->next;
-      else
-	Globhead->next = g->next;
-
-      // If g is the tail, point Globtail at the previous node
-      // (if there is one), or Globhead
-      if (g == Globtail) {
-	if (prev != NULL)
-	  Globtail = prev;
-	else
-	  Globtail = Globhead;
-      }
-    }
-  }
-
-  // Point prev at g before we move up to the next node
-  prev = g;
-}
-
 // Dump a single symbol
 static void dumpsym(struct symtable *sym, int indent) {
   int i;

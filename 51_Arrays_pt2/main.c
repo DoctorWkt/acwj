@@ -83,7 +83,6 @@ static char *do_compile(char *filename) {
     fprintf(stdout, "\n\n");
   }
 
-  freestaticsyms();		// Free any static symbols in the file
   return (Outfilename);
 }
 

@@ -109,59 +109,6 @@ but you should look out for code like this:
 
 in `cg.c`, `decl.c`, `expr.c` and `gen.c`.
 
-## Getting Rid of `static` Declarations
-
-Once we have finished parsing static declarations, we need to remove them
-from the global symbol table. In `do_compile()` in `main.c`, just after
-we close the input file, we now do this:
-
-```c
-  genpreamble();                // Output the preamble
-  global_declarations();        // Parse the global declarations
-  genpostamble();               // Output the postamble
-  fclose(Outfile);              // Close the output file
-  freestaticsyms();             // Free any static symbols in the file
-```
-
-So let's now look at `freestaticsyms()` in `sym.c`. We walk the global symbol
-table. For any static node, we relink the list to remove it. I'm not a whiz
-at linked list code, so I wrote out all the possibly alternatives on a sheet
-of paper to come up with the following code:
-
-```c
-// Remove all static symbols from the global symbol table
-void freestaticsyms(void) {
-  // g points at current node, prev at the previous one
-  struct symtable *g, *prev= NULL;
-
-  // Walk the global table looking for static entries
-  for (g= Globhead; g != NULL; g= g->next) {
-    if (g->class == C_STATIC) {
-
-      // If there's a previous node, rearrange the prev pointer
-      // to skip over the current node. If not, g is the head,
-      // so do the same to Globhead
-      if (prev != NULL) prev->next= g->next;
-      else Globhead->next= g->next;
-
-      // If g is the tail, point Globtail at the previous node
-      // (if there is one), or Globhead
-      if (g == Globtail) {
-        if (prev != NULL) Globtail= prev;
-        else Globtail= Globhead;
-      }
-    }
-  }
-
-  // Point prev at g before we move up to the next node
-  prev= g;
-}
-```
-
-The overall effect is to treat static declarations as global declarations,
-but to remove them from the symbol table at the end of processing an
-input file.
-
 ## Testing the Changes
 
 There are three programs to test the changes, `tests/input116.c` through to
