@@ -1,0 +1,17 @@
+#!/bin/sh
+# Make the output files for each test
+
+if [ ! -f ../compn ]
+then echo "Need to build ../compn first!"; exit 1
+fi
+
+for i in input*
+do if [ ! -f "out.$i" ]
+   then
+     ../compn $i
+     nasm -f elf64 out.s
+     cc -no-pie -o out out.o
+     ./out > out.$i
+     rm -f out out.s
+   fi
+done

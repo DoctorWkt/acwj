@@ -44,7 +44,7 @@ void cgpreamble() {
   freeall_registers();
   fputs("\tglobal\tmain\n"
 	"\textern\tprintf\n"
-	"\tSECTION\t.text\n"
+	"\tsection\t.text\n"
 	"LC0:\tdb\t\"%d\",10,0\n"
 	"printint:\n"
 	"\tpush\trbp\n"

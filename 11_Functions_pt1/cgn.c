@@ -41,7 +41,7 @@ void cgpreamble() {
   freeall_registers();
   fputs("\tglobal\tmain\n"
 	"\textern\tprintf\n"
-	"\tSECTION\t.text\n"
+	"\tsection\t.text\n"
 	"LC0:\tdb\t\"%d\",10,0\n"
 	"printint:\n"
 	"\tpush\trbp\n"
@@ -58,7 +58,7 @@ void cgpreamble() {
 // Print out a function preamble
 void cgfuncpreamble(char *name) {
   fprintf(Outfile,
-	  "\tSECTION\t.text\n"
+	  "\tsection\t.text\n"
 	  "\tglobal\t%s\n"
 	  "%s:\n" "\tpush\trbp\n"
 	  "\tmov\trbp, rsp\n", name, name);
