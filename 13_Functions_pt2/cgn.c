@@ -41,7 +41,7 @@ static void free_register(int reg) {
 // Print out the assembly preamble
 void cgpreamble() {
   freeall_registers();
-  fputs("\textern\tprintint\n" "\tsection\t.text\n", Outfile);
+  fputs("\textern\tprintint\n", Outfile);
 }
 
 // Print out a function preamble
