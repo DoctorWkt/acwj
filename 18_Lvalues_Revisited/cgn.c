@@ -292,7 +292,7 @@ void cgreturn(int reg, int id) {
 int cgaddress(int id) {
   int r = alloc_register();
 
-  fprintf(Outfile, "\tlea\t%s, %s\n", reglist[r], Gsym[id].name);
+  fprintf(Outfile, "\tmov\t%s, %s\n", reglist[r], Gsym[id].name);
   return (r);
 }
 
