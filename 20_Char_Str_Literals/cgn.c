@@ -243,14 +243,42 @@ void cgglobstr(int l, char *strvalue) {
   fprintf(Outfile, "\tdb\t0\n");
 
   /* put string in readable format on a single line
-  fprintf(Outfile, "\tdb\t\'");
+  // probably went overboard with error checking
+  int comma = 0, quote = 0, start = 1;
+  fprintf(Outfile, "\tdb\t");
   for (cptr=strvalue; *cptr; cptr++) {
     if ( ! isprint(*cptr) )
-      fprintf(Outfile, "\', %d, \'", *cptr);
+      if (comma || start) {
+        fprintf(Outfile, "%d, ", *cptr);
+        start = 0;
+        comma = 1;
+      }
+      else if (quote) {
+        fprintf(Outfile, "\', %d, ", *cptr);
+        comma = 1;
+        quote = 0;
+      }
+      else {
+        fprintf(Outfile, "%d, ", *cptr);
+        comma = 1;
+        quote = 0;
+      }
     else
-      fprintf(Outfile, "%c", *cptr);
+      if (start || comma) {
+        fprintf(Outfile, "\'%c", *cptr);
+        start = comma = 0;
+        quote = 1;
+      }
+      else {
+        fprintf(Outfile, "%c", *cptr);
+        comma = 0;
+        quote = 1;
+      }
   }
-  fprintf(Outfile, "\', 0\n");
+  if (comma || start)
+    fprintf(Outfile, "0\n");
+  else
+    fprintf(Outfile, "\', 0\n");
   */
 }
 
