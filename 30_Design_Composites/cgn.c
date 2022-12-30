@@ -501,13 +501,13 @@ void cgglobsym(struct symtable *node) {
   /* compact version using times instead of loop
   switch(typesize) {
     case 1:
-      fprintf(Outfile, "\ttimes\t%d\tdb\t0\n", Symtable[id].size);
+      fprintf(Outfile, "\ttimes\t%d\tdb\t0\n", node->size);
       break;
     case 4:
-      fprintf(Outfile, "\ttimes\t%d\tdd\t0\n", Symtable[id].size);
+      fprintf(Outfile, "\ttimes\t%d\tdd\t0\n", node->size);
       break;
     case 8:
-      fprintf(Outfile, "\ttimes\t%d\tdq\t0\n", Symtable[id].size);
+      fprintf(Outfile, "\ttimes\t%d\tdq\t0\n", node->size);
       break;
     default:
       fatald("Unknown typesize in cgglobsym: ", typesize);
