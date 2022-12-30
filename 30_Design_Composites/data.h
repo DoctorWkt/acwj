@@ -15,10 +15,10 @@ extern_ struct token Token;		// Last token scanned
 extern_ char Text[TEXTLEN + 1];		// Last identifier scanned
 
 // Symbol table lists
-struct symtable *Globhead, *Globtail;	// Global variables and functions
-struct symtable *Loclhead, *Locltail;	// Local variables
-struct symtable *Parmhead, *Parmtail;	// Local parameters
-struct symtable *Comphead, *Comptail;	// Composite types
+extern_ struct symtable *Globhead, *Globtail;	// Global variables and functions
+extern_ struct symtable *Loclhead, *Locltail;	// Local variables
+extern_ struct symtable *Parmhead, *Parmtail;	// Local parameters
+extern_ struct symtable *Comphead, *Comptail;	// Composite types
 
 // Command-line flags
 extern_ int O_dumpAST;		// If true, dump the AST trees
