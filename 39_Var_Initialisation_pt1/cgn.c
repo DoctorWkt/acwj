@@ -775,6 +775,6 @@ void cgswitch(int reg, int casecount, int toplabel,
   // Load the specific registers
   cglabel(toplabel);
   fprintf(Outfile, "\tmov\trax, %s\n", reglist[reg]);
-  fprintf(Outfile, "\tlea\trdx, L%d\n", label);
+  fprintf(Outfile, "\tmov\trdx, L%d\n", label);
   fprintf(Outfile, "\tjmp\tswitch\n");
 }
