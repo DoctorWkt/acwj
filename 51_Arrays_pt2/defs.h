@@ -13,7 +13,7 @@ enum {
 // Commands and default filenames
 #define AOUT "a.out"
 #ifdef __NASM__
-#define ASCMD "nasm -f elf64 -o "
+#define ASCMD "nasm -f elf64 -w-ptr -o "
 #define LDCMD "cc -no-pie -fno-plt -Wall -o "
 #else
 #define ASCMD "as -o "
