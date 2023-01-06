@@ -181,17 +181,6 @@ static void unspill_all_regs(void) {
 // Print out the assembly preamble
 void cgpreamble() {
   freeall_registers(NOREG);
-  fputs("\textern\tprintint\n", Outfile);
-  fputs("\textern\tprintchar\n", Outfile);
-  fputs("\textern\topen\n", Outfile);
-  fputs("\textern\tclose\n", Outfile);
-  fputs("\textern\tread\n", Outfile);
-  fputs("\textern\twrite\n", Outfile);
-  fputs("\textern\tprintf\n", Outfile);
-  fputs("\textern\tfprintf\n", Outfile);
-  fputs("\textern\tstdout\n", Outfile);
-  fputs("\textern\tstrerror\n", Outfile);
-  fputs("\textern\t__errno_location\n", Outfile);
   cgtextseg();
   fprintf(Outfile,
 	  "; internal switch(expr) routine\n"
