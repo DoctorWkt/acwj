@@ -102,7 +102,12 @@ char *do_assemble(char *filename) {
   }
   // Build the assembly command and run it
 #ifdef __NASM__
-  snprintf(cmd, TEXTLEN, "%s %s -p%s %s", ASCMD, outfilename, alter_suffix(filename, 'n'), filename);
+  char *incfilename = alter_suffix(filename, 'n');
+  if (incfilename == NULL) {
+    fprintf(stderr, "Error: %s has no suffix, try .s on the end\n", filename);
+    exit(1);
+  }
+  sprintf(cmd, "%s %s -p%s %s", ASCMD, outfilename, incfilename, filename);
 #else
   snprintf(cmd, TEXTLEN, "%s %s %s", ASCMD, outfilename, filename);
 #endif

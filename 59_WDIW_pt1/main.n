@@ -20,3 +20,4 @@ extern	genpostamble
 extern	dumpsymtables
 extern	freestaticsyms
 extern	system
+extern	sprintf
