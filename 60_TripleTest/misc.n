@@ -1,0 +1,11 @@
+extern	Outfilename
+extern	unlink
+extern	exit
+extern	Infilename
+extern	Line
+extern	stderr
+extern	fprintf
+extern	Outfile
+extern	fclose
+extern	Token
+extern	scan
