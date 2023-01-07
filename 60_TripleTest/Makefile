@@ -94,4 +94,5 @@ compn1: compn0 $(SRCN) $(HSRCS)
 	./compn0 -o compn1 $(SRCN)
 
 compn0: installn $(SRCN) $(HSRCS)
+	echo "#define __NASM__ 1" >> incdir.h
 	./compn  -o compn0 $(SRCN)
