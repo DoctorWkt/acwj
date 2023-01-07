@@ -52,6 +52,11 @@ test: install tests/runtests
 test0: install tests/runtests0 cwj0
 	(cd tests; chmod +x runtests0; ./runtests0)
 
+# Run the tests with the
+# compiler that compiled itself
+test0n: install tests/runtests0n compn0
+	(cd tests; chmod +x runtests0n; ./runtests0n)
+
 armtest: cwjarm tests/runtests
 	(cd tests; chmod +x runtests; ./runtests)
 
