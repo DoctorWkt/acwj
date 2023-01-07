@@ -101,7 +101,11 @@ char *do_assemble(char *filename) {
     exit(1);
   }
   // Build the assembly command and run it
+#ifdef __NASM__
+  snprintf(cmd, TEXTLEN, "%s %s -p%s %s", ASCMD, outfilename, alter_suffix(filename, 'n'), filename);
+#else
   snprintf(cmd, TEXTLEN, "%s %s %s", ASCMD, outfilename, filename);
+#endif
   if (O_verbose)
     printf("%s\n", cmd);
   err = system(cmd);
