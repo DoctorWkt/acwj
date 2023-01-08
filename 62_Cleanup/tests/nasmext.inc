@@ -1,0 +1,12 @@
+extern	printint
+extern	printchar
+extern	open
+extern	close
+extern	read
+extern	write
+extern	printf
+extern	fprintf
+extern	stdout
+extern	strerror
+extern	__errno_location
+extern	malloc

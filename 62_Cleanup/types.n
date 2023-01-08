@@ -1,0 +1,4 @@
+extern	fatald
+extern	genprimsize
+extern	fatal
+extern	mkastunary
