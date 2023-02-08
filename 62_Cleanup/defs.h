@@ -13,8 +13,13 @@ enum {
 
 // Commands and default filenames
 #define AOUT "a.out"
+#ifdef __NASM__
+#define ASCMD "nasm -g -f elf64 -w-ptr -o "
+#define LDCMD "cc -g -no-pie -fno-plt -Wall -o "
+#else
 #define ASCMD "as -g -o "
 #define LDCMD "cc -g -o "
+#endif
 #define CPPCMD "cpp -nostdinc -isystem "
 
 // Token types
@@ -116,6 +121,9 @@ struct symtable {
   int *initlist;		// List of initial values
   struct symtable *next;	// Next symbol in one list
   struct symtable *member;	// First member of a function, struct,
+#ifdef __NASM__
+  int extinit;
+#endif
 };				// union or enum
 
 // Abstract Syntax Tree structure

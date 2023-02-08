@@ -59,6 +59,9 @@ struct symtable *newsym(char *name, int type, struct symtable *ctype,
   node->next = NULL;
   node->member = NULL;
   node->initlist = NULL;
+  #ifdef __NASM__
+  node->extinit = 0;
+  #endif
   return (node);
 }
 

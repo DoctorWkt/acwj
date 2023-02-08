@@ -1,0 +1,27 @@
+#!/bin/sh
+# Run each test and compare
+# against known good output
+
+if [ ! -f ../compn ]
+then echo "Need to build ../compn first!"; exit 1
+fi
+
+for i in input*
+do if [ ! -f "out.$i" ]
+   then echo "Can't run test on $i, no output file!"
+   else
+     echo -n $i
+     ../compn $i
+     nasm -f elf64 out.s
+     cc -no-pie -o out out.o
+     ./out > trial.$i
+     cmp -s "out.$i" "trial.$i"
+     if [ "$?" -eq "1" ]
+     then echo ": failed"
+       diff -c "out.$i" "trial.$i"
+       echo
+     else echo ": OK"
+     fi
+     rm -f out out.o out.s "trial.$i"
+   fi
+done

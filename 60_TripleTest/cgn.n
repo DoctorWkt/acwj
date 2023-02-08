@@ -1,0 +1,12 @@
+extern	Outfile
+extern	fprintf
+extern	fputs
+extern	fputc
+extern	fatald
+extern	fatal
+extern	ptrtype
+extern	typesize
+extern	value_at
+extern	Loclhead
+extern	pointer_to
+extern	genlabel
