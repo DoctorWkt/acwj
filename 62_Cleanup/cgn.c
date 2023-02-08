@@ -8,6 +8,29 @@
 // Flag to say which section were are outputting in to
 enum { no_seg, text_seg, data_seg } currSeg = no_seg;
 
+// List of available registers and their names.
+// We need a list of byte and doubleword registers, too.
+// The list also includes the registers used to
+// hold function parameters
+#define NUMFREEREGS 4
+#define FIRSTPARAMREG 9		// Position of first parameter register
+static int freereg[NUMFREEREGS];
+static char *reglist[] =
+ { "r10",  "r11", "r12", "r13", "r9", "r8", "rcx", "rdx", "rsi",
+   "rdi"
+};
+
+// We also need the 8-bit and 32-bit register names
+static char *breglist[] =
+ { "r10b",  "r11b", "r12b", "r13b", "r9b", "r8b", "cl", "dl", "sil",
+   "dil"
+};
+
+static char *dreglist[] =
+ { "r10d",  "r11d", "r12d", "r13d", "r9d", "r8d", "ecx", "edx",
+  "esi", "edi"
+};
+
 // Switch to the text segment
 void cgtextseg() {
   if (currSeg != text_seg) {
@@ -22,6 +45,11 @@ void cgdataseg() {
     fputs("\tsection .data\n", Outfile);
     currSeg = data_seg;
   }
+}
+
+// Generate a label
+void cglabel(int l) {
+  fprintf(Outfile, "L%d:\n", l);
 }
 
 // Given a scalar type value, return the
@@ -40,6 +68,27 @@ int cgprimsize(int type) {
       fatald("Bad type in cgprimsize:", type);
   }
   return (0);			// Keep -Wall happy
+}
+
+// Store a register's value into a local variable
+int cgstorlocal(int r, struct symtable *sym) {
+  if (cgprimsize(sym->type) == 8) {
+    fprintf(Outfile, "\tmov\tqword\t[rbp+%d], %s\n", sym->st_posn,
+            reglist[r]);
+  } else
+  switch (sym->type) {
+    case P_CHAR:
+      fprintf(Outfile, "\tmov\tbyte\t[rbp+%d], %s\n", sym->st_posn,
+              breglist[r]);
+      break;
+    case P_INT:
+      fprintf(Outfile, "\tmov\tdword\t[rbp+%d], %s\n", sym->st_posn,
+              dreglist[r]);
+      break;
+    default:
+      fatald("Bad type in cgstorlocal:", sym->type);
+  }
+  return (r);
 }
 
 // Given a scalar type, an existing memory offset
@@ -80,29 +129,6 @@ static int newlocaloffset(int size) {
   localOffset += (size > 4) ? size : 4;
   return (-localOffset);
 }
-
-// List of available registers and their names.
-// We need a list of byte and doubleword registers, too.
-// The list also includes the registers used to
-// hold function parameters
-#define NUMFREEREGS 4
-#define FIRSTPARAMREG 9		// Position of first parameter register
-static int freereg[NUMFREEREGS];
-static char *reglist[] =
- { "r10",  "r11", "r12", "r13", "r9", "r8", "rcx", "rdx", "rsi",
-   "rdi"
-};
-
-// We also need the 8-bit and 32-bit register names
-static char *breglist[] =
- { "r10b",  "r11b", "r12b", "r13b", "r9b", "r8b", "cl", "dl", "sil",
-   "dil"
-};
-
-static char *dreglist[] =
- { "r10d",  "r11d", "r12d", "r13d", "r9d", "r8d", "ecx", "edx",
-  "esi", "edi"
-};
 
 // Push and pop a register on/off the stack
 static void pushreg(int r) {
@@ -220,6 +246,10 @@ void cgpreamble(char *filename) {
 
 // Nothing to do for the end of a file
 void cgpostamble() {
+//  fprintf(Outfile, "extern\tOutfile\n");
+//  fprintf(Outfile, "extern\tLoclhead\n");
+//  fprintf(Outfile, "extern\tToken\n");
+//  fprintf(Outfile, "extern\tText\n");
 }
 
 // Print out a function preamble
@@ -235,8 +265,11 @@ void cgfuncpreamble(struct symtable *sym) {
   localOffset = 0;
 
   // Output the function start, save the rsp and rbp
-  if (sym->class == C_GLOBAL)
+//  if (sym->class == C_GLOBAL)
+  if(!sym->extinit) {
     fprintf(Outfile, "\tglobal\t%s\n", name);
+    sym->extinit = 1;
+  }
   fprintf(Outfile,
 	  "%s:\n" "\tpush\trbp\n"
 	  "\tmov\trbp, rsp\n", name);
@@ -290,6 +323,11 @@ int cgloadint(int value, int type) {
 // also perform this action.
 int cgloadvar(struct symtable *sym, int op) {
   int r, postreg, offset = 1;
+
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
 
   // Get a new register
   r = cgallocreg();
@@ -519,6 +557,11 @@ int cgcall(struct symtable *sym, int numargs) {
   int outr;
 
   // Call the function
+//  printf("extern %s, type %d, stype %d, class %d\n", sym->name, sym->type, sym->stype, sym->class);
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
   fprintf(Outfile, "\tcall\t%s\n", sym->name);
 
   // Remove any arguments pushed on the stack
@@ -562,6 +605,10 @@ int cgshlconst(int r, int val) {
 
 // Store a register's value into a variable
 int cgstorglob(int r, struct symtable *sym) {
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
   if (cgprimsize(sym->type) == 8) {
     fprintf(Outfile, "\tmov\t[%s], %s\n", sym->name, reglist[r]);
   } else
@@ -574,27 +621,6 @@ int cgstorglob(int r, struct symtable *sym) {
       break;
     default:
       fatald("Bad type in cgloadglob:", sym->type);
-  }
-  return (r);
-}
-
-// Store a register's value into a local variable
-int cgstorlocal(int r, struct symtable *sym) {
-  if (cgprimsize(sym->type) == 8) {
-    fprintf(Outfile, "\tmov\tqword\t[rbp+%d], %s\n", sym->st_posn,
-            reglist[r]);
-  } else
-  switch (sym->type) {
-    case P_CHAR:
-      fprintf(Outfile, "\tmov\tbyte\t[rbp+%d], %s\n", sym->st_posn,
-              breglist[r]);
-      break;
-    case P_INT:
-      fprintf(Outfile, "\tmov\tdword\t[rbp+%d], %s\n", sym->st_posn,
-              dreglist[r]);
-      break;
-    default:
-      fatald("Bad type in cgstorlocal:", sym->type);
   }
   return (r);
 }
@@ -624,6 +650,9 @@ void cgglobsym(struct symtable *node) {
   cgdataseg();
   if (node->class == C_GLOBAL)
     fprintf(Outfile, "\tglobal\t%s\n", node->name);
+  if(!node->extinit) {
+    node->extinit = 1;
+  }
   fprintf(Outfile, "%s:\n", node->name);
 
   // Output space for one or more elements
@@ -705,11 +734,6 @@ int cgcompare_and_set(int ASTop, int r1, int r2, int type) {
   return (r2);
 }
 
-// Generate a label
-void cglabel(int l) {
-  fprintf(Outfile, "L%d:\n", l);
-}
-
 // Generate a jump to a label
 void cgjump(int l) {
   fprintf(Outfile, "\tjmp\tL%d\n", l);
@@ -786,6 +810,10 @@ void cgreturn(int reg, struct symtable *sym) {
 int cgaddress(struct symtable *sym) {
   int r = cgallocreg();
 
+  if (!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
   if (sym->class == C_GLOBAL ||
       sym->class == C_EXTERN || sym->class == C_STATIC)
     fprintf(Outfile, "\tmov\t%s, %s\n", reglist[r], sym->name);

@@ -121,6 +121,9 @@ struct symtable {
   int *initlist;		// List of initial values
   struct symtable *next;	// Next symbol in one list
   struct symtable *member;	// First member of a function, struct,
+#ifdef __NASM__
+  int extinit;
+#endif
 };				// union or enum
 
 // Abstract Syntax Tree structure
