@@ -233,8 +233,11 @@ void cgfuncpreamble(struct symtable *sym) {
   localOffset = 0;
 
   // Output the function start, save the rsp and rbp
-  if (sym->class == C_GLOBAL)
+//  if (sym->class == C_GLOBAL)
+  if(!sym->extinit) {
     fprintf(Outfile, "\tglobal\t%s\n", name);
+    sym->extinit = 1;
+  }
   fprintf(Outfile,
 	  "%s:\n" "\tpush\trbp\n"
 	  "\tmov\trbp, rsp\n", name);
@@ -288,6 +291,11 @@ int cgloadint(int value, int type) {
 // also perform this action.
 int cgloadvar(struct symtable *sym, int op) {
   int r, postreg, offset = 1;
+
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
 
   // Get a new register
   r = alloc_register();
@@ -511,6 +519,10 @@ int cgcall(struct symtable *sym, int numargs) {
   int outr;
 
   // Call the function
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
   fprintf(Outfile, "\tcall\t%s\n", sym->name);
 
   // Remove any arguments pushed on the stack
@@ -552,6 +564,10 @@ int cgshlconst(int r, int val) {
 
 // Store a register's value into a variable
 int cgstorglob(int r, struct symtable *sym) {
+  if(!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
   if (cgprimsize(sym->type) == 8) {
     fprintf(Outfile, "\tmov\t[%s], %s\n", sym->name, reglist[r]);
   } else
@@ -614,6 +630,9 @@ void cgglobsym(struct symtable *node) {
   cgdataseg();
   if (node->class == C_GLOBAL)
     fprintf(Outfile, "\tglobal\t%s\n", node->name);
+  if(!node->extinit) {
+    node->extinit = 1;
+  }
   fprintf(Outfile, "%s:\n", node->name);
 
   // Output space for one or more elements
@@ -771,6 +790,11 @@ void cgreturn(int reg, struct symtable *sym) {
 // identifier into a variable. Return a new register
 int cgaddress(struct symtable *sym) {
   int r = alloc_register();
+
+  if (!sym->extinit) {
+    fprintf(Outfile, "extern\t%s\n", sym->name);
+    sym->extinit = 1;
+  }
 
   if (sym->class == C_GLOBAL ||
       sym->class == C_EXTERN || sym->class == C_STATIC)

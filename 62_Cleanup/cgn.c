@@ -246,10 +246,6 @@ void cgpreamble(char *filename) {
 
 // Nothing to do for the end of a file
 void cgpostamble() {
-//  fprintf(Outfile, "extern\tOutfile\n");
-//  fprintf(Outfile, "extern\tLoclhead\n");
-//  fprintf(Outfile, "extern\tToken\n");
-//  fprintf(Outfile, "extern\tText\n");
 }
 
 // Print out a function preamble
@@ -557,7 +553,6 @@ int cgcall(struct symtable *sym, int numargs) {
   int outr;
 
   // Call the function
-//  printf("extern %s, type %d, stype %d, class %d\n", sym->name, sym->type, sym->stype, sym->class);
   if(!sym->extinit) {
     fprintf(Outfile, "extern\t%s\n", sym->name);
     sym->extinit = 1;
