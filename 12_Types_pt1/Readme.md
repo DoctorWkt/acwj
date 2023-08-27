@@ -14,7 +14,7 @@ added the `void` keyword for functions. In the next step I will add
 function return values. So, for now, `void` exists but I'm not fully
 dealing with it.
 
-Obviously, `char` has a much more limited range of values that `int`.
+Obviously, `char` has a much more limited range of values than `int`.
 Like SubC, I'm going to use the range 0 .. 255 for `char`s and
 a range of signed values for `int`s.
 
