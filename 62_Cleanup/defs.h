@@ -15,11 +15,10 @@ enum {
 #define AOUT "a.out"
 #ifdef __NASM__
 #define ASCMD "nasm -g -f elf64 -w-ptr -o "
-#define LDCMD "cc -g -no-pie -fno-plt -Wall -o "
 #else
 #define ASCMD "as -g -o "
-#define LDCMD "cc -g -o "
 #endif
+#define LDCMD "ld --dynamic-linker /lib64/ld-linux-x86-64.so.2 /usr/lib/x86_64-linux-gnu/crt1.o /usr/lib/x86_64-linux-gnu/crti.o /usr/lib/x86_64-linux-gnu/crtn.o -lc -o "
 #define CPPCMD "cpp -nostdinc -isystem "
 
 // Token types
