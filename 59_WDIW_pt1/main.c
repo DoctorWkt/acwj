@@ -107,7 +107,7 @@ char *do_assemble(char *filename) {
     fprintf(stderr, "Error: %s has no suffix, try .s on the end\n", filename);
     exit(1);
   }
-  sprintf(cmd, "%s %s -p%s %s", ASCMD, outfilename, incfilename, filename);
+  sprintf(cmd, "%s %s %s", ASCMD, outfilename, filename);
 #else
   snprintf(cmd, TEXTLEN, "%s %s %s", ASCMD, outfilename, filename);
 #endif

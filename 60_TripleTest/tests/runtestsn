@@ -12,7 +12,6 @@ for i in input*c
 # We can't do anything if there's no file to test against
 do 
    bn=$(echo $i | cut -d. -f1)
-   cp -p nasmext.inc ${bn}.n
    if [ ! -f "out.$i" -a ! -f "err.$i" ]
    then echo "Can't run test on $i, no output file!"
 
@@ -59,5 +58,5 @@ do
         fi
      fi
    fi
-   rm -f out out.o out.s ${bn}.s ${bn}.n "trial.$i"
+   rm -f out out.o out.s ${bn}.s "trial.$i"
 done

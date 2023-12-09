@@ -1,5 +1,0 @@
-extern	fprintf
-extern	stdout
-extern	fatald
-extern	fatal
-extern	malloc
