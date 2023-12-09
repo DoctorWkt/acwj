@@ -177,8 +177,7 @@ legitimate digit, and build up the final number. Here is the code:
 
 ```c
 // Scan and return an integer literal
-// value from the input file. Store
-// the value as a string in Text.
+// value from the input file.
 static int scanint(int c) {
   int k, val = 0;
 
