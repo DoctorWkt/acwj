@@ -48,12 +48,10 @@ I've already mentioned the 64K address space limitation: that's going to
 require the "acwj" compiler to be completely restructured to fit. Now let's
 look at the 6809's architecture.
 
-<center>
 ![](docs/6809_Internal_Registers.png)
 
 Creative Commons CC0 license,
 [Wikipedia](https://commons.wikimedia.org/wiki/File:6809_Internal_Registers.svg)
-</center>
 
 For an 8-bit CPU, the 6809 has quite a few registers. Well, it's not like
 the x64 or a RISC CPU with a bunch of general-purpose registers. There is
@@ -361,9 +359,7 @@ I've borrowed the idea for longs that Alan Cox uses in the
 We use the `Y` register to hold the top-half of a 32-bit long with the
 `D` register holding the lower half:
 
-<center>
-![long register](docs/long_regs.png)
-</center>
+![](docs/long_regs.png)
 
 The 6809 already calls the lower half of the `D` register the `B`
 register, used for 8-bit operations. And there is the `A` register
