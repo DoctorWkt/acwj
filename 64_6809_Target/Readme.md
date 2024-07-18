@@ -49,7 +49,7 @@ require the "acwj" compiler to be completely restructured to fit. Now let's
 look at the 6809's architecture.
 
 <center>
-![6809 registers](docs/6809_Internal_Registers.png)
+![6809 registers](https://github.com/DoctorWkt/acwj/blob/master/64_6809_Target/docs/6809_Internal_Registers.png?raw=true)
 
 Creative Commons CC0 license,
 [Wikipedia](https://commons.wikimedia.org/wiki/File:6809_Internal_Registers.svg)
@@ -362,7 +362,7 @@ We use the `Y` register to hold the top-half of a 32-bit long with the
 `D` register holding the lower half:
 
 <center>
-![long register](docs/long_regs.png)
+![long register](https://github.com/DoctorWkt/acwj/blob/master/64_6809_Target/docs/long_regs.png?raw=true)
 </center>
 
 The 6809 already calls the lower half of the `D` register the `B`
