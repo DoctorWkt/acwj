@@ -1,0 +1,189 @@
+.de DS
+.nf
+.in +3
+.sp
+..
+.de DE
+.sp
+.in -3
+.fi
+..
+.TH copt 1
+.SH NAME
+copt \- peephole optimizer
+.SH SYNOPSIS
+\fBcopt\fP [-d] \fIfile\fP ...
+.SH OPTIONS
+.TP
+.B \-\^d
+Turn on debug modus. Replacements of original patterns
+will be sent to stderr in the order of execution.
+.SH DESCRIPTION
+\fIcopt\fP is a general-purpose peephole optimizer.
+It reads code from its standard input
+and writes an improved version to its standard output.
+\fIcopt\fP reads the named files for its optimizations,
+which are encoded as follows:
+.DS
+<pattern for input line 1>
+<pattern for input line 2>
+ ...
+<pattern for input line n>
+=
+<pattern for output line 1>
+<pattern for output line 2>
+ ...
+<pattern for output line m>
+<blank line>
+.DE
+Pattern matching uses literal string comparison, with these exceptions:
+``%%'' matches the ``%'' character,
+and ``%'' followed by a digit matches everything
+up to the next occurrence of the next pattern character,
+though all occurrences of %\fIn\fP must denote the same string.
+For example, the pattern ``%1=%1.'' matches exactly those strings
+that begin with a string X, followed by a ``='' (the first),
+followed by a second occurrence of X, followed by a period.
+In this way, the input/output pattern
+.DS
+mov $%1,r%2
+mov *r%2,r%2
+=
+mov %1,r%2
+.DE
+commands \fIcopt\fP to replace runs like
+.DS
+mov $_a,r3
+mov *r3,r3
+.DE
+with
+.DS
+mov _a,r3
+.DE
+Note that a tab or newline can terminate a %\fIn\fP variable.
+.LP
+In the input pattern, you can use \fIregular exporessions\fP to
+match input patterns and generate values for variables. The syntax
+is
+.DS
+%"\fI<expr>\fP"\fI<n>\fP
+.DE
+where \fI<expr>\fP is the (extended) POSIX regular expression and
+\fI<n>\fP \fIoptional\fP variable ident (as above). If the expression
+matches input, the matched pattern will be assigned to the variable.
+If there is at least one subexpression in \fI<expr>\fP and a variable
+is specified, then the match of the \fUfirst\fP subexpression will be
+taken. Prefix and suffix (if any) will be skipped.
+Example:
+.DS
+ \fIj%"."0 %"(.),"1%2\fP  matches  \fBjr c,l_label\fP  and assignes
+ '\fIr\fP' to %0, '\fIc\fP' to %1 and '\fIl_label\fP' to %2. It
+ won't match  jr nc,l_label. This can be used to output
+ inverted jumps:  \fIj%0 n%1,%2\fP  will gain  \fIjr nc,l_label\fP.
+.DE
+\fBImportant\fP: If setting a variable, you \fImust\fP use the \fIlast\fP
+occurance of the variable in the input pattern, because copt
+matches input patterns in reverse order.
+.LP
+Occurances of %L, %M or %N in the output pattern will be substituted
+by unique integers to allow creation of up to 3 labels.
+For example, the output pattern
+.DS
+		sbc	hl,de
+		jr	c,_unique_%L
+		jr	z,_unique_%M
+		inc	a
+ ._unique_%L
+		inc	a
+ ._unique_%M
+.DE
+could produce
+.DS
+		sbc	hl,de
+		jr	c,_unique_1
+		jr	z,_unique_2
+		inc	a
+ ._unique_1
+		inc	a
+ ._unique_2
+.DE
+.LP
+If the second part of a rule starts with the line \fI%once\fP,
+this rule will be "fired" only once. Example:
+.DS
+	---- rules ----           ---- source ----
+	.%0                       .l_10
+		j%"r|p"2	%1        	jp	l_label
+	=                         	...
+	%activate                 	jr	l_10
+	.%0                       	...
+		j%2	%1                .l_label
+	=                         	...
+	%activate
+	.%1                       ---- result ----
+	=                         	...
+	%%once                    	jp	l_10
+	.%0                       	...
+	.%1                       .l10
+	%activate                 .l_label
+		jr	%0                	...
+	=
+		jp	%0
+.DE
+.LP
+If the output pattern starts with \fI%activate\fP it has to contain a valid
+rule that will be "activated" upon first match. \fIcopt\fP first evaluates the
+contained rule (i.e. replaces %\fIn\fP variables as usual) and then replaces
+the current rule with the contained one. At the same time, a flag is set, that
+will cause a new pass through the source after the current pass finishes.
+Nested activations are allowed. Note that you have to duplicate all \fI%\fP
+characters with each nesting level.
+.LP
+ Example rule       Source              Output
+ ---------------    ------------------	-----------------
+ .%0                   jp  z,l_label       jp  z,l_other
+	 jp  %1            ...                 ...
+ =                     ...                 ...           
+ %activate         .l_label            .l_label          
+ .%1                   jp  l_other         jp  l_other   
+ =                     ...                 ...           
+ %%activate                   ...                 ...           
+     jp%%%%0%0     .l_other            .l_other          
+ =                     ...                 ...           
+     jp%%%%0%1   
+.LP
+You can activate several rules at once, simply by appending further
+rules, separated by an '%activate' line.
+.LP
+Blank lines and lines starting with \fI;;\fP in the first column
+that occure in front of a rule will be ignored. This allows to
+comment the rule file and add some blank lines between them for
+better readability.
+
+;; this is a comment
+
+.LP
+\fIcopt\fP compares each run of input patterns
+with the current input instruction and its predecessors.
+If no match is found, it advances to the next input instruction and tries again.
+Otherwise, it replaces the input instructions
+with the corresponding output patterns, pattern variables instantiated,
+and resumes its search with the \fIfirst\fP instruction of the replacement.
+\fIcopt\fP matches input patterns in reverse order 
+to cascade optimizations without backing up.
+.SH BUGS
+Errors in optimization files are always possible.
+.SH SEE ALSO
+regex(7)
+.SH AUTHORS
+.TP
+.B \^Christian W. Fraser 1984
+copt version 1.00
+.TP
+.B \^DG 1999
+Added out of memory checking and ANSI prototyping
+.TP
+.B \^Zrin Ziborski 2002
+Added comment lines, %L-%N variables, %activate,
+regexp capability and %check
+

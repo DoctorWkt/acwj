@@ -1,0 +1,28 @@
+#!/bin/sh
+# Run one test and show the output
+# Build our compiler if needed
+if [ ! -f ../cparse6809 ]
+then (cd ..; make install)
+fi
+
+if [ "$#" -ne 2 ]
+then echo Usage: $0 cpu sourcefile; exit 1
+fi
+
+rm -f *_*
+
+bin=`echo $2 | sed 's/\.c$//'`
+
+../wcc -v -X -o $bin -m $1 $2
+
+if [ "$1" = "6809" ]
+then
+  emu6809 -d debug $bin
+fi
+
+if [ "$1" = "qbe" ]
+then
+  ./$bin
+fi
+  
+exit 0

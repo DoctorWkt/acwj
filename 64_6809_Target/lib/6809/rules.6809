@@ -1,0 +1,193 @@
+# No need to add 0 to D
+#1
+	addd #0
+=
+====
+# No need to in/decrease S by 0
+#2
+	leas -0,s
+=
+====
+#3
+	leas 0,s
+=
+====
+# Avoid D reloads
+#4
+	std %1
+	ldd %1
+=
+	std %1
+====
+#5
+	std %1
+;
+	ldd %1
+=
+	std %1
+====
+#6
+	std %1
+;
+;
+	ldd %1
+=
+	std %1
+====
+# Avoid B reloads
+#7
+	stb %1
+	ldb %1
+=
+	stb %1
+====
+#8
+	stb %1
+;
+	ldb %1
+=
+	stb %1
+====
+#9
+	stb %1
+;
+;
+	ldb %1
+=
+	stb %1
+====
+# Avoid using a temporary
+#10
+	std R%1
+	ldd %2
+	addd R%1
+=
+	addd %2
+====
+# Use indexed addressing
+#11
+	ldx %1,s
+	ldd 0,x
+=
+	ldd [%1,s]
+====
+#12
+	ldx %1,s
+	std 0,x
+=
+	std [%1,s]
+====
+#13
+	ldx %1,s
+	ldb 0,x
+=
+	ldb [%1,s]
+====
+#14
+	ldx %1,s
+	stb 0,x
+=
+	stb [%1,s]
+====
+# Some more indexed addressing
+#15
+	ldx %1,s
+	ldd %2
+	std 0,x
+=
+	ldd %2
+	std [%1,s]
+====
+# Skip some D to X transfers
+#16
+	ldd %1
+	tfr d,x
+=
+	ldx %1
+====
+# Get rid of silly jumps
+#17
+	bra L%1
+;
+L%1:
+=
+;
+L%1:
+====
+#18
+	bra L%1
+L%1:
+=
+;
+L%1:
+====
+# Skip some X to D transfers
+#19
+	tfr x,d
+	std %1
+=
+	stx %1
+====
+# Lose some silly X index operations
+#20
+	ldx #%1
+	ldd %2
+	std 0,x
+=
+	ldd %2
+	std %1
+====
+#21
+	ldd #%1
+	addd #%2
+	tfr d,x
+	ldd %3
+	std 0,x
+=
+	ldd %3
+	std %1+%2
+====
+#22
+	ldx #%1
+	ldd 0,x
+=
+	ldd %1
+====
+#23
+	ldd #%1
+	addd #%2
+	tfr d,x
+	ldd 0,x
+=
+	ldd %1+%2
+====
+# Simplify some X offsets
+#24
+	ldd %1
+	addd #%2
+	tfr d,x
+	ldd %3
+	std 0,x
+=
+	ldx %1
+	ldd %3
+	std %2,x
+====
+#25
+	ldd %1
+	addd #%2
+	tfr d,x
+	ldd 0,x
+=
+	ldx %1
+	ldd %2,x
+====
+# Optmise << 1
+#26
+	pshs d
+	ldd #1
+	lbsr __shl
+=
+	aslb
+	rola
+====

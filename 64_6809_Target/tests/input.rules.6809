@@ -1,0 +1,99 @@
+# Test file for the peephole optimiser
+#1
+	addd #0
+#2
+	leas -0,s
+#3
+	leas 0,s
+#4
+	std _a
+	ldd _a
+#5
+	std _a
+;
+	ldd _a
+#6
+	std _a
+;
+;
+	ldd _a
+#7
+	stb _a
+	ldb _a
+#8
+	stb _a
+;
+	ldb _a
+#9
+	stb _a
+;
+;
+	ldb _a
+#10
+	std R0
+	ldd _a
+	addd R0
+#11
+	ldx 6,s
+	ldd 0,x
+#12
+	ldx 7,s
+	stb 0,x
+#13
+	ldx 6,s
+	ldb 0,x
+#14
+	ldx 7,s
+	std 0,x
+#15
+	ldx 3,s
+	ldd #15
+	std 0,x
+#16
+	ldd _a
+	tfr d,x
+#17
+	bra L5
+;
+L5:
+#18
+	bra L9
+L9:
+#19
+	tfr x,d
+	std _b
+#20
+	ldx #_fred
+	ldd _jim
+	std 0,x
+#21
+	ldd #_fred
+	addd #4
+	tfr d,x
+	ldd _b
+	std 0,x
+#22
+	ldx #_fred
+	ldd 0,x
+#23
+	ldd #_fred
+	addd #4
+	tfr d,x
+	ldd 0,x
+#24
+	ldd 4,s
+	addd #14
+	tfr d,x
+	ldd R0+0
+	std 0,x
+#25
+	ldd 4,s
+	addd #8
+	tfr d,x
+	ldd 0,x
+#26
+	ldd 0,s
+	pshs d
+	ldd #1
+	lbsr __shl
+	std 0,s

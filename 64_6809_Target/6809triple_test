@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# Build the 6809 compiler binaries. Also create front-end shell
+# scripts so that we can run them as if they were native programs.
+#
+# Do this twice to run the triple test on the 6809 compiler binaries.
+#
+make clean l1dirs.h
+mkdir L1
+wcc 	   -o L1/wcc wcc.c
+cc         -o L1/cpeep cpeep.c
+wcc -m6809 -o L1/_cscan scan.c misc.c
+wcc -m6809 -o L1/_detok detok.c tstring.c
+wcc -m6809 -o L1/_detree -DDETREE detree.c misc.c tree.c
+wcc -m6809 -o L1/_desym desym.c
+wcc -m6809 -o L1/_cparse6809 -DWRITESYMS decl.c expr.c misc.c opt.c \
+		parse.c stmt.c sym.c tree.c targ6809.c tstring.c types.c
+wcc -m6809 -o L1/_cgen6809 -DSPLITSWITCH cg6809.c cgen.c gen.c misc.c sym.c \
+		targ6809.c tree.c types.c
+rm -f l1dirs.h dirs.h
+
+# Make the front-end shell scripts
+dir=`pwd`/L1
+for i in cscan detok detree desym cparse6809 cgen6809
+do cat << EOF > L1/$i
+#!/bin/sh
+exec emu6809 $dir/_$i \$*
+EOF
+
+  chmod +x L1/$i
+done
+
+# exit 0
+
+# Now we do it all again for L2
+make l2dirs.h
+mkdir L2
+wcc              -o L2/wcc wcc.c
+cc               -o L2/cpeep cpeep.c
+L1/wcc -m6809 -v -o L2/_cscan scan.c misc.c
+L1/wcc -m6809 -v -o L2/_detok detok.c tstring.c
+L1/wcc -m6809 -v -o L2/_detree -DDETREE detree.c misc.c tree.c
+L1/wcc -m6809 -v -o L2/_desym desym.c
+L1/wcc -m6809 -v -o L2/_cparse6809 -DWRITESYMS decl.c expr.c misc.c opt.c \
+			parse.c stmt.c sym.c tree.c targ6809.c tstring.c types.c
+L1/wcc -m6809 -v -o L2/_cgen6809 -DSPLITSWITCH cg6809.c cgen.c gen.c misc.c sym.c \
+			targ6809.c tree.c types.c
+rm -f l2dirs.h dirs.h
+
+# Make the front-end shell scripts
+dir=`pwd`/L2
+for i in cscan detok detree desym cparse6809 cgen6809
+do cat << EOF > L2/$i
+#!/bin/sh
+exec emu6809 $dir/_$i \$*
+EOF
+
+  chmod +x L2/$i
+done
+
+exit 0
