@@ -136,7 +136,7 @@ This is going to be an interesting journey!
 
 ## The Code Generator Contract
 
-Now that we are going to have two difference backends, we need a "contract"
+Now that we are going to have two different backends, we need a "contract"
 or API between the architecture-independent part of the code generator
 ([gen.c](gen.c)) and each architecture-dependent part. This is now the
 list of functions defined in [gen.h](gen.h).
@@ -210,7 +210,7 @@ if the code generator API uses register numbers, how do we write a
 6809 backend when this CPU only has a single accumulator, `D`?
 
 When I began writing the 6809 backend, I started with a set of
-8-byte memory locations called `R0, R1, R2` etc. You can still see
+4-byte memory locations called `R0, R1, R2` etc. You can still see
 them in [lib/6809/crt0.s](lib/6809/crt0.s):
 
 ```
@@ -604,7 +604,7 @@ the 6809's 64K address limitation.
 ## Fitting a Compiler into 65,536 Bytes
 
 The original "acwj" compiler was a single executable. It read from the
-C pre-processors output, did the scanning, parsing and code generation,
+C pre-processor's output, did the scanning, parsing and code generation,
 outputting assembly code. It kept the symbol table and the AST tree
 for each function in memory, and never bothered to free data structures
 once they were used.
