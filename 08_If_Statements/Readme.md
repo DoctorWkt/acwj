@@ -383,7 +383,7 @@ operators, we need to know if we are doing the compare as part of an IF
 statement (jump on the opposite comparison) or a normal expression
 (set register to 1 or 0 on the normal comparison).
 
-To this end, I've modified `getAST()` so that we can pass in the
+To this end, I've modified `genAST()` so that we can pass in the
 parent AST nodes operation:
 
 ```c
