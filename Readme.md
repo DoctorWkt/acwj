@@ -76,8 +76,8 @@ Here are the steps I've taken so far:
  + [Part 63](63_QBE/Readme.md):           A New Backend using QBE
  + [Part 64](64_6809_Target/Readme.md):   A Backend for the 6809 CPU
 
-There isn't a schedule or timeline for the future parts, so
-just keep checking back here to see if I've written any more.
+I've stoped work on *acwj* and now I'm writing a new language
+called [alic](https://github.com/DoctorWkt/alic) from scratch. Check it out!
 
 ## Copyrights
 
