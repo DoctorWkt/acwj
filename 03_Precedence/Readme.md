@@ -409,7 +409,7 @@ $ make test2
  ./parser2 input05)
 15                                       # input01 result
 29                                       # input02 result
-syntax error on line 1, token 5          # input03 result
+syntax error on line 1, token 1          # input03 result
 Unrecognised character . on line 3       # input04 result
 Unrecognised character a on line 1       # input05 result
 
