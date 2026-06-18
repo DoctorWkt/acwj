@@ -316,6 +316,25 @@ The `leaq` instruction loads the address of the named identifier.
 In the section function, the `(%r8)` syntax loads the value that
 register `%r8` points to.
 
+### Corresponding changes to cgstorglob and cgloadglob
+
+cgloadglob :
+```c
+    case P_LONG:
+    case P_CHARPTR:
+    case P_INTPTR:
+    case P_LONGPTR:
+      fprintf(Outfile, "\tmovq\t%s(\%%rip), %s\n", Gsym[id].name, reglist[r]);
+```
+cgstorglob :
+```c
+    case P_LONG:
+    case P_CHARPTR:
+    case P_INTPTR:
+    case P_LONGPTR:
+      fprintf(Outfile, "\tmovq\t%s, %s(\%%rip)\n", reglist[r], Gsym[id].name);
+```
+
 ## Testing the New Functinality
 
 Here's our new test file, `tests/input15.c` and the result when we
